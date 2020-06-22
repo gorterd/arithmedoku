@@ -1,11 +1,18 @@
 ## Background and Overview 
 
 Arithmedoku is inspired by the popular puzzle game [KenKen][1], a sudoku-like game
-with a math twist.
+with a math twist, invented by Japanese math teacher [Tetsuya Miyamoto][6]
 
 What will set Arithmedoku apart from other remakes of KenKen is its advanced annotation and deduction tools. 
 
 The fun of paper puzzles is how easily you can create your own systems of annotation and sketch out your reasoning. Digital versions struggle in that regard. You end up just trying to remember more and notate less, which makes solving the puzzle less fun and more difficult.
+
+All of the puzzles in Arithmedoku were written by Jim Bumgardner, aka Krazydad. He calls them Inkies. From the Krazydad [about page][2]:
+
+> This website has been offering free puzzles to the public since 2005. My mission is to provide puzzles to under-served groups that need them, including prisoners, pensioners, home-schoolers, hospitals, churches, and classrooms. There are 
+currently about two million individual puzzles on the site, and over sixty unique varieties.
+
+Check out the [Krazydad website][3], [find more Inkies][4], or [donate to Krazydad's PayPal][5].
 
 ## Functionality and MVPs 
 
@@ -59,3 +66,8 @@ The fun of paper puzzles is how easily you can create your own systems of annota
 4. Timed puzzles, different difficulties, high scores.
 
 [1]: https://en.wikipedia.org/wiki/KenKen
+[2]: https://krazydad.com/about.php
+[3]: https://krazydad.com/
+[4]: https://krazydad.com/inkies/
+[5]: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=dad%40krazydad%2ecom&item_name=KrazyDad+-+Jim+Bumgardner+-+Free+Puzzles&item_number=PUZ-TP1VA&no_shipping=1&cn=Your%20comments%20are%20welcome&tax=0&currency_code=USD&bn=PP%2dDonationsBF&charset=UTF%2d8&return=https%3A%2F%2Fkrazydad.com%2F%3Fpaypal%3Dsuccess&cancel_return=https%3A%2F%2Fkrazydad.com%2F%3Fpaypal%3Dcancel&amount=10.0
+[6]: https://en.wikipedia.org/wiki/Tetsuya_Miyamoto
