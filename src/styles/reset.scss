@@ -1,0 +1,41 @@
+* {
+  margin: 0; 
+  padding: 0;
+  border: 0;
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
+  text-decoration: inherit;
+  vertical-align: inherit;
+  text-transform: inherit;
+  background: transparent;
+  box-sizing: border-box;
+}
+
+ol, ul {
+  list-style: none;
+}
+
+img {
+  display: block;
+  height: auto;
+  width: 100%;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="submit"],
+textarea,
+button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+button,
+a,
+input[type="submit"] {
+  cursor: pointer;
+}
+
+

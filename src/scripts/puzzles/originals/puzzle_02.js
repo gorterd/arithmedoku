@@ -5,7 +5,7 @@ import {
   DIVIDE,
 } from '../../constants'
 
-export default puzzle02 = {
+export default {
   id: 2,
   size: 9,
   difficulty: 'hard',

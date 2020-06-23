@@ -1,4 +1,4 @@
-export const ADD = 'ADD';
-export const SUBTRACT = 'SUBTRACT';
-export const MULTIPLY = 'MULTIPLY';
-export const DIVIDE = 'DIVIDE';
+export const ADD = '+';
+export const SUBTRACT = '−';
+export const MULTIPLY = '⨉';
+export const DIVIDE = '÷';
