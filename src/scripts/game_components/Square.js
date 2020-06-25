@@ -3,6 +3,5 @@ export default class Square {
     this.val = null;
     this.pos = pos;
     this.puzzle = puzzle;
-    this.meta = new SquareMeta();
   }
 }

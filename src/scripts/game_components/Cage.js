@@ -19,11 +19,12 @@ export default class Cage {
     const traversed = [], topBounds = [], leftBounds = [];
 
     this.squares.forEach( square => {
-      const [row,col] = pos = square.pos;
-      if ( !traversed.includes([row-1, col]) ){
+      const pos = square.pos;
+      const [row,col] = pos;
+      if ( !traversed.some( a => a[0] === row-1 && a[1] === col) ){
         topBounds.push(pos);
       }
-      if ( !traversed.includes([row, col-1]) ){
+      if (!traversed.some(a => a[0] === row && a[1] === col - 1) ){
         leftBounds.push(pos);
       }
       traversed.push(pos);

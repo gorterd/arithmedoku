@@ -1,16 +1,23 @@
 import Cage from "./Cage";
+import PuzzleRender from "../render_components/puzzle_render";
 
 export default class Puzzle {
-  constructor(puzzle, solution, options = {}){
-    this.puzzle = puzzle;
+  constructor(puzzle, solution, root){
+    const { cages, ...rest } = puzzle;
+    Object.assign(this, rest);
+
     this.solution = solution.grid;
+
     this.grid = Array.from( 
       new Array(puzzle.size),
       () => new Array(puzzle.size, null) 
     );
     
-    this.cages = this._generateCages(puzzle.cages);
+    this.cages = this._generateCages(cages);
+    this.groups = this.cages;
     this.bounds = this._generateBounds();
+    this.focusedSquare = null;
+    this.renderer = new PuzzleRender(root, this);
   }
 
   // the puzzle IS solved if it is NOT the case that there's an error:
@@ -22,22 +29,35 @@ export default class Puzzle {
     })
   }
 
-  _generateBounds(){
-    const topBounds = [], leftBounds = [];
+  getSquare(pos){
+    const [row, col] = pos;
+    return this.grid[row][col];
+  }
 
-    this.cages.forEach( cage => {
-      const { topBounds: top, leftBounds: left } = cage.getBounds();
-      topBounds.concat(top);
-      leftBounds.concat(left);
-    });
+  getSquareGroups(pos){
 
-    return { topBounds, leftBounds };
   }
 
   iterateSquares(cb){
     this.grid.forEach( row => {
       row.forEach( square => cb(square) );
     });
+  }
+
+  render() {
+    this.renderer.render();
+  }
+
+  _generateBounds(){
+    let topBounds = [], leftBounds = [];
+
+    this.cages.forEach( cage => {
+      const { topBounds: top, leftBounds: left } = cage.getBounds();
+      topBounds = topBounds.concat(top);
+      leftBounds = leftBounds.concat(left);
+    });
+
+    return { topBounds, leftBounds };
   }
 
   _generateCages(cagesData){

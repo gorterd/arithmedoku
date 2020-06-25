@@ -1,0 +1,25 @@
+.gm-info-grp {
+  background: $rose-dark;
+  border: 2px solid $ruby-dark;
+}
+
+@media only screen 
+and (max-width: $breakpoint-1) {
+  .gm-info-grp {
+    
+  }
+}
+
+@media only screen 
+and (min-width: $breakpoint-1) 
+and (max-width: $breakpoint-2) {
+  .gm-info-grp {
+    align-self: end;
+  }
+}
+
+@media only screen and (min-width: $breakpoint-2){
+  .gm-info-grp {
+
+  }
+}

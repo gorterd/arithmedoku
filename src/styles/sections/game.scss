@@ -1,0 +1,45 @@
+.game {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  // justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.gm-components {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  position: relative;
+  margin-bottom: auto;
+}
+
+@media only screen
+and (min-width: $breakpoint-1){
+  // .gm-components {
+  //   height: calc(100vh - #{$lg-hdr-height})
+  // }
+  .game {
+    height: calc(100vh - #{$lg-nav-height})
+  }
+}
+
+@media only screen 
+and (min-width: $breakpoint-1) 
+and (max-width: $breakpoint-2) {
+  .gm-components {
+    display: grid;
+    grid-template: repeat(2, $md-pz-size / 2) / 1fr $md-pz-size 1fr $md-info-size 1fr;
+    // margin-top: 75px;
+  }
+}
+
+@media only screen
+and (min-width: $breakpoint-2) {
+  .gm-components {
+    // justify-content: space-between;
+    // margin-top: 150px;
+  }
+}

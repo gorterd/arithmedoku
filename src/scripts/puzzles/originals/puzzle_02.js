@@ -123,6 +123,14 @@ export default {
     },
     {
       squares: [
+        [3, 0],
+        [4, 0],
+      ],
+      operation: MULTIPLY,
+      result: 14
+    },
+    {
+      squares: [
         [3, 3],
         [3, 4],
         [4, 4],

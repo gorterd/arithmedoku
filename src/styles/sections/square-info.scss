@@ -1,0 +1,30 @@
+.gm-info-sqr {
+
+  background: $robin-light;
+  border: 2px solid $ocean;
+
+  &.show {
+    visibility: visible;
+  }
+}
+
+@media only screen 
+and (max-width: $breakpoint-1) {
+  .gm-info-sqr {
+    
+  }
+}
+
+@media only screen 
+and (min-width: $breakpoint-1) 
+and (max-width: $breakpoint-2) {
+  .gm-info-sqr {
+    
+  }
+}
+
+@media only screen and (min-width: $breakpoint-2){
+  .gm-info-sqr {
+    
+  }
+}

@@ -45,8 +45,8 @@ export default {
     },
     {
       squares: [
+        [0,4],
         [0,5],
-        [0,6],
       ],
       operation: SUBTRACT,
       result: 4

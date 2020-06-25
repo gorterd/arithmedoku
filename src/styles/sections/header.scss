@@ -1,0 +1,35 @@
+.gm-header {
+  @include hd-small();
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  
+  button {
+    color: $cappuccino;
+    background: $cream;
+    border-radius: 15px;
+    font-weight: 700;
+    padding: 10px;
+    margin-left: 20px;
+    border: 1px solid $cream-dark;
+    box-shadow: 2px 3px 0px 0px $cream-darker3;
+    
+    &:hover {
+      background: $cappuccino;
+      color: $cream;
+      border-color: $cappuccino-dark;
+      box-shadow: 2px 3px 0px 0px $cappuccino-darker;
+    }
+  }
+}
+
+@media only screen 
+and (min-width: $breakpoint-1) {
+  .gm-header {
+    @include hd-large();
+
+   .hd-menu {
+     display: none;
+   }
+  }
+}

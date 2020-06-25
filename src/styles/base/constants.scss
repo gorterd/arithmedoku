@@ -1,0 +1,70 @@
+// color 
+$rose-lighter: #fff7f6;
+$rose-light: #ffe0dd;
+$rose: #ffc9c3;
+$rose-dark: #ffb2aa;
+$rose-darker: #ff9b90;
+$rose-darker2: #ff8477;
+
+$ruby: #990f00;
+$ruby-dark: #800d00;
+
+
+$robin-lighter: #f6feff;
+$robin-light: #ddfcff;
+$robin: #c3f9ff;
+$robin-dark: #aaf6ff;
+$robin-darker: #90f4ff;
+
+$ocean: #00818f;
+
+$cream-lighter: #fffbf6;
+$cream-light: #fff1dd;
+$cream: #ffe7c3;
+$cream-dark: #ffddaa;
+$cream-darker: #ffd390;
+$cream-darker2: #ffc877;
+$cream-darker3: #f4a125;
+
+$cappuccino: hsl(36, 100%, 30%);
+$cappuccino-dark: hsl(36, 100%, 25%);
+$cappuccino-darker: #422700;
+
+
+// size
+
+$lg-pz-size: 42vw;
+$md-pz-size: 60vw;
+$sm-pz-size: 95vw;
+
+$lg-info-size: 27vw;
+$md-info-size: 35vw;
+$sm-info-size: 70vw;
+
+$lg-hdr-height: calc(40px + 1.5vw);
+$sm-hdr-height: 8vh;
+
+$lg-nav-height: 40px;
+
+$breakpoint-1: 700px;
+$breakpoint-2: 1050px;
+
+@mixin hd-small() {
+  width: 95vw;
+  min-height: $sm-hdr-height;
+}
+
+@mixin hd-large() {
+  width: 42vw;
+  min-height: $lg-hdr-height;
+}
+
+@mixin small($pz-size, $num-squares) {
+  font-size: calc(#{$pz-size} / #{$num-squares} / 4.5);
+}
+
+@mixin large($pz-size, $num-squares) {
+  font-size: calc(#{$pz-size} / #{$num-squares} / 2);
+}
+
+
