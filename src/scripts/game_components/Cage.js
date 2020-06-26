@@ -4,12 +4,12 @@ export default class Cage {
   constructor(cageData, puzzle) {
     Object.assign(this, cageData);
 
-    const sortedSquares = cageData.squares.sort( (a,b) => {
+    this.squareCoords = cageData.squares.sort( (a,b) => {
       const compareVal = a[0] - b[0];
       return compareVal || a[1] - b[1];
     });
-    this.anchor = sortedSquares[0];
-    this.squares = sortedSquares.map( square => new Square(square, puzzle) );
+    this.anchor = this.squareCoords[0];
+    this.squares = this.squareCoords.map( square => new Square(square, puzzle) );
     this.puzzle = puzzle;
     
     this.anchorText = `${this.result} ${this.operation}`;

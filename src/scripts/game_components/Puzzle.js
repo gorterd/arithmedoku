@@ -1,5 +1,5 @@
 import Cage from "./Cage";
-import PuzzleRender from "../render_components/puzzle_render";
+import PuzzleRender from "../render_components/PuzzleRender";
 
 export default class Puzzle {
   constructor(puzzle, solution, root){
@@ -34,8 +34,31 @@ export default class Puzzle {
     return this.grid[row][col];
   }
 
-  getSquareGroups(pos){
+  getRow(idx){
+    return this.grid[idx];
+  }
 
+  getCol(idx){
+    return this.grid.map( row => row[idx]);
+  }
+
+  getSquareGroups(pos){
+    return this.groups.filter( grp => {
+      grp.squareCoords.includes(pos);
+    })
+  }
+
+  checkConflicts(pos, val){
+    const [row, col] = pos;
+
+    const conflictingSquares = [];
+    [this.getRow(row), this.getCol(col)]
+      .forEach( ln => ln.forEach( sq => {
+        if ( sq.val === val ){
+          conflictingSquares.push(sq.pos);
+        }
+      }));
+    return { conflictingSquares };
   }
 
   iterateSquares(cb){

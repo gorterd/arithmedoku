@@ -24,6 +24,10 @@
     background-color: $rose-light;
   }
 
+  &.conflicting {
+    animation: fade-in-out 600ms 1;
+  }
+
   &::before {
     position: absolute;
     bottom: -2px;
@@ -45,9 +49,12 @@
     @include large($sm-pz-size, 9);
       cursor: pointer;
 
-
     &:focus {
       outline: none;
+    }
+
+    &.mistake {
+      animation: shake 600ms ease-in-out 50ms 1;
     }
 
   }

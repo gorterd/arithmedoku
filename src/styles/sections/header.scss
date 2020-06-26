@@ -14,11 +14,13 @@
     border: 1px solid $cream-dark;
     box-shadow: 2px 3px 0px 0px $cream-darker3;
     
-    &:hover {
-      background: $cappuccino;
-      color: $cream;
-      border-color: $cappuccino-dark;
-      box-shadow: 2px 3px 0px 0px $cappuccino-darker;
+    &:hover, &:focus {
+      transform: translate(-0.5px, -0.5px);
+      box-shadow: 3.5px 4.5px 0px 0px $cream-darker3;
+    }
+
+    &:focus {
+      outline: none;
     }
   }
 }

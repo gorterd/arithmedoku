@@ -3,7 +3,7 @@
   background: $robin-light;
   border: 2px solid $ocean;
 
-  &.show {
+  &.swipe-show {
     visibility: visible;
   }
 }
@@ -12,6 +12,23 @@
 and (max-width: $breakpoint-1) {
   .gm-info-sqr {
     
+  }
+}
+
+@media only screen 
+and (min-width: $breakpoint-1) {
+  .gm-info-sqr {
+    @include slide-out('left');    
+
+    &.show {
+      display: flex;
+    }
+
+    &.leaving {
+      transform: translateX(-80%);
+      opacity: 0;
+      transition: transform 200ms ease, opacity 200ms ease;    
+    }
   }
 }
 

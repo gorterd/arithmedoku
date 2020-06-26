@@ -1,13 +1,10 @@
-import GroupInfoRender from "../render_components/group_info_render";
+import GroupInfoRender from "../render_components/GroupInfoRender";
+import Info from "./Info";
 
-export default class GroupInfo {
+export default class GroupInfo extends Info {
   constructor(puzzle, root) {
-    this.puzzle = puzzle;
+    super(puzzle);
     this.renderer = new GroupInfoRender(root, this);
-  }
-
-  render() {
-    this.renderer.render();
   }
 
 }

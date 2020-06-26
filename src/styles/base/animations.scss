@@ -1,0 +1,81 @@
+@keyframes shake {
+  @for $i from 0 through 1 {
+    #{0% + ($i * 50%)} {
+      transform: rotate(0deg);
+    }
+  
+    #{12.5% + ($i * 50%)} {
+      transform: rotate(30deg);
+    }
+  
+    #{25% + ($i * 50%)} {
+      transform: rotate(0deg);
+    }
+  
+    #{37.5% + ($i * 50%)} {
+      transform: rotate(-30deg);
+    }
+  
+    #{50% + ($i * 50%)} {
+      transform: rotate(0deg);
+    }
+  }
+
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-in-out {
+
+  0% {
+    background-color: initial;
+  }
+
+  50% {
+    background-color: $cream-dark;
+  }
+
+  100% {
+    background-color: initial;
+  }
+
+}
+
+@mixin slide-out($dir) {
+  @keyframes slide-left {
+    
+    0% {
+      opacity: 0;
+      transform: translateX(80%);
+    }
+
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes slide-right {
+    
+    0% {
+      opacity: 0;
+      transform: translateX(-80%);
+    }
+
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @if $dir == 'left' {
+    animation: slide-right 150ms ease-out 1;
+  } @else {
+    animation: slide-left 150ms ease-out 1;
+  }
+}

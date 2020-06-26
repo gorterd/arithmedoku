@@ -1,13 +1,19 @@
 import * as DOMUtil from './dom_util';
 
+const status = {
+  disableUnfocus: false
+}
+
 export const mountListeners = ctx => {
   mountKeyboardListeners.call(ctx);
   mountClickListeners.call(ctx);
-  ctx.puzzleDiv.onblur = unfocusOldSquare.bind(ctx);
+  ctx.puzzleDiv.onblur = puzzleUnfocus.bind(ctx); 
 }
 
 function mountClickListeners(){
   this.puzzleDiv.onclick = handleSquareClick.bind(this);
+  document.querySelector('.hd-new').onclick = this.newPuzzle.bind(this);
+  document.querySelector('.hd-reset').onclick = this.resetPuzzle.bind(this);
 }
 
 function mountKeyboardListeners() {
@@ -67,8 +73,18 @@ function numKeyHandler(e){
   const square = this.puzzle.focusedSquare;
   if (square){
     const val = parseInt(e.key);
-    this.puzzle.getSquare(square).val = val;
-    DOMUtil.getSquareInp(square).value = val;
+
+    const squareInp = DOMUtil.getSquareInp(square);
+    squareInp.value = val;
+
+    let { conflictingSquares } = this.puzzle.checkConflicts(square, val);
+
+    console.log(conflictingSquares);
+    if (conflictingSquares.length){
+      DOMUtil.handleConflicts(square, conflictingSquares );
+    } else {
+      this.puzzle.getSquare(square).val = val;
+    }
   }
 }
 
@@ -81,6 +97,7 @@ function deleteKeyHandler(e){
 }
 
 function handleSquareClick(e) {
+  status.disableUnfocus = true;
   const squareDiv = e.target.parentElement;
   const square = squareDiv.dataset.pos
     .split(',')
@@ -90,7 +107,9 @@ function handleSquareClick(e) {
 }
 
 function switchFocus(newSquare, newSquareDiv){
-  if (this.puzzle.focusedSquare) {
+  const wasPrev = this.puzzle.focusedSquare;
+
+  if (wasPrev) {
     unfocusOldSquare.call(this);
   }
 
@@ -99,16 +118,44 @@ function switchFocus(newSquare, newSquareDiv){
   };
 
   newSquareDiv.classList.add('focused');
+  this.squareInfo.setSquare(newSquare, !wasPrev);
+  this.groupInfo.setSquare(newSquare, !wasPrev);
   this.puzzle.focusedSquare = newSquare;
-  this.squareInfo.setSquare(newSquare);
 }
 
 function unfocusOldSquare(){
-  if(this.puzzle.focusedSquare){
-    const oldSquareDiv = DOMUtil.getSquareDiv(this.puzzle.focusedSquare);
-  
-    oldSquareDiv.classList.remove('focused');
-    this.puzzle.focusedSquare = null;
+  const oldSquareDiv = DOMUtil.getSquareDiv(this.puzzle.focusedSquare);
+
+  oldSquareDiv.classList.remove('focused');
+  this.puzzle.focusedSquare = null;
+}
+
+function puzzleUnfocus(){
+  if (this.puzzle.focusedSquare){
+    unfocusOldSquare.call(this);
+    status.disableUnfocus = false;
+    window.setTimeout( () => {
+      if(!status.disableUnfocus){
+        this.squareInfoDiv.classList.add('leaving');
+        this.groupInfoDiv.classList.add('leaving');
+
+        window.setTimeout( () => {
+          this.squareInfo.clearSquare();
+          this.groupInfo.clearSquare();
+          this.squareInfoDiv.classList.remove('leaving');
+          this.groupInfoDiv.classList.remove('leaving');
+        }, 200);
+      }
+      status.disableUnfocus = false;
+    }, 30);
   }
+}
+
+function newGame(){
+
+}
+
+function resetGame(){
+
 }
 
