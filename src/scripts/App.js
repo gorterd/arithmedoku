@@ -4,7 +4,7 @@ import Puzzle from './game_components/Puzzle';
 import SquareInfo from './game_components/SquareInfo';
 import GroupInfo from './game_components/GroupInfo';
 
-import { mountListeners } from './listeners.js';
+import { mountListeners } from './listeners/listeners.js';
 
 export default class App {
 
@@ -24,7 +24,9 @@ export default class App {
     this.squareInfo = new SquareInfo(puzzle, this.squareInfoDiv);
     this.groupInfo = new GroupInfo(puzzle, this.groupInfoDiv);
 
-    puzzle.render();
+    this.puzzle.render();
+    this.squareInfo.render();
+    this.groupInfo.render();
 
     mountListeners(this);
   }

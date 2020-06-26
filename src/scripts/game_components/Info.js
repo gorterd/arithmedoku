@@ -16,11 +16,13 @@ export default class Info {
 
   render(opts = {}) {
     if (opts.newSquare) {
-      this.renderer.render();
+      this.renderer.show();
     } else if (opts.clearSquare) {
       this.renderer.clear();
-    } else {
+    } else if (opts.updateSquare) {
       this.renderer.update();
+    } else {
+      this.renderer.render();
     }
   }
 

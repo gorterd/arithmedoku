@@ -4,11 +4,15 @@ export default class InfoRender {
     this.root = root;
   }
 
-  render() {
-    this.root.classList.add('show');
+  render(){
+    
   }
-
+  
   update() {
+  }
+  
+  show(){
+    this.root.classList.add('show');
   }
 
   clear() {

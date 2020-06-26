@@ -7,6 +7,9 @@
   border-right: 4px solid black;
   border-bottom: 4px solid black;
   &:focus { outline: none; }
+  position: relative;
+  z-index: 1;
+  background: white;
 }
 
 .gm-square {

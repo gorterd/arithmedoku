@@ -1,19 +1,21 @@
-import * as DOMUtil from './dom_util';
+import * as DOMUtil from '../dom_util';
 
-const status = {
-  disableUnfocus: false
+export function mountPuzzleListeners() {
+  mountKeyboardListeners.call(this);
+  mountClickListeners.call(this);
+  this.puzzleDiv.onblur = puzzleUnfocus.bind(this);
 }
 
-export const mountListeners = ctx => {
-  mountKeyboardListeners.call(ctx);
-  mountClickListeners.call(ctx);
-  ctx.puzzleDiv.onblur = puzzleUnfocus.bind(ctx); 
-}
-
-function mountClickListeners(){
+function mountClickListeners() {
   this.puzzleDiv.onclick = handleSquareClick.bind(this);
-  document.querySelector('.hd-new').onclick = this.newPuzzle.bind(this);
-  document.querySelector('.hd-reset').onclick = this.resetPuzzle.bind(this);
+  document.querySelector('.hd-new').onclick = e => {
+    e.target.blur();
+    this.newPuzzle.bind(this)
+  };
+  document.querySelector('.hd-reset').onclick = e => {
+    e.target.blur();
+    this.resetPuzzle.bind(this)
+  };
 }
 
 function mountKeyboardListeners() {
@@ -23,8 +25,8 @@ function mountKeyboardListeners() {
     const key = e.key;
     if (arrowMatch.test(key)) {
       arrowKeyHandler.call(this, e);
-    } else if ( /^\d/.test(key) ){
-      numKeyHandler.call(this,e);
+    } else if (/^\d/.test(key)) {
+      numKeyHandler.call(this, e);
     } else if (key === 'Delete' || key === 'Backspace') {
       deleteKeyHandler.call(this, e)
     } else {
@@ -34,15 +36,15 @@ function mountKeyboardListeners() {
 }
 
 function arrowKeyHandler(e) {
-  
+
   const oldSquare = this.puzzle.focusedSquare;
-  
+
   if (!oldSquare) {
     return;
   }
 
   e.preventDefault();
-  
+
   const size = this.puzzle.size;
   const [row, col] = oldSquare;
 
@@ -62,16 +64,16 @@ function arrowKeyHandler(e) {
       break;
   }
 
-  if( newSquare ){
+  if (newSquare) {
     const newSquareDiv = DOMUtil.getSquareDiv(newSquare);
-  
+
     switchFocus.call(this, newSquare, newSquareDiv);
   }
 }
 
-function numKeyHandler(e){
+function numKeyHandler(e) {
   const square = this.puzzle.focusedSquare;
-  if (square){
+  if (square) {
     const val = parseInt(e.key);
 
     const squareInp = DOMUtil.getSquareInp(square);
@@ -80,15 +82,31 @@ function numKeyHandler(e){
     let { conflictingSquares } = this.puzzle.checkConflicts(square, val);
 
     console.log(conflictingSquares);
-    if (conflictingSquares.length){
-      DOMUtil.handleConflicts(square, conflictingSquares );
+    if (conflictingSquares.length) {
+      DOMUtil.handleConflicts(square, conflictingSquares);
     } else {
       this.puzzle.getSquare(square).val = val;
     }
   }
 }
 
-function deleteKeyHandler(e){
+function deleteKeyHandler(e) {
+  const square = this.puzzle.focusedSquare;
+  if (square) {
+    this.puzzle.getSquare(square).val = null;
+    DOMUtil.getSquareInp(square).value = '';
+  }
+}
+
+function tabKeyHandler(e) {
+  const square = this.puzzle.focusedSquare;
+  if (square) {
+    this.puzzle.getSquare(square).val = null;
+    DOMUtil.getSquareInp(square).value = '';
+  }
+}
+
+function ctrlNumHandler(e) {
   const square = this.puzzle.focusedSquare;
   if (square) {
     this.puzzle.getSquare(square).val = null;
@@ -97,23 +115,23 @@ function deleteKeyHandler(e){
 }
 
 function handleSquareClick(e) {
-  status.disableUnfocus = true;
+  this.status.disableUnfocus = true;
   const squareDiv = e.target.parentElement;
   const square = squareDiv.dataset.pos
     .split(',')
-    .map( n => parseInt(n));
+    .map(n => parseInt(n));
 
   switchFocus.call(this, square, squareDiv);
 }
 
-function switchFocus(newSquare, newSquareDiv){
+function switchFocus(newSquare, newSquareDiv) {
   const wasPrev = this.puzzle.focusedSquare;
 
   if (wasPrev) {
     unfocusOldSquare.call(this);
   }
 
-  if (this.puzzleDiv !== document.activeElement){
+  if (this.puzzleDiv !== document.activeElement) {
     this.puzzleDiv.focus();
   };
 
@@ -123,39 +141,33 @@ function switchFocus(newSquare, newSquareDiv){
   this.puzzle.focusedSquare = newSquare;
 }
 
-function unfocusOldSquare(){
+function unfocusOldSquare() {
   const oldSquareDiv = DOMUtil.getSquareDiv(this.puzzle.focusedSquare);
 
   oldSquareDiv.classList.remove('focused');
   this.puzzle.focusedSquare = null;
 }
 
-function puzzleUnfocus(){
-  if (this.puzzle.focusedSquare){
+function puzzleUnfocus() {
+  if (this.puzzle.focusedSquare) {
     unfocusOldSquare.call(this);
-    status.disableUnfocus = false;
-    window.setTimeout( () => {
-      if(!status.disableUnfocus){
+    this.status.disableUnfocus = false;
+    window.setTimeout(() => {
+      if (!this.status.disableUnfocus) {
         this.squareInfoDiv.classList.add('leaving');
         this.groupInfoDiv.classList.add('leaving');
 
-        window.setTimeout( () => {
+        window.setTimeout(() => {
           this.squareInfo.clearSquare();
           this.groupInfo.clearSquare();
           this.squareInfoDiv.classList.remove('leaving');
           this.groupInfoDiv.classList.remove('leaving');
         }, 200);
       }
-      status.disableUnfocus = false;
+      this.status.disableUnfocus = false;
     }, 30);
   }
 }
 
-function newGame(){
 
-}
-
-function resetGame(){
-
-}
 

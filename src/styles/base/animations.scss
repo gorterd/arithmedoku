@@ -50,32 +50,49 @@
   @keyframes slide-left {
     
     0% {
-      opacity: 0;
-      transform: translateX(80%);
+      opacity: 0.6;
+      transform: translateX(180%) scale(.4);
+      position: relative;
+      z-index: -1;
     }
 
     100% {
-      opacity: 1;
-      transform: translateX(0);
+      opacity: 0.6;
+      transform: translateX(0) scale(0.4);
     }
   }
 
   @keyframes slide-right {
     
     0% {
-      opacity: 0;
-      transform: translateX(-80%);
+      opacity: 0.6;
+      transform: translateX(-180%) scale(.4);
+      position: relative;
+      z-index: -1;
+    }
+
+    100% {
+      opacity: 0.6;
+      transform: translateX(0) scale(0.4);
+    }
+  }
+
+  @keyframes scale-up {
+    
+    0% {
+      opacity: 0.6;
+      transform: scale(.4);
     }
 
     100% {
       opacity: 1;
-      transform: translateX(0);
+      transform: scale(1);
     }
   }
 
   @if $dir == 'left' {
-    animation: slide-right 150ms ease-out 1;
+    animation: slide-left 200ms ease-out 1, scale-up 200ms ease-in-out 200ms 1;
   } @else {
-    animation: slide-left 150ms ease-out 1;
+    animation: slide-right 200ms ease-out 1, scale-up 200ms ease-in-out 200ms 1;
   }
 }
