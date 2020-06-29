@@ -1,12 +1,27 @@
 .gm-header {
-  @include hd-small();
   display: flex;
   align-items: center;
+  justify-content: space-between;
+}
+
+.gm-header-left,
+.gm-header-right {
+  display: flex;
+  align-items: center;
+}
+
+.gm-header-right {
   justify-content: flex-end;
 }
 
+.gm-header-left {
+  justify-content: flex-start;
+}
+
 .hd-btn, 
-.hd-options > ul {
+.hd-options > ul,
+.hd-about > div,
+.hd-instructions > ol {
   color: $cappuccino;
   background: $cream;
   border-radius: 15px;
@@ -16,12 +31,15 @@
 
 .hd-btn {
   padding: 10px;
-  margin-left: 20px;
+  margin-left: 15px;
   box-shadow: 2px 3px 0px 0px $cream-darker3;
 
 
   &:hover, &:focus {
     box-shadow: 3.5px 4.5px 0px 0px $cream-darker3;
+    transform: translate(-0.5px, -0.5px);
+    z-index: 4;
+
   }
  
   &:focus {
@@ -29,27 +47,77 @@
   }
 }
 
-.btn-std:hover, 
-.btn-std:focus {
-  transform: translate(-0.5px, -0.5px);
-}
 
-.hd-options {
+.hd-options,
+.hd-about,
+.hd-instructions {
   position: relative;
 }
 
-.hd-options > ul {
+.hd-options > ul,
+.hd-about > div,
+.hd-instructions ol {
   display: none;
   position: absolute;
   z-index: 2;
-  flex-direction: column;
   top: 125%;
   left: 0;
   right: -420%;
   padding-top: 25px;
+  font-weight: 400;
 
   box-shadow: 0 2px 5px 0 hsl(36,30,50);
+}
 
+.hd-about {
+  margin-left: 0;
+}
+
+
+.hd-about > div {
+  right: -600%;
+  line-height: 1.6rem;
+  padding: 25px;
+  cursor: text;
+  user-select: text;
+
+  a {
+    text-decoration: underline;
+    &:hover {
+      color: $cappuccino-darker;
+    }
+  }
+
+  p {
+    display: inline-block;
+    padding: 15px;
+    margin-top: 10px;
+    background-color: $cream-light;
+    border-radius: 10px;
+    font-style: italic;
+  }
+
+  &.show { 
+    display: block;
+  }
+}
+
+.hd-instructions > ol {
+  list-style: decimal;
+  padding-left: 20px;
+
+  li {
+    display: list-item;
+
+    span {
+      font-weight: 600;
+    }
+  }
+}
+
+.hd-options > ul,
+.hd-instructions ol {
+  flex-direction: column;
 
   &.show { 
     display: flex;
@@ -57,11 +125,18 @@
 
   li {
     margin: 0 20px 25px 20px;
+  }
+
+}
+
+.hd-options > ul {
+  font-weight: 600;
+
+  li {
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
-
 }
 
 .tg-info {
@@ -100,8 +175,8 @@
   border-radius: 15px;
   text-align: center;
   caret-color: transparent;
-  // caret-color: transparentize($cappuccino-darker, 0.5);
-  
+  cursor: pointer;
+
   &:focus {
     outline: none;
     box-shadow: inset 0 0 3px 0 hsl(36,30,40);
@@ -195,12 +270,22 @@
 
 
 @media only screen 
-and (min-width: $breakpoint-1) {
+and (max-width: $breakpoint-2) {
+  .gm-header {
+    @include hd-small();
+  }
+}
+
+@media only screen 
+and (min-width: $breakpoint-2) {
   .gm-header {
     @include hd-large();
+  }
+}
 
-   .hd-menu {
-     display: none;
-   }
+@media only screen 
+and (min-width: $breakpoint-1) {
+  .hd-menu {
+    display: none;
   }
 }

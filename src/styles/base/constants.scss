@@ -54,12 +54,12 @@ $breakpoint-1: 700px;
 $breakpoint-2: 1050px;
 
 @mixin hd-small() {
-  width: 95vw;
-  min-height: $sm-hdr-height;
+  min-width: 90vw;
+  min-height: $lg-hdr-height;
 }
 
 @mixin hd-large() {
-  width: 42vw;
+  min-width: 42vw;
   min-height: $lg-hdr-height;
 }
 

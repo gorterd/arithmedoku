@@ -131,7 +131,7 @@ function switchFocus(newSquare, newSquareDiv) {
   }
 
   if (this.divs.puzzleDiv !== document.activeElement) {
-    this.divs.puzzleDiv.focus();
+    this.divs.puzzleDiv.focus({preventScroll: true});
   };
 
   newSquareDiv.classList.add('focused');
@@ -152,7 +152,7 @@ function puzzleUnfocus() {
     this.status.disableUnfocus.puzzle = false;
     window.setTimeout(() => {
       if (this.status.disableUnfocus.puzzle){
-        this.divs.puzzleDiv.focus();
+        this.divs.puzzleDiv.focus({preventScroll: true});
       } else {
         unfocusOldSquare.call(this);
         this.divs.squareInfoDiv.classList.add('leaving');

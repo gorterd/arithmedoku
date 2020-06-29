@@ -23,11 +23,10 @@
 }
 
 .info-num-wrapper {
-  font-size: 2.5rem;
+  font-size: 3vw;
   display: flex;
   justify-content: space-around;
   align-items: center;
-  // margin: 0 10px;
 }
 
 .info-num {
@@ -35,8 +34,8 @@
   color: darken($ocean, 5);
   opacity: 0.3;
   user-select: none;
-  width: 3rem;
-  height: 3rem;
+  width: 3.5vw;
+  height: 3.5vw;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -72,9 +71,9 @@
 }
 
 .info-nums-check {
-  height: 50px;
-  width: 50px;
-  font-size: 3rem;
+  height: 3.5vw;
+  width: 3.5vw;
+  font-size: 3.5vw;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -106,6 +105,15 @@
   }
 }
 
+.gm-info-grps {
+  height: 35%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: $ocean;
+  font-size: 1.5vw;
+}
+
 @media only screen 
 and (max-width: $breakpoint-1) {
   .gm-info-sqr {
@@ -120,6 +128,7 @@ and (min-width: $breakpoint-1) {
 
     &.show {
       display: flex;
+      flex-direction: column;
       opacity: 1;
     }
 

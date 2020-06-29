@@ -6,7 +6,9 @@ export const mountListeners = ctx => {
   ctx.status = {
     disableUnfocus: {
       puzzle: false,
-      options: false
+      options: false,
+      about: false,
+      instructions: false,
     }
   }
   mountPuzzleListeners.call(ctx);
@@ -27,29 +29,9 @@ function mountHeader(){
 }
 
 function mountOptions(){
-  document.querySelector('.hd-options').onclick = e => {
-    const btn = e.currentTarget;
-    const classList = btn.querySelector('ul').classList;
-    classList.toggle('show');
-    if (!classList.contains('show')) { 
-      btn.blur();
-    }
-  }
-
-  document.querySelector('.hd-options').onblur = e => {
-    const classList = e.currentTarget.querySelector('ul').classList;
-    this.status.disableUnfocus.options = false;
-    window.setTimeout( () => {
-      if (!this.status.disableUnfocus.options) { 
-        classList.remove('show') 
-      };
-    }, 50);
-  }
-
-  document.querySelector('.hd-options ul').onclick = e => {
-    e.stopPropagation();
-    this.status.disableUnfocus.options = true;
-  }
+  mountDropdown.call(this, 'options', '.hd-options', 'ul');
+  mountDropdown.call(this, 'about', '.hd-about', 'div');
+  mountDropdown.call(this, 'instructions', '.hd-instructions', 'ol');
 
   document.getElementById('tg-block').onclick = optionToggle.call(this, 'block');
   document.getElementById('tg-elim').onclick = optionToggle.call(this, 'autoElim');
@@ -60,6 +42,32 @@ function optionToggle(option) {
   return e => {
     e.currentTarget.classList.toggle('on');
     this.opts[option] = !this.opts[option];
+  }
+}
+
+function mountDropdown(name, selector, subselector){
+  document.querySelector(selector).onclick = e => {
+    const btn = e.currentTarget;
+    const classList = btn.querySelector(subselector).classList;
+    classList.toggle('show');
+    if (!classList.contains('show')) {
+      btn.blur();
+    }
+  }
+
+  document.querySelector(selector).onblur = e => {
+    const classList = e.currentTarget.querySelector(subselector).classList;
+    this.status.disableUnfocus[name] = false;
+    window.setTimeout(() => {
+      if (!this.status.disableUnfocus[name]) {
+        classList.remove('show')
+      };
+    }, 50);
+  }
+
+  document.querySelector(`${selector} ${subselector}`).onclick = e => {
+    e.stopPropagation();
+    this.status.disableUnfocus[name] = true;
   }
 }
 
