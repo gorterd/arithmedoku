@@ -136,7 +136,7 @@ function switchFocus(newSquare, newSquareDiv) {
 
   newSquareDiv.classList.add('focused');
   this.puzzle.renderers.squareInfo.update(newSquare, !wasPrev);
-  // this.groupInfo.setSquare(newSquare, !wasPrev);
+  this.puzzle.renderers.groupInfo.show();
   this.puzzle.focusedSquare = newSquare;
 }
 

@@ -19,11 +19,11 @@ export const mountListeners = ctx => {
 function mountHeader(){
   document.querySelector('.hd-new').onclick = e => {
     e.target.blur();
-    this.newPuzzle.bind(this)
+    this.newPuzzle.call(this)
   };
   document.querySelector('.hd-reset').onclick = e => {
     e.target.blur();
-    this.resetPuzzle.bind(this)
+    this.resetPuzzle.call(this);
   };
   mountOptions.call(this);
 }

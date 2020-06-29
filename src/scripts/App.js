@@ -34,9 +34,9 @@ export default class App {
   clearPuzzle(){
     this.divs.puzzleDiv.innerHTML = '';
     this.divs.puzzleDiv.className = 'gm-puzzle';
-    this.divs.squareInfoDiv.innerHTML = '';
+    // this.divs.squareInfoDiv.innerHTML = '';
     this.divs.squareInfoDiv.className = 'gm-info gm-info-sqr';
-    this.divs.groupInfoDiv.innerHTML = '';
+    // this.divs.groupInfoDiv.innerHTML = '';
     this.divs.groupInfoDiv.className = 'gm-info gm-info-grp';
   }
 
@@ -54,27 +54,3 @@ export default class App {
 }
 
 
-// createPuzzle(puzzle){
-//   this.puzzle = puzzle;
-//   this.squareInfo = new SquareInfo(puzzle, this.divs.squareInfoDiv);
-//   this.groupInfo = new GroupInfo(puzzle, this.divs.groupInfoDiv);
-
-//   puzzle.render();
-
-//   mountListeners(this);
-// }
-
-// newPuzzle(){
-//   this.createPuzzle(this.randomPuzzle());
-// }
-
-// randomPuzzle(){
-//   const { puzzle, solution } = PUZZLES[Math.floor(Math.random() * PUZZLES.length)];
-
-//   this.resetPuzzle = () => {
-//     this.createPuzzle(new Puzzle(puzzle, solution, this.divs.puzzleDiv));
-//   }
-
-//   return new Puzzle(puzzle, solution, this.divs.puzzleDiv);
-// }
-// }
