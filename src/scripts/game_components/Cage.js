@@ -1,4 +1,5 @@
 import Square from './Square'
+import GroupInfo from './GroupInfo';
 
 export default class Cage {
   constructor(cageData, puzzle) {
@@ -11,6 +12,7 @@ export default class Cage {
     this.anchor = this.squareCoords[0];
     this.squares = this.squareCoords.map( square => new Square(square, puzzle) );
     this.puzzle = puzzle;
+    this.groupInfo = new GroupInfo(puzzle);
     
     this.anchorText = `${this.result} ${this.operation}`;
   }

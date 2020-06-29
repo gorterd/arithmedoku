@@ -1,14 +1,47 @@
 import * as DOMUtil from '../dom_util';
 
 export default class PuzzleRender {
-  constructor(root, puzzle){
-    this.root = root;
+  constructor(puzzle){
     this.puzzle = puzzle;
+    this.root = puzzle.divs.puzzleDiv;
   }
 
   render() {
     this.puzzle.iterateSquares(this._generateSquareDiv.bind(this));
     this.puzzle.cages.forEach(this._generateCageLabel);
+  }
+
+  updateSquareOptions(square, limit){
+    const squareInfo = square.squareInfo;
+    const options = squareInfo.options.sort( (a,b) => b - a );
+    const num = options.length;
+    
+    let locked = squareInfo.locked ? 'locked-in' : '';
+    let display = num ? 'all' : 'none';
+    if (limit && num){
+      display = num > limit ?  'flag' : 'limited';
+    } 
+
+    let optionsSpan = DOMUtil.getSquareDiv(square.pos).querySelector('.sq-options');
+    optionsSpan.className = `sq-options ${display} ${locked}`;
+
+    switch (display) {
+      case 'all':
+      case 'limited':
+        let spans = options.map( opt => {
+          let span = document.createElement('span');
+          span.innerText = opt;
+          return span;
+        });
+        optionsSpan.innerHTML = '';
+        optionsSpan.append(...spans);
+        break;
+      case 'flag':
+        optionsSpan.innerHTML = '<i class="far fa-sticky-note"></i>';
+        break;
+      default:
+        optionsSpan.innerHTML = '';
+    }
   }
 
   _generateCageLabel(cage) {
@@ -35,7 +68,10 @@ export default class PuzzleRender {
     squareDiv.style.gridColumn = `${col + 1} / span 1`;
 
     const squareInput = document.createElement('input');
-    squareDiv.appendChild(squareInput);
+    const options = document.createElement('div');
+    options.className = 'sq-options';
+    squareDiv.append(squareInput, options);
+
     this.root.append(squareDiv);
   }
 }

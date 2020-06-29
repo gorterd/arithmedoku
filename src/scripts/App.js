@@ -1,17 +1,18 @@
 import PUZZLES from './puzzles/puzzles';
 
 import Puzzle from './game_components/Puzzle';
-import SquareInfo from './game_components/SquareInfo';
-import GroupInfo from './game_components/GroupInfo';
 
 import { mountListeners } from './listeners/listeners.js';
 
 export default class App {
 
   constructor(puzzleDiv, squareInfoDiv, groupInfoDiv){
-    this.puzzleDiv = puzzleDiv;
-    this.squareInfoDiv = squareInfoDiv;
-    this.groupInfoDiv = groupInfoDiv;
+    this.divs = { puzzleDiv, squareInfoDiv, groupInfoDiv }
+    this.opts = {
+      block: true,
+      autoElim: true,
+      limit: null
+    }
     this.init();
   }
 
@@ -21,13 +22,7 @@ export default class App {
 
   createPuzzle(puzzle) {
     this.puzzle = puzzle;
-    this.squareInfo = new SquareInfo(puzzle, this.squareInfoDiv);
-    this.groupInfo = new GroupInfo(puzzle, this.groupInfoDiv);
-
     this.puzzle.render();
-    this.squareInfo.render();
-    this.groupInfo.render();
-
     mountListeners(this);
   }
 
@@ -37,12 +32,12 @@ export default class App {
   }
 
   clearPuzzle(){
-    this.puzzleDiv.innerHTML = '';
-    this.puzzleDiv.className = 'gm-puzzle';
-    this.squareInfoDiv.innerHTML = '';
-    this.squareInfoDiv.className = 'gm-info gm-info-sqr';
-    this.groupInfoDiv.innerHTML = '';
-    this.groupInfoDiv.className = 'gm-info gm-info-grp';
+    this.divs.puzzleDiv.innerHTML = '';
+    this.divs.puzzleDiv.className = 'gm-puzzle';
+    this.divs.squareInfoDiv.innerHTML = '';
+    this.divs.squareInfoDiv.className = 'gm-info gm-info-sqr';
+    this.divs.groupInfoDiv.innerHTML = '';
+    this.divs.groupInfoDiv.className = 'gm-info gm-info-grp';
   }
 
   randomPuzzle() {
@@ -50,10 +45,10 @@ export default class App {
 
     this.resetPuzzle = () => {
       this.clearPuzzle();
-      this.createPuzzle(new Puzzle(puzzle, solution, this.puzzleDiv));
+      this.createPuzzle(new Puzzle(puzzle, solution, this.divs));
     }
 
-    return new Puzzle(puzzle, solution, this.puzzleDiv);
+    return new Puzzle(puzzle, solution, this.divs);
   }
 
 }
@@ -61,8 +56,8 @@ export default class App {
 
 // createPuzzle(puzzle){
 //   this.puzzle = puzzle;
-//   this.squareInfo = new SquareInfo(puzzle, this.squareInfoDiv);
-//   this.groupInfo = new GroupInfo(puzzle, this.groupInfoDiv);
+//   this.squareInfo = new SquareInfo(puzzle, this.divs.squareInfoDiv);
+//   this.groupInfo = new GroupInfo(puzzle, this.divs.groupInfoDiv);
 
 //   puzzle.render();
 
@@ -77,9 +72,9 @@ export default class App {
 //   const { puzzle, solution } = PUZZLES[Math.floor(Math.random() * PUZZLES.length)];
 
 //   this.resetPuzzle = () => {
-//     this.createPuzzle(new Puzzle(puzzle, solution, this.puzzleDiv));
+//     this.createPuzzle(new Puzzle(puzzle, solution, this.divs.puzzleDiv));
 //   }
 
-//   return new Puzzle(puzzle, solution, this.puzzleDiv);
+//   return new Puzzle(puzzle, solution, this.divs.puzzleDiv);
 // }
 // }

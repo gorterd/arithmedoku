@@ -9,27 +9,53 @@
 }
 
 .gm-info-nums {
-  display: flex;
-  flex-wrap: wrap;
   width: 100%;
+  height: 65%;
+  border-bottom: 2px dashed $ocean;
+  padding: 5% 0;
+
+  display: grid;
+  grid-template: [first] 1fr 1fr 1fr [last] / 3fr 1fr;
+  
+  &.small {
+    grid-template: [first] 1fr 1fr [last] / 3fr 1fr;
+  }
 }
 
 .info-num-wrapper {
-  font-size: 2rem;
+  font-size: 2.5rem;
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
-
+  // margin: 0 10px;
 }
 
 .info-num {
   &:hover { cursor: pointer; }
-  color: black;
-  opacity: 0.2;
-
+  color: darken($ocean, 5);
+  opacity: 0.3;
+  user-select: none;
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  &:hover {
+    opacity: 0.8;
+  }
+  
   &.selected {
-    color: $rose;
     opacity: 1;
+    border: 1px solid $ocean;
+    border-radius: 50%;
+  }
+  
+  &.ruled-in {
+    background-color: $robin-darker;
+    font-weight: 600;
+    transform: scale(1.1);
+    cursor: not-allowed;
   }
 
   &.ruled-out {
@@ -37,20 +63,46 @@
   }
 }
 
-.info-nums-checkall {
+.info-actions {
+  grid-area: 1 / 2 / last / 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.info-nums-check {
   height: 50px;
   width: 50px;
-  font-size: 2rem;
+  font-size: 3rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  color: black;
-  opacity: 0.2;
+  color: $ocean;
+  opacity: 0.3;
   cursor: pointer;
+  outline: none;
+  position: relative;
+
+  &:hover {
+    opacity: 0.5;
+  }
 
   &.selected {
-    color: $rose;
     opacity: 1;
+    transform: scale(1.1);
+
+    &::after {
+      position: absolute;
+      top: 15%;
+      left: 15%;
+      width: 70%;
+      height: 70%;
+      background-color: darken($mint, 35);
+      content: '';
+      z-index: -1;
+      border-radius: 40%;
+    }
   }
 }
 
@@ -68,6 +120,7 @@ and (min-width: $breakpoint-1) {
 
     &.show {
       display: flex;
+      opacity: 1;
     }
 
     &.leaving {

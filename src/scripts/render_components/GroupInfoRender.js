@@ -2,9 +2,8 @@ import InfoRender from "./InfoRender";
 
 export default class GroupInfoRender extends InfoRender {
 
-  constructor(root, groupInfo) {
-    super(root);
-    this.groupInfo = groupInfo;
+  constructor(puzzle) {
+    super(puzzle, puzzle.divs.groupInfoDiv);
   }
 
 }

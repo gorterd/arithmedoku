@@ -12,17 +12,63 @@
   <nav class="navbar"></nav>
   <section class="game">
     <header class="gm-header">
-      <button class='hd-btn hd-new'>new puzzle</button>
-      <button class='hd-btn hd-reset'>reset</button>
-      <button class='hd-menu'>menu</button>
+      <button class='hd-btn hd-options'>options
+        <ul>
+          <li>
+            <span class='tg-info'>
+              block contradictory moves
+              <span>
+                <i class="fas fa-info-circle"></i>
+                <span class='hvr-text'>
+                  prevent you from entering a number that already appears in the same row or column
+                </span>
+              </span>
+            </span>
+            <span class='hd-toggle on' id='tg-block'><span class='tg-circle'></span></span>
+          </li>
+          <li>
+            <span class='tg-info'>
+              auto-eliminate options
+              <span>
+                <i class="fas fa-info-circle"></i>
+                <span class='hvr-text'>
+                  when you enter a number, remove that number as an option from all the squares in the same row or column
+                </span>
+              </span>
+            </span>
+            <span class='hd-toggle on' id='tg-elim'><span class='tg-circle'></span></span>
+          </li>
+          <li>
+            <span class="tg-info">
+              only show options when <=  
+              <span>
+                <i class="fas fa-info-circle"></i>
+                <span class='hvr-text'>
+                  don't show the options in the square itself, unless you've narrowed it down to this number or less
+                </span>
+              </span>
+            </span>
+            <span class="hd-limit">
+              <input placeholder="x"></input>
+              <span class='error-msg'></span>
+            </span>
+          </li>
+        </ul>
+      </button>
+      <button class='hd-btn btn-std hd-new'>new puzzle</button>
+      <button class='hd-btn btn-std hd-reset'>reset</button>
+      <button class='hd-menu'><i class="fas fa-bars"></i></button>
     </header>
 
     <section class="gm-components">
       <div class='gm-info gm-info-sqr'>
         <div class='gm-info-nums'>
-          <button class='info-nums-checkall'>
-            <i class="far fa-check-square"></i>
-          </button>
+
+          <div class='info-actions'>
+            <button class='info-nums-check'>
+              <i class="fas fa-check-circle"></i>
+            </button>
+          </div>
         </div>
         <div class='gm-info-grps'>
 

@@ -3,19 +3,11 @@ import * as DOMUtil from '../dom_util';
 export function mountPuzzleListeners() {
   mountKeyboardListeners.call(this);
   mountClickListeners.call(this);
-  this.puzzleDiv.onblur = puzzleUnfocus.bind(this);
+  this.divs.puzzleDiv.onblur = puzzleUnfocus.bind(this);
 }
 
 function mountClickListeners() {
-  this.puzzleDiv.onclick = handleSquareClick.bind(this);
-  document.querySelector('.hd-new').onclick = e => {
-    e.target.blur();
-    this.newPuzzle.bind(this)
-  };
-  document.querySelector('.hd-reset').onclick = e => {
-    e.target.blur();
-    this.resetPuzzle.bind(this)
-  };
+  this.divs.puzzleDiv.onclick = handleSquareClick.bind(this);
 }
 
 function mountKeyboardListeners() {
@@ -79,14 +71,21 @@ function numKeyHandler(e) {
     const squareInp = DOMUtil.getSquareInp(square);
     squareInp.value = val;
 
-    let { conflictingSquares } = this.puzzle.checkConflicts(square, val);
-
-    console.log(conflictingSquares);
-    if (conflictingSquares.length) {
-      DOMUtil.handleConflicts(square, conflictingSquares);
-    } else {
-      this.puzzle.getSquare(square).val = val;
+    if (this.opts.block){
+      let conflictingSquares = this.puzzle.checkConflicts(square, val);
+  
+      if (conflictingSquares.length) {
+        DOMUtil.handleConflicts(square, conflictingSquares);
+        return null;
+      }
     }
+
+    if (this.opts.autoElim){
+      let affectedSquares = this.puzzle.autoEliminate(square, val);
+      DOMUtil.illumineSquares(affectedSquares);
+    }
+
+    this.puzzle.getSquare(square).val = val;
   }
 }
 
@@ -115,7 +114,7 @@ function ctrlNumHandler(e) {
 }
 
 function handleSquareClick(e) {
-  this.status.disableUnfocus = true;
+  this.status.disableUnfocus.puzzle = true;
   const squareDiv = e.target.parentElement;
   const square = squareDiv.dataset.pos
     .split(',')
@@ -131,13 +130,13 @@ function switchFocus(newSquare, newSquareDiv) {
     unfocusOldSquare.call(this);
   }
 
-  if (this.puzzleDiv !== document.activeElement) {
-    this.puzzleDiv.focus();
+  if (this.divs.puzzleDiv !== document.activeElement) {
+    this.divs.puzzleDiv.focus();
   };
 
   newSquareDiv.classList.add('focused');
-  this.squareInfo.setSquare(newSquare, !wasPrev);
-  this.groupInfo.setSquare(newSquare, !wasPrev);
+  this.puzzle.renderers.squareInfo.update(newSquare, !wasPrev);
+  // this.groupInfo.setSquare(newSquare, !wasPrev);
   this.puzzle.focusedSquare = newSquare;
 }
 
@@ -150,21 +149,23 @@ function unfocusOldSquare() {
 
 function puzzleUnfocus() {
   if (this.puzzle.focusedSquare) {
-    unfocusOldSquare.call(this);
-    this.status.disableUnfocus = false;
+    this.status.disableUnfocus.puzzle = false;
     window.setTimeout(() => {
-      if (!this.status.disableUnfocus) {
-        this.squareInfoDiv.classList.add('leaving');
-        this.groupInfoDiv.classList.add('leaving');
+      if (this.status.disableUnfocus.puzzle){
+        this.divs.puzzleDiv.focus();
+      } else {
+        unfocusOldSquare.call(this);
+        this.divs.squareInfoDiv.classList.add('leaving');
+        this.divs.groupInfoDiv.classList.add('leaving');
 
         window.setTimeout(() => {
-          this.squareInfo.clearSquare();
-          this.groupInfo.clearSquare();
-          this.squareInfoDiv.classList.remove('leaving');
-          this.groupInfoDiv.classList.remove('leaving');
+          this.puzzle.renderers.squareInfo.clear();
+          this.puzzle.renderers.groupInfo.clear();
+          this.divs.squareInfoDiv.classList.remove('leaving');
+          this.divs.groupInfoDiv.classList.remove('leaving');
         }, 200);
       }
-      this.status.disableUnfocus = false;
+      this.status.disableUnfocus.puzzle = false;
     }, 30);
   }
 }
