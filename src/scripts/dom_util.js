@@ -8,15 +8,23 @@ export const getSquareInp = square => {
 }
 
 export const handleConflicts = (square, conflictingSquares) => {
-  const conflictingDivs = conflictingSquares.map( sq => getSquareDiv(sq));
+  illumineSquares(conflictingSquares);
+  
   const squareInp = getSquareInp(square);
-
-  conflictingDivs.forEach( sq => sq.classList.add('conflicting'));
   squareInp.classList.add('mistake');
 
   window.setTimeout( () => {
-    conflictingDivs.forEach( sq => sq.classList.remove('conflicting'));
     squareInp.classList.remove('mistake');
     squareInp.value = '';
+  }, 600);
+}
+
+export const illumineSquares = squares => {
+  const squareDivs = squares.map(sq => getSquareDiv(sq));
+
+  squareDivs.forEach(sq => sq.classList.add('conflicting'));
+
+  window.setTimeout(() => {
+    squareDivs.forEach(sq => sq.classList.remove('conflicting'));
   }, 600);
 }

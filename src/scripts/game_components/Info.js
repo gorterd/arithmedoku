@@ -1,26 +1,27 @@
 export default class Info {
-  constructor(puzzle) {
+  constructor(puzzle, renderer) {
     this.puzzle = puzzle;
+    this.renderer = renderer;
     this.square = null;
   }
 
-  setSquare(square, isNew = false) {
+  setSquare(square, appearing = false) {
     this.square = square;
-    this.render({ newSquare: isNew });
+    this.render(square, { update: true, appearing });
   }
 
   clearSquare() {
     this.square = null;
-    this.render({ clearSquare: true });
+    this.render(null, { clear: true });
   }
 
-  render(opts = {}) {
-    if (opts.newSquare) {
-      this.renderer.show();
-    } else if (opts.clearSquare) {
+  render(square = null, opts = {}) {
+    if (opts.appearing) {
+      this.renderer.show(square);
+    } else if (opts.clear) {
       this.renderer.clear();
-    } else if (opts.updateSquare) {
-      this.renderer.update();
+    } else if (opts.update) {
+      this.renderer.update(square);
     } else {
       this.renderer.render();
     }

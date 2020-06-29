@@ -1,14 +1,15 @@
 export default class InfoRender {
 
-  constructor(root) {
+  constructor(puzzle, root) {
+    this.puzzle = puzzle;
     this.root = root;
   }
 
   render(){
-    
+
   }
   
-  update() {
+  update(square, appearing) {
   }
   
   show(){

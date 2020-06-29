@@ -12,6 +12,10 @@
   background: white;
 }
 
+.gm-puzzle-container {
+  position: relative;
+}
+
 .gm-square {
   position: relative;
   height: 100%;
@@ -79,6 +83,48 @@
   @include small($sm-pz-size, 9);
 }
 
+.sq-options {
+  position: absolute;
+  right: 5%;
+  left: 5%;
+  top: 40%;
+  bottom: 10%;
+  display: flex;
+  flex-flow: row-reverse wrap-reverse;
+  justify-content: center;
+  align-items: flex-start;
+  color: $ocean;
+  opacity: 0.5;
+  @include small($sm-pz-size, 9);
+  line-height: 1em;
+
+  >span {
+    flex-basis: 18%;
+    text-align: center;
+  }
+
+  &.limited,
+  &.flag {
+    top: 7%;
+    bottom: 0;
+    left: 70%;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+    flex-basis: 1%;
+  }
+}
+
+.attr {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  padding-top: 5px;
+  
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 
 // desktop
 
@@ -92,10 +138,13 @@ and (max-width: $breakpoint-1) {
 @media only screen 
 and (min-width: $breakpoint-1) 
 and (max-width: $breakpoint-2) {
+  .gm-puzzle-container {
+    grid-area: 1 / 2 / 3 / 3;
+  }
+
   .gm-puzzle {
     height: $md-pz-size;
     width: $md-pz-size;
-    grid-area: 1 / 2 / 3 / 3;
   }
 
   .cage-label {
@@ -104,6 +153,10 @@ and (max-width: $breakpoint-2) {
 
   .gm-square input {
     @include large($md-pz-size, 9)
+  }
+
+  .sq-options {
+    @include small($md-pz-size, 9);
   }
 }
 
@@ -119,6 +172,10 @@ and (max-width: $breakpoint-2) {
 
   .gm-square input {
     @include large($lg-pz-size, 9)
+  }
+
+  .sq-options {
+    @include small($lg-pz-size, 9);
   }
 }
 
