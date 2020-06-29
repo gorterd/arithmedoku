@@ -5,7 +5,7 @@ with a math twist, invented by Japanese math teacher [Tetsuya Miyamoto][6]
 
 What will set Arithmedoku apart from other remakes of KenKen is its advanced annotation and deduction tools. 
 
-The fun of paper puzzles is how easily you can create your own systems of annotation and sketch out your reasoning. Digital versions struggle in that regard. You end up just trying to remember more and notate less, which makes solving the puzzle less fun and more difficult.
+The fun of paper puzzles is how easily you can create your own systems of annotation and sketch out your reasoning. Digital versions struggle in that regard. You end up just trying to remember more and notate less, which makes solving the puzzle less fun & more difficult.
 
 All of the puzzles in Arithmedoku were written by Jim Bumgardner, aka Krazydad. He calls them Inkies. From the Krazydad [about page][2]:
 
