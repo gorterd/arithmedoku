@@ -5,14 +5,14 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const outputDir = "./dist";
 
 module.exports = {
-  entry: path.resolve(__dirname, "src", "index.js"),
+  entry: path.resolve(__dirname, "src", "new_scripts", "index.js"),
   output: {
     path: path.join(__dirname, outputDir),
     filename: "[name].js",
     publicPath: "/dist/"
   },
   resolve: {
-    extensions: [".js"] 
+    extensions: [".js"]
   },
   module: {
     rules: [
@@ -75,7 +75,7 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: "[name].css",
       chunkFilename: "[id].css",
-      ignoreOrder: false 
+      ignoreOrder: false
     }),
     require("autoprefixer")
   ]

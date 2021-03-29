@@ -1,4 +1,4 @@
-.game {
+.app {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -21,7 +21,7 @@ and (min-width: $breakpoint-1){
   // .gm-components {
   //   height: calc(100vh - #{$lg-hdr-height})
   // }
-  .game {
+  .app {
     height: calc(100vh - #{$lg-nav-height})
   }
 }

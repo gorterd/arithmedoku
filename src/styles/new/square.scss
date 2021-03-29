@@ -1,0 +1,105 @@
+.square {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  border-top: 1px solid grey;
+  border-left: 1px solid grey;
+  @include large($sm-pz-size, 9);
+
+  &::before {
+    position: absolute;
+    bottom: -2px;
+    top: -2px;
+    right: -2px;
+    left: -2px;
+    display: block;
+    z-index: 1;
+    content: '';
+  }
+
+  &:focus {
+    background-color: $robin-light;
+    outline: none;
+  }
+}
+
+.square--confict {
+  animation: fade-in-out 600ms 1;
+}
+
+.square--mistake {
+  animation: shake 600ms ease-in-out 50ms 1;
+}
+
+.square--top-bound::before {
+  border-top: 4px solid black;
+}
+
+.square--left-bound::before {
+  border-left: 4px solid black;
+}
+
+.square_options {
+  position: absolute;
+  right: 5%;
+  left: 5%;
+  top: 40%;
+  bottom: 10%;
+  display: flex;
+  flex-flow: row-reverse wrap-reverse;
+  justify-content: center;
+  align-items: flex-start;
+  color: $ocean;
+  opacity: 0.5;
+}
+
+.square_option {
+  display: none;
+}
+
+.square_option--show {
+  display: block;
+}
+
+.square_label {
+  position: absolute;
+  font-weight: bold;
+  left: 7%;
+  top: 7%;
+  @include small($lg-pz-size, 9);
+}
+
+@media only screen 
+and (min-width: $breakpoint-1) 
+and (max-width: $breakpoint-2) {
+
+  .square {
+    @include large($md-pz-size, 9)
+  }
+
+  .square_label {
+    @include small($md-pz-size, 9)
+  }
+
+  .square_options {
+    @include small($md-pz-size, 9);
+  }
+}
+
+@media only screen and (min-width: $breakpoint-2){
+  .square {
+    @include large($lg-pz-size, 9)
+  }
+
+  .square_label{
+    @include small($lg-pz-size, 9)
+  }
+
+  .square_options {
+    @include small($lg-pz-size, 9);
+  }
+}
+

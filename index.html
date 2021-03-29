@@ -1,44 +1,52 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang='en'>
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="dist/main.css">
-  <script src="https://kit.fontawesome.com/24cc9dca36.js" crossorigin="anonymous"></script>
-  <script src="dist/main.js"></script>
+  <meta charset='UTF-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+  <link rel='stylesheet' href='dist/main.css'>
+  <script src='https://kit.fontawesome.com/24cc9dca36.js' crossorigin='anonymous'></script>
+  <script src='dist/main.js'></script>
   <title>Arithmedoku</title>
 </head>
+
 <body>
-  <section class="game">
-    <header class="gm-header">
+  <section class='app'>
+    <header class='gm-header'>
       <div class='gm-header-left'>
         <button class='hd-btn hd-about'>about
           <div>
-            Arithmedoku is inspired by the popular puzzle game 
-            <a href="https://en.wikipedia.org/wiki/KenKen">KenKen</a>, 
-            a sudoku-like game with a math twist, invented by Japanese math teacher 
-            <a href="https://en.wikipedia.org/wiki/Tetsuya_Miyamoto">Tetsuya Miyamoto</a>.
+            Arithmedoku is inspired by the popular puzzle game
+            <a href='https://en.wikipedia.org/wiki/KenKen'>KenKen</a>,
+            a sudoku-like game with a math twist, invented by Japanese math teacher
+            <a href='https://en.wikipedia.org/wiki/Tetsuya_Miyamoto'>Tetsuya Miyamoto</a>.
             <br></br>
-            All of the puzzles in Arithmedoku were written by Jim Bumgardner, aka Krazydad. He calls them Inkies. From the Krazydad
-            <a href="https://krazydad.com/about.php">about page</a>:
-            
+            All of the puzzles in Arithmedoku were written by Jim Bumgardner, aka Krazydad. He calls them Inkies. From
+            the Krazydad
+            <a href='https://krazydad.com/about.php'>about page</a>:
+
             <p>
-This website has been offering free puzzles to the public since 2005. My mission is to provide puzzles to under-served groups that need them, including prisoners, pensioners, home-schoolers, hospitals, churches, and classrooms. There are currently about two million individual puzzles on the site, and over sixty unique varieties.
+              This website has been offering free puzzles to the public since 2005. My mission is to provide puzzles to
+              under-served groups that need them, including prisoners, pensioners, home-schoolers, hospitals, churches,
+              and classrooms. There are currently about two million individual puzzles on the site, and over sixty
+              unique varieties.
             </p>
             <br></br>
-            Check out the 
-            <a href="https://krazydad.com/">Krazydad website</a>, 
-            <a href="https://krazydad.com/inkies/">find more Inkies</a>, or 
-            <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=dad%40krazydad%2ecom&item_name=KrazyDad+-+Jim+Bumgardner+-+Free+Puzzles&item_number=PUZ-TP1VA&no_shipping=1&cn=Your%20comments%20are%20welcome&tax=0&currency_code=USD&bn=PP%2dDonationsBF&charset=UTF%2d8&return=https%3A%2F%2Fkrazydad.com%2F%3Fpaypal%3Dsuccess&cancel_return=https%3A%2F%2Fkrazydad.com%2F%3Fpaypal%3Dcancel&amount=10.0">donate to Krazydad's PayPal</a>.
+            Check out the
+            <a href='https://krazydad.com/'>Krazydad website</a>, or
+            <a href='https://krazydad.com/inkies/'>find more Inkies</a>.
           </div>
         </button>
         <button class='hd-btn hd-instructions'>instructions
           <ol>
             <li>Each row and colum contain each of the numbers 1 through 9, no repeats</li>
             <li>Cages are outlined in bold. They usually contain 2-4 squares.</li>
-            <li>In the upper left is a result, and an operation. Performing this operation on the numbers in the cage must produce the listed result.</li>
-            <li>E.g. a cage with two squares and label <span>42 x</span> could contain 6 and 7, since 6 * 7 = 42, but not 8 and 5, since 8 * 5 != 42.</li>
-            <li>You can note possible numbers in the box on the left. If you've noted every possibility, hit the checkmark to finalize them.</li>
+            <li>In the upper left is a result, and an operation. Performing this operation on the numbers in the cage
+              must produce the listed result.</li>
+            <li>E.g. a cage with two squares and label <span>42 x</span> could contain 6 and 7, since 6 * 7 = 42, but
+              not 8 and 5, since 8 * 5 != 42.</li>
+            <li>You can note possible numbers in the box on the left. If you've noted every possibility, hit the
+              checkmark to finalize them.</li>
           </ol>
         </button>
       </div>
@@ -63,7 +71,8 @@ This website has been offering free puzzles to the public since 2005. My mission
                 <span>
                   <i class="fas fa-info-circle"></i>
                   <span class='hvr-text'>
-                    when you enter a number, remove that number as an option from all the squares in the same row or column
+                    when you enter a number, remove that number as an option from all the squares in the same row or
+                    column
                   </span>
                 </span>
               </span>
@@ -71,13 +80,12 @@ This website has been offering free puzzles to the public since 2005. My mission
             </li>
             <li>
               <span class="tg-info">
-                only show options when <=  
-                <span>
+                only show options when <= <span>
                   <i class="fas fa-info-circle"></i>
                   <span class='hvr-text'>
                     don't show the options in the square itself, unless you've narrowed it down to this number or less
                   </span>
-                </span>
+              </span>
               </span>
               <span class="hd-limit">
                 <input placeholder="x"></input>
@@ -92,29 +100,46 @@ This website has been offering free puzzles to the public since 2005. My mission
       </div>
     </header>
 
-    <section class="gm-components">
-      <div class='gm-info gm-info-sqr'>
-        <div class='gm-info-nums'>
+    <section class='game'>
+      <div class='game_puzzle-container'>
+        <div class='puzzle'></div>
+        <a href='https://www.krazydad.com' class='attr'>puzzles by Jim Bumgardner, aka Krazydad</a>
+      </div>
 
-          <div class='info-actions'>
-            <button class='info-nums-check'>
-              <i class="fas fa-check-circle"></i>
+      <div class='info-box'>
+        <div class='info-box_nums'>
+          <div class='info-box_actions'>
+            <button class='info-box_select-btn'>
+              <i class='fas fa-check-circle'></i>
             </button>
           </div>
         </div>
-        <div class='gm-info-grps'>
+        <div class='info-box_filters'>
           <p>under construction</p>
         </div>
       </div>
-
-      <div class='gm-puzzle-container'>
-        <div class='gm-puzzle' tabindex="0"></div>
-        <a href='https://www.krazydad.com' class='attr'>puzzles by Jim Bumgardner, aka Krazydad</a> 
-      </div>
-
-      <div class='gm-info gm-info-grp'><p>under construction</p></div>
-
     </section>
   </section>
+
+  <template id='square-template'>
+    <div class='square' tabindex='-1'>
+      <span class='square_label'></span>
+      <span class='square_value'></span>
+      <div class='square_options'>
+        <span class='square_option' data-val='1'>1</span>
+        <span class='square_option' data-val='2'>2</span>
+        <span class='square_option' data-val='3'>3</span>
+        <span class='square_option' data-val='4'>4</span>
+        <span class='square_option' data-val='5'>5</span>
+        <span class='square_option' data-val='6'>6</span>
+        <span class='square_option' data-val='7'>7</span>
+        <span class='square_option' data-val='8'>8</span>
+        <span class='square_option' data-val='9'>9</span>
+      </div>
+    </div>
+  </template>
+
+
 </body>
+
 </html>

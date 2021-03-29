@@ -1,5 +1,5 @@
 // TO-DO: don't hardcode size of grid
-.gm-puzzle {
+.puzzle {
   display: grid;
   grid-template: repeat(9, 1fr) / repeat(9, 1fr);
   width: $sm-pz-size;
@@ -142,7 +142,7 @@ and (max-width: $breakpoint-2) {
     grid-area: 1 / 2 / 3 / 3;
   }
 
-  .gm-puzzle {
+  .puzzle {
     height: $md-pz-size;
     width: $md-pz-size;
   }
@@ -161,7 +161,7 @@ and (max-width: $breakpoint-2) {
 }
 
 @media only screen and (min-width: $breakpoint-2){
-  .gm-puzzle {
+  .puzzle {
     height: $lg-pz-size;
     width: $lg-pz-size;
   }
