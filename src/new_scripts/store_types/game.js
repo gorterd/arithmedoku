@@ -17,30 +17,21 @@ const Game = types
   })
   .views(self => {
     return {
-      get squares() {
-        return self.puzzle.squares
-      },
-      getSquareByPos(pos) {
-        return self.puzzle.getSquareByPos(pos)
-      },
-      getCollectionsBySquare(square) {
-        return self.puzzle.getCollectionsBySquare(square)
-      },
     }
   })
   .actions(self => {
     return {
       initialize({ cages, solution }) {
-        cages.forEach(cage => {
-          const { operation, result, squares } = cage
-          const cageStore = self.puzzle.cages.put({ operation, result })
+        cages.forEach(({ operation, result, squares }) => {
+          const cage = self.puzzle.cages.put({ operation, result })
 
           squares.forEach(position => {
-            cageStore.addSquare(self.puzzle.squares.put({
+            const square = self.puzzle.squares.put({
               position,
               solution: solution[position[0]][position[1]],
-              cage: cageStore.id
-            }))
+              cage: cage.id
+            })
+            cage.addSquare(square)
           })
         })
       },
@@ -50,11 +41,11 @@ const Game = types
       selectSquareByPos(pos) {
         self.ui.selectSquareByPos(pos)
       },
-      fillFocusedSquare(key) {
-        self.ui.focusedSquare.value = key
+      setFocusedSquare(value) {
+        self.ui.focusedSquare.value = value
       },
-      eraseFocusedSquare() {
-        self.ui.focusedSquare.value = null
+      clearFocusedSquare() {
+        self.setFocusedSquare(null)
       },
 
     }

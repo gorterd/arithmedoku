@@ -1,9 +1,11 @@
 import { getRoot, types } from 'mobx-state-tree'
+import { GameBase } from './base'
 import { Cage, Group } from './collections'
 import Square from './square'
 
-const UI = types
-  .model('UI', {
+const UI = GameBase
+  .named('UI')
+  .props({
     focusedSquare: types.maybeNull(types.reference(Square)),
     focusedGroup: types.maybeNull(types.union(
       types.reference(Group),
@@ -16,9 +18,6 @@ const UI = types
       get focusedPosition() {
         return self.focusedSquare?.position
       },
-      get puzzle() {
-        return getRoot(self).puzzle
-      }
     }
   })
   .actions(self => {
@@ -46,13 +45,13 @@ const UI = types
           }
         }
 
-        const newSquare = self.puzzle.getSquareByPos(newPos)
+        const newSquare = self.rootPuzzle.getSquareByPos(newPos)
         if (newSquare) {
           self.focusedSquare = newSquare
         }
       },
       selectSquareByPos(pos) {
-        self.focusedSquare = self.puzzle.getSquareByPos(pos)
+        self.focusedSquare = self.rootPuzzle.getSquareByPos(pos)
       },
     }
   })

@@ -1,10 +1,11 @@
 import { types } from 'mobx-state-tree'
 import { combinations, product, sum, quotient, difference } from '../util'
-import { Id, Filter } from './base'
+import { Id, Filter, GameBase } from './base'
 import Square from './square'
 
-const Collection = types
-  .model('Collection', {
+const Collection = GameBase
+  .named('Collection')
+  .props({
     id: Id,
     squares: types.array(types.reference(types.late(() => Square))),
     rules: types.optional(Filter, () => Filter.create()),

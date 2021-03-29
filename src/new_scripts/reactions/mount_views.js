@@ -8,19 +8,12 @@ export default ({ gameStore, puzzleEle, infoBoxEle }) => {
 
   const squareEles = new DocumentFragment()
 
-  gameStore.squares.forEach(square => {
+  gameStore.puzzle.squares.forEach(square => {
     const squareEle = mountSquare(square, squareTemplate)
     squareEles.appendChild(squareEle)
   })
 
   puzzleEle.appendChild(squareEles)
-
-  // document.querySelectorAll('.square').forEach(squareEle => {
-  //   const pos = extractPosFromSquare(squareEle)
-  //   const square = gameStore.getSquareByPos(pos)
-  //   // square.makeReactive()
-  //   mountSquare(square)
-  // })
 }
 
 /*

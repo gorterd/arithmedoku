@@ -25,8 +25,9 @@ export const GameBase = types
     }
   })
 
-export const Filter = types
-  .model('Filter', {
+export const Filter = GameBase
+  .named('Filter')
+  .props({
     includesAll: types.array(types.integer),
     includesOne: types.array(types.array(types.integer)),
     includesNone: types.array(types.integer),

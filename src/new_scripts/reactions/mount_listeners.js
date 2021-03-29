@@ -15,10 +15,10 @@ export default ({ gameStore, puzzleEle, infoBoxEle }) => {
         gameStore.selectSquareByKey(key)
         break
       case numMatch.test(key):
-        gameStore.fillFocusedSquare(parseInt(key))
+        gameStore.setFocusedSquare(parseInt(key))
         break
       case key === 'Delete' || key === 'Backspace':
-        gameStore.eraseFocusedSquare()
+        gameStore.clearFocusedSquare()
         break
     }
   })

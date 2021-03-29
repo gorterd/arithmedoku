@@ -1,11 +1,12 @@
 import { autorun } from 'mobx'
 import { getRoot, types } from 'mobx-state-tree'
 import { autorunEach, classes } from '../util'
-import { Id, Position } from './base'
+import { Id, Position, GameBase } from './base'
 import { Cage } from './collections'
 
-const Square = types
-  .model('Square', {
+const Square = GameBase
+  .named('Square')
+  .props({
     id: Id,
     position: Position,
     cage: types.maybeNull(types.reference(types.late(() => Cage))),
@@ -29,14 +30,8 @@ const Square = types
 
     return {
       views: {
-        get options() {
-          return getRoot(self).options
-        },
-        get ui() {
-          return getRoot(self).ui
-        },
         get collections() {
-          return getRoot(self).getCollectionsBySquare(self)
+          return self.rootPuzzle.getCollectionsBySquare(self)
         },
         get collectionPossibilities() {
           return initialPossibilities.filter(val =>
@@ -71,7 +66,7 @@ const Square = types
           return self.cage.bounds.leftSquares.includes(self)
         },
         get isFocused() {
-          return self.ui.focusedSquare === self
+          return self.rootUi.focusedSquare === self
         },
         get label() {
           return self.cage.anchor === self ? self.cage.labelText : ''
@@ -90,7 +85,7 @@ const Square = types
         },
         get showPossibilities() {
           return (
-            self.options.maxDisplayedPossibilities >= self.possibilities.length
+            self.rootOptions.maxDisplayedPossibilities >= self.possibilities.length
             && self.value === null
           )
         },

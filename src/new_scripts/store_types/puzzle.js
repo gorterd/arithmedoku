@@ -1,11 +1,12 @@
 import { types } from 'mobx-state-tree'
 import { nextId } from '../util'
-import { Id } from './base'
+import { Id, GameBase } from './base'
 import { Cage, Group } from './collections'
 import Square from './square'
 
-const Puzzle = types
-  .model('Puzzle', {
+const Puzzle = GameBase
+  .named('Puzzle')
+  .props({
     id: Id,
     uuid: types.optional(types.string, nextId),
     squares: types.map(Square),
