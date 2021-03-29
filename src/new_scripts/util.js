@@ -1,27 +1,25 @@
 export const combinations = (() => {
   const memo = {}
 
-  const recursiveCombinations = (min, max, numElements) => {
-    const rangeSize = max - min + 1
+  return function recursiveCombinations(numElements, min = 1, max = 9) {
+    const key = `${numElements},${min},${max}`
+    if (!memo[key]) {
+      const rangeSize = max - min + 1
 
-    if (numElements < 0 || numElements > rangeSize) {
-      throw new Error('Bad arguments.')
-    } else if (numElements === 0) {
-      return [[]]
-    } else if (numElements === rangeSize) {
-      return [Array.from(Array(numElements), (_, idx) => min + idx)]
-    } else {
-      const withMin = recursiveCombinations(min + 1, max, numElements - 1)
-        .map(combo => [min, ...combo])
-      const withoutMin = recursiveCombinations(min + 1, max, numElements)
+      if (numElements < 0 || numElements > rangeSize) {
+        throw new Error('Bad arguments.')
+      } else if (numElements === 0) {
+        memo[key] = [[]]
+      } else if (numElements === rangeSize) {
+        memo[key] = [Array.from(Array(numElements), (_, idx) => min + idx)]
+      } else {
+        const withMin = recursiveCombinations(numElements - 1, min + 1, max)
+          .map(combo => [min, ...combo])
+        const withoutMin = recursiveCombinations(numElements, min + 1, max)
 
-      return [...withMin, ...withoutMin]
+        memo[key] = [...withMin, ...withoutMin]
+      }
     }
-  }
-
-  return (num, upTo = 9) => {
-    const key = `${num},${upTo}`
-    memo[key] = memo[key] ?? recursiveCombinations(1, upTo, num)
 
     return memo[key]
   }

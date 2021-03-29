@@ -15,8 +15,11 @@ const Collection = types
       get numSquares() {
         return self.squares.length
       },
+      get allCombinations() {
+        return combinations(self.numSquares)
+      },
       get possibleCombinations() {
-        return combinations(self.numSquares).filter(self.isPossibleCombination)
+        return self.allCombinations.filter(self.isPossibleCombination)
       },
       isPossibleCombination(combo) {
         return (

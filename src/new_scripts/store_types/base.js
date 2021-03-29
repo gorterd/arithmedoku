@@ -34,8 +34,9 @@ export const Filter = types
   .views(self => ({
     isPossibleCombination(combo) {
       return (
-        self.includesAll.every(num => combo.includes(num))
-        && self.includesOne.every(array => array.some(num => combo.includes(num)))
+        self.includesAll
+          .every(num => combo.includes(num))
+        && self.includesOne.every(arr => arr.some(num => combo.includes(num)))
         && self.includesNone.every(num => !combo.includes(num))
       )
     },
