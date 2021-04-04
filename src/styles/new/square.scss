@@ -26,11 +26,11 @@
   }
 }
 
-.square--confict {
+.square--conflict {
   animation: fade-in-out 600ms 1;
 }
 
-.square--mistake {
+.square--mistake .square_value {
   animation: shake 600ms ease-in-out 50ms 1;
 }
 
@@ -42,7 +42,7 @@
   border-left: 4px solid black;
 }
 
-.square_options {
+.square_possibilities {
   position: absolute;
   right: 5%;
   left: 5%;
@@ -56,11 +56,11 @@
   opacity: 0.5;
 }
 
-.square_option {
+.square_possibility {
   display: none;
 }
 
-.square_option--show {
+.square_possibility--show {
   display: block;
 }
 
@@ -84,7 +84,7 @@ and (max-width: $breakpoint-2) {
     @include small($md-pz-size, 9)
   }
 
-  .square_options {
+  .square_possibilities {
     @include small($md-pz-size, 9);
   }
 }
@@ -98,7 +98,7 @@ and (max-width: $breakpoint-2) {
     @include small($lg-pz-size, 9)
   }
 
-  .square_options {
+  .square_possibilities {
     @include small($lg-pz-size, 9);
   }
 }

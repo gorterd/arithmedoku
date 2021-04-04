@@ -1,6 +1,5 @@
-import { autorun } from 'mobx'
-import { getRoot, types } from 'mobx-state-tree'
-import { autorunEach, classes } from '../util'
+import { flow, types } from 'mobx-state-tree'
+import { wait, classes } from '../util'
 import { Id, Position, GameBase } from './base'
 import { Cage } from './collections'
 
@@ -12,18 +11,10 @@ const Square = GameBase
     cage: types.maybeNull(types.reference(types.late(() => Cage))),
     value: types.maybeNull(types.integer),
     solution: types.integer,
-    eliminated: types.array(types.integer),
+    eliminatedValues: types.optional(types.array(types.integer), () => []),
     status: types.maybeNull(
       types.enumeration('Status', ['mistake', 'conflict'])
     ),
-  })
-  .volatile(self => {
-    return {
-      ele: null,
-      valNode: null,
-      labelEle: null,
-      optionsEle: null,
-    }
   })
   .extend(self => {
     const initialPossibilities = Array.from(Array(9), (_, idx) => idx + 1)
@@ -33,6 +24,22 @@ const Square = GameBase
         get collections() {
           return self.rootPuzzle.getCollectionsBySquare(self)
         },
+        get rowSquares() {
+          return self.rootPuzzle.getSquaresByRow(self.row)
+            .filter(square => square !== self)
+        },
+        get colSquares() {
+          return self.rootPuzzle.getSquaresByCol(self.col)
+            .filter(square => square !== self)
+        },
+        get rowColSquares() {
+          return [...self.rowSquares, ...self.colSquares]
+        },
+        get rowColValues() {
+          return self.rowColSquares
+            .map(square => square.value)
+            .filter(val => typeof val === 'number')
+        },
         get collectionPossibilities() {
           return initialPossibilities.filter(val =>
             self.collections.every(c => c.isPossibleValue(val))
@@ -40,12 +47,18 @@ const Square = GameBase
         },
         get squarePossiblities() {
           return initialPossibilities.filter(val =>
-            !self.eliminated.includes(val)
+            !self.eliminatedValues.includes(val)
           )
         },
-        get possibilities() {
+        get squareAndCollectionPossibilities() {
           return self.collectionPossibilities
             .filter(val => self.squarePossiblities.includes(val))
+        },
+        get possibilities() {
+          return typeof self.value === 'number'
+            ? [self.value]
+            : self.squareAndCollectionPossibilities
+              .filter(val => !self.isAutoEliminatedValue(val))
         },
         get dataPos() {
           return self.position.join(',')
@@ -58,6 +71,9 @@ const Square = GameBase
         },
         get isCorrect() {
           return self.value === self.solution
+        },
+        get isConflicting() {
+          return self.conflictingSquares.length > 0
         },
         get isTopSquare() {
           return self.cage.bounds.topSquares.includes(self)
@@ -83,7 +99,7 @@ const Square = GameBase
         get inlineStyle() {
           return `grid-area: ${self.row + 1} / ${self.col + 1} / span 1 / span 1;`
         },
-        get showPossibilities() {
+        get shouldShowPossibilities() {
           return (
             self.rootOptions.maxDisplayedPossibilities >= self.possibilities.length
             && self.value === null
@@ -94,22 +110,55 @@ const Square = GameBase
           const ele = template.content.firstElementChild.cloneNode(true)
           ele.dataset.pos = self.dataPos
           return ele
-          // return `
-          //   <div 
-          //     class='${self.className}'
-          //     style='${self.inlineStyle}'
-          //     data-pos='${self.dataPos}'
-          //     tabindex='-1'
-          //   >
-          //     <span class='square_label'>${self.label}</span>
-          //     <div class='square_options'></div>
-          //   </div>
-          // `
         },
-        optionClassName(val) {
-          return self.showPossibilities && self.possibilities.includes(val)
-            ? 'square_option square_option--show'
-            : 'square_option'
+        conflictingSquares(val) {
+          return val === null
+            ? []
+            : self.rowColSquares.filter(square => square.value === val)
+        },
+        isPossibleValue(val) {
+          return val === null || val === self.value
+            ? true
+            : self.possibilities.includes(val)
+        },
+        isSquareEliminatedValue(val) {
+          return self.eliminatedValues.includes(val)
+        },
+        isCollectionEliminatedValue(val) {
+          return (
+            self.squarePossiblities.includes(val)
+            && !self.collectionPossibilities.includes(val)
+          )
+        },
+        isAutoEliminatedValue(val) {
+          return (
+            self.rootOptions.autoEliminate
+            && self.squareAndCollectionPossibilities.includes(val)
+            && self.rowColValues.includes(val)
+          )
+        },
+        isActiveMistake(val) {
+          return self.status === 'mistake' && self.value === val
+        },
+        possibilityClassName(val) {
+          return self.shouldShowPossibilities && self.possibilities.includes(val)
+            ? 'square_possibility square_possibility--show'
+            : 'square_possibility'
+        },
+        infoPossibilityClassName(val) {
+          return classes(
+            'square-info_possibility',
+            [self.isPossibleValue(val),
+              'square-info_possibility--possible'],
+            [self.isActiveMistake(val),
+              'square-info_possibility--mistake'],
+            [self.isCollectionEliminatedValue(val),
+              'square-info_possibility--collectionEliminated'],
+            [self.isSquareEliminatedValue(val),
+              'square-info_possibility--squareEliminated'],
+            [self.isAutoEliminatedValue(val),
+              'square-info_possibility--autoEliminated'],
+          )
         },
         isBelow(otherSquare) {
           return (
@@ -152,38 +201,37 @@ const Square = GameBase
           return otherSquare.isLogicalSupersetOf(self)
         }
       },
-    }
-  })
-  .actions(self => {
-    return {
-      setupEles() {
-        self.ele = document.querySelector(`.square[data-pos="${self.dataPos}"`)
-        self.optionsEle = self.ele.querySelector('.square_options')
-        self.labelEle = self.ele.querySelector('.square_label')
-        self.valNode = self.ele.appendChild(document.createTextNode(''))
-      },
-    }
-  })
-  .actions(self => {
-    const reactiveActions = {
-      renderValNode() {
-        self.valNode.data = self.value
-      },
-      renderClassName() {
-        self.ele.className = self.className
-      },
-      renderLabel() {
-        self.labelEle.innerText = self.label
-      },
-      renderOptions() {
-        self.optionsEle.innerHTML = self.optionsInnerHtml
-      },
-    }
+      actions: {
+        setMistake: flow(function* setMistake(val) {
+          const oldVal = self.value
+          self.value = val
+          self.status = 'mistake'
+          yield wait(self.globals.mistakeTimeoutMs)
+          self.status = null
+          self.value = oldVal
+        }),
+        setConflict: flow(function* setConflict() {
+          self.status = 'conflict'
+          yield wait(self.globals.mistakeTimeoutMs)
+          self.status = null
+        }),
+        eliminateValue(val) {
+          if (!self.eliminatedValues.includes(val)) {
+            self.eliminatedValues.push(val)
+          }
+        },
+        uneliminateValue(val) {
+          const valIndex = self.eliminatedValues.indexOf(val)
 
-    return {
-      ...reactiveActions,
-      makeReactive: () => Object.values(reactiveActions)
-        .forEach(fn => autorun(fn))
+          if (valIndex >= 0) {
+            self.eliminatedValues.splice(valIndex, 1)
+          }
+        },
+        setPossibilities(nums) {
+          self.eliminatedValues = initialPossibilities
+            .filter(num => !nums.includes(num))
+        }
+      }
     }
   })
 

@@ -1,4 +1,4 @@
-import { getRoot, types } from 'mobx-state-tree'
+import { types } from 'mobx-state-tree'
 import { GameBase } from './base'
 import { Cage, Group } from './collections'
 import Square from './square'

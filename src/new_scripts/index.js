@@ -1,5 +1,5 @@
 import '../styles/index.scss'
-import { unprotect } from 'mobx-state-tree'
+import { unprotect, getPropertyMembers } from 'mobx-state-tree'
 import { connectReduxDevtools } from 'mst-middlewares'
 import remotedev from 'remotedev'
 import puzzle_01 from './data/puzzle_01'
@@ -20,6 +20,10 @@ document.addEventListener('DOMContentLoaded', () => {
       consideration: null,
       implication: null,
     },
+    globals: {
+      size: 9,
+      mistakeTimeoutMs: 600,
+    }
   }
 
   const gameStore = Game.create({}, env)
@@ -35,4 +39,11 @@ document.addEventListener('DOMContentLoaded', () => {
   connectReduxDevtools(remotedev, gameStore)
   unprotect(gameStore)
   window.gameStore = gameStore
+
+  window.sq = gameStore.puzzle.getSquareByPos([0, 1])
+  window.c = window.sq.cage
+  window.r = window.c.rules
+  window.combo = [8, 9]
+  window.incone = [1, 2, 3, 4, 5]
+  window.getPropertyMembers = getPropertyMembers
 })

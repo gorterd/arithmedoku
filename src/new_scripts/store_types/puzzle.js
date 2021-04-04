@@ -40,6 +40,14 @@ const Puzzle = GameBase
 
         return posToIdMap[strPos]
       },
+      getSquaresByRow(row) {
+        return self.squaresArray
+          .filter(square => square.row === row)
+      },
+      getSquaresByCol(col) {
+        return self.squaresArray
+          .filter(square => square.col === col)
+      },
       getCollectionsBySquare(square) {
         return self.collections.filter(c => c.squares.includes(square))
       },

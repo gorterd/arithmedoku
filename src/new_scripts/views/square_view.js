@@ -15,10 +15,13 @@ function createSquare(square, template) {
 function makeSquareReactive(square, squareEle) {
   const labelEle = squareEle.querySelector('.square_label')
   const valueEle = squareEle.querySelector('.square_value')
-  const optionEles = squareEle.querySelectorAll('.square_option')
+  const possibilityEles = squareEle.querySelectorAll('.square_possibility')
 
-  const optionReactions = Array.from(optionEles).map(optionEle =>
-    () => optionEle.className = square.optionClassName(optionEle.dataset.val)
+  const possibilityReactions = Array.from(possibilityEles).map(possibilityEle =>
+    () => {
+      const val = possibilityEle.dataset.val
+      possibilityEle.className = square.possibilityClassName(val)
+    }
   )
 
   const reactions = [
@@ -37,7 +40,7 @@ function makeSquareReactive(square, squareEle) {
     function focusSquare() {
       if (square.isFocused) squareEle.focus()
     },
-    ...optionReactions
+    ...possibilityReactions
   ]
 
   const disposers = reactions.map(fn => autorun(fn))

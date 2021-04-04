@@ -23,6 +23,7 @@ module.exports = {
           options: {
             presets: ["@babel/preset-env"],
             plugins: ["@babel/plugin-proposal-optional-chaining"],
+            plugins: ["@babel/plugin-transform-runtime"],
             exclude: /node_modules/
           }
         }

@@ -1,5 +1,5 @@
-import { types, getRoot } from 'mobx-state-tree'
-import { nextId } from '../util'
+import { types, getRoot, getEnv } from 'mobx-state-tree'
+import { nextId, includesArray, indexOfArray } from '../util'
 
 export const Id = types.optional(types.identifier, nextId)
 
@@ -21,12 +21,18 @@ export const GameBase = types
       },
       get rootPuzzle() {
         return getRoot(self).puzzle
+      },
+      get env() {
+        return getEnv(self)
+      },
+      get globals() {
+        return self.env?.globals
       }
     }
   })
 
-export const Filter = GameBase
-  .named('Filter')
+export const Rules = GameBase
+  .named('Rules')
   .props({
     includesAll: types.array(types.integer),
     includesOne: types.array(types.array(types.integer)),
@@ -35,8 +41,7 @@ export const Filter = GameBase
   .views(self => ({
     isPossibleCombination(combo) {
       return (
-        self.includesAll
-          .every(num => combo.includes(num))
+        self.includesAll.every(num => combo.includes(num))
         && self.includesOne.every(arr => arr.some(num => combo.includes(num)))
         && self.includesNone.every(num => !combo.includes(num))
       )
@@ -48,4 +53,44 @@ export const Filter = GameBase
       return self.includesNone.includes(value)
     }
   }))
+  .actions(self => {
+    return {
+      requireValue(val) {
+        if (!self.includesAll.includes(val)) {
+          self.includesAll.push(val)
+        }
+      },
+      unrequireValue(val) {
+        const valIndex = self.includesAll.indexOf(val)
+
+        if (valIndex >= 0) {
+          self.includesAll.splice(valIndex, 1)
+        }
+      },
+      eliminateValue(val) {
+        if (!self.includesNone.includes(val)) {
+          self.includesNone.push(val)
+        }
+      },
+      uneliminateValue(val) {
+        const valIndex = self.includesNone.indexOf(val)
+
+        if (valIndex >= 0) {
+          self.includesNone.splice(valIndex, 1)
+        }
+      },
+      requireOneOfValues(valArray) {
+        if (!includesArray(self.includesOne, valArray)) {
+          self.includesOne.push(valArray)
+        }
+      },
+      unrequireOneOfValues(valArray) {
+        const valArrayIndex = indexOfArray(self.includesOne, valArray)
+
+        if (valArrayIndex >= 0) {
+          self.includesOne.splice(valArrayIndex, 1)
+        }
+      },
+    }
+  })
 

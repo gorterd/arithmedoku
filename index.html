@@ -11,11 +11,13 @@
 </head>
 
 <body>
-  <section class='app'>
-    <header class='gm-header'>
-      <div class='gm-header-left'>
-        <button class='hd-btn hd-about'>about
-          <div>
+  <main class='app'>
+
+    <header class='header'>
+      <div class='header_left'>
+        <button id='header-about' class='header_button'>
+          about
+          <div class='header_dropdown header_dropdown--info'>
             Arithmedoku is inspired by the popular puzzle game
             <a href='https://en.wikipedia.org/wiki/KenKen'>KenKen</a>,
             a sudoku-like game with a math twist, invented by Japanese math teacher
@@ -37,8 +39,9 @@
             <a href='https://krazydad.com/inkies/'>find more Inkies</a>.
           </div>
         </button>
-        <button class='hd-btn hd-instructions'>instructions
-          <ol>
+        <button id='header-instructions' class='header_button'>
+          instructions
+          <ol class='header_dropdown header_dropdown--list header_dropdown--ordered'>
             <li>Each row and colum contain each of the numbers 1 through 9, no repeats</li>
             <li>Cages are outlined in bold. They usually contain 2-4 squares.</li>
             <li>In the upper left is a result, and an operation. Performing this operation on the numbers in the cage
@@ -50,96 +53,209 @@
           </ol>
         </button>
       </div>
-      <div class='gm-header-right'>
-        <button class='hd-btn hd-options'>options
-          <ul>
-            <li>
-              <span class='tg-info'>
+      <div class='header_right'>
+        <button id='header-options' class='header_button'>
+          options
+          <ul class='header_dropdown header_options'>
+            <li class='option'>
+              <span class='option_info'>
                 block contradictory moves
                 <span>
                   <i class="fas fa-info-circle"></i>
-                  <span class='hvr-text'>
-                    prevent you from entering a number that already appears in the same row or column
+                  <span class='option_hover-text'>
+                    prevents you from entering a number that's eliminated as a possibility
                   </span>
                 </span>
               </span>
-              <span class='hd-toggle on' id='tg-block'><span class='tg-circle'></span></span>
+              <span id='option-auto-block' class='toggle toggle--on'>
+                <span class='toggle_circle'></span>
+              </span>
             </li>
-            <li>
-              <span class='tg-info'>
-                auto-eliminate options
+            <li class='option'>
+              <span class='option_info'>
+                auto-eliminate possibilities
                 <span>
                   <i class="fas fa-info-circle"></i>
-                  <span class='hvr-text'>
-                    when you enter a number, remove that number as an option from all the squares in the same row or
+                  <span class='option_hover-text'>
+                    when you enter a number, remove that number as a possibility from all the squares in the same row or
                     column
                   </span>
                 </span>
               </span>
-              <span class='hd-toggle on' id='tg-elim'><span class='tg-circle'></span></span>
+              <span id='option-auto-elim' class='toggle toggle--on'>
+                <span class='toggle_circle'></span>
+              </span>
             </li>
-            <li>
-              <span class="tg-info">
-                only show options when <= <span>
+            <li class='option'>
+              <span class="option_info">
+                max possibilities to display in square
+                <span>
                   <i class="fas fa-info-circle"></i>
-                  <span class='hvr-text'>
-                    don't show the options in the square itself, unless you've narrowed it down to this number or less
+                  <span class='option_hover-text'>
+                    don't display the possibilites in the square itself, unless you've narrowed it down to this number
+                    or less
                   </span>
+                </span>
               </span>
-              </span>
-              <span class="hd-limit">
-                <input placeholder="x"></input>
-                <span class='error-msg'></span>
+              <span id='option-max-possibilities' class='option_num'>
+                <input class='option_num-input' placeholder="x"></input>
+                <span class='option_error'></span>
               </span>
             </li>
           </ul>
         </button>
-        <button class='hd-btn hd-new'>new puzzle</button>
-        <button class='hd-btn hd-reset'>reset</button>
-        <!-- <button class='hd-btn hd-menu'><i class="fas fa-bars"></i></button> -->
+        <button id='header-new' class='header_button'>new puzzle</button>
+        <button id='header-reset' class='header_button'>reset</button>
       </div>
     </header>
 
     <section class='game'>
-      <div class='game_puzzle-container'>
+      <div class='puzzle-container'>
         <div class='puzzle'></div>
-        <a href='https://www.krazydad.com' class='attr'>puzzles by Jim Bumgardner, aka Krazydad</a>
+        <a href='https://www.krazydad.com' class='puzzle-container_attribution'>
+          puzzles by Jim Bumgardner, aka Krazydad
+        </a>
       </div>
 
       <div class='info-box'>
-        <div class='info-box_nums'>
-          <div class='info-box_actions'>
-            <button class='info-box_select-btn'>
+        <div class='square-info'>
+          <ol class='square-info_possibilities'>
+            <li class='square-info_possibility' data-val='1'>1</li>
+            <li class='square-info_possibility' data-val='2'>2</li>
+            <li class='square-info_possibility' data-val='3'>3</li>
+            <li class='square-info_possibility' data-val='4'>4</li>
+            <li class='square-info_possibility' data-val='5'>5</li>
+            <li class='square-info_possibility' data-val='6'>6</li>
+            <li class='square-info_possibility' data-val='7'>7</li>
+            <li class='square-info_possibility' data-val='8'>8</li>
+            <li class='square-info_possibility' data-val='9'>9</li>
+          </ol>
+          <div class='square-info_actions'>
+            <button class='square-info_select-only'>
               <i class='fas fa-check-circle'></i>
             </button>
           </div>
         </div>
-        <div class='info-box_filters'>
-          <p>under construction</p>
+        <div class='collection-info'>
+          <ul class='collection-combos'>
+
+          </ul>
+          <div class='collection-rules'>
+            <ol class='collection-rules_includes-all'></ol>
+            <ol class='collection-rules_includes-one'></ol>
+            <ol class='collection-rules_includes-none'></ol>
+          </div>
         </div>
       </div>
     </section>
-  </section>
+  </main>
 
   <template id='square-template'>
     <div class='square' tabindex='-1'>
       <span class='square_label'></span>
       <span class='square_value'></span>
-      <div class='square_options'>
-        <span class='square_option' data-val='1'>1</span>
-        <span class='square_option' data-val='2'>2</span>
-        <span class='square_option' data-val='3'>3</span>
-        <span class='square_option' data-val='4'>4</span>
-        <span class='square_option' data-val='5'>5</span>
-        <span class='square_option' data-val='6'>6</span>
-        <span class='square_option' data-val='7'>7</span>
-        <span class='square_option' data-val='8'>8</span>
-        <span class='square_option' data-val='9'>9</span>
-      </div>
+      <ol class='square_possibilities'>
+        <li class='square_possibility' data-val='1'>1</li>
+        <li class='square_possibility' data-val='2'>2</li>
+        <li class='square_possibility' data-val='3'>3</li>
+        <li class='square_possibility' data-val='4'>4</li>
+        <li class='square_possibility' data-val='5'>5</li>
+        <li class='square_possibility' data-val='6'>6</li>
+        <li class='square_possibility' data-val='7'>7</li>
+        <li class='square_possibility' data-val='8'>8</li>
+        <li class='square_possibility' data-val='9'>9</li>
+      </ol>
     </div>
   </template>
-
-
 </body>
+<section hidden id='deprecated'>
+  <header class='gm-header'>
+    <div class='gm-header-left'>
+      <button class='hd-btn hd-about'>about
+        <div>
+          Arithmedoku is inspired by the popular puzzle game
+          <a href='https://en.wikipedia.org/wiki/KenKen'>KenKen</a>,
+          a sudoku-like game with a math twist, invented by Japanese math teacher
+          <a href='https://en.wikipedia.org/wiki/Tetsuya_Miyamoto'>Tetsuya Miyamoto</a>.
+          <br></br>
+          All of the puzzles in Arithmedoku were written by Jim Bumgardner, aka Krazydad. He calls them Inkies. From
+          the Krazydad
+          <a href='https://krazydad.com/about.php'>about page</a>:
+
+          <p>
+            This website has been offering free puzzles to the public since 2005. My mission is to provide puzzles to
+            under-served groups that need them, including prisoners, pensioners, home-schoolers, hospitals, churches,
+            and classrooms. There are currently about two million individual puzzles on the site, and over sixty
+            unique varieties.
+          </p>
+          <br></br>
+          Check out the
+          <a href='https://krazydad.com/'>Krazydad website</a>, or
+          <a href='https://krazydad.com/inkies/'>find more Inkies</a>.
+        </div>
+      </button>
+      <button class='hd-btn hd-instructions'>instructions
+        <ol>
+          <li>Each row and colum contain each of the numbers 1 through 9, no repeats</li>
+          <li>Cages are outlined in bold. They usually contain 2-4 squares.</li>
+          <li>In the upper left is a result, and an operation. Performing this operation on the numbers in the cage
+            must produce the listed result.</li>
+          <li>E.g. a cage with two squares and label <span>42 x</span> could contain 6 and 7, since 6 * 7 = 42, but
+            not 8 and 5, since 8 * 5 != 42.</li>
+          <li>You can note possible numbers in the box on the left. If you've noted every possibility, hit the
+            checkmark to finalize them.</li>
+        </ol>
+      </button>
+    </div>
+    <div class='gm-header-right'>
+      <button class='hd-btn hd-options'>options
+        <ul>
+          <li>
+            <span class='tg-info'>
+              block contradictory moves
+              <span>
+                <i class="fas fa-info-circle"></i>
+                <span class='hvr-text'>
+                  prevent you from entering a number that already appears in the same row or column
+                </span>
+              </span>
+            </span>
+            <span class='hd-toggle on' id='tg-block'><span class='tg-circle'></span></span>
+          </li>
+          <li>
+            <span class='tg-info'>
+              auto-eliminate options
+              <span>
+                <i class="fas fa-info-circle"></i>
+                <span class='hvr-text'>
+                  when you enter a number, remove that number as an option from all the squares in the same row or
+                  column
+                </span>
+              </span>
+            </span>
+            <span class='hd-toggle on' id='tg-elim'><span class='tg-circle'></span></span>
+          </li>
+          <li>
+            <span class="tg-info">
+              only show options when <= <span>
+                <i class="fas fa-info-circle"></i>
+                <span class='hvr-text'>
+                  don't show the options in the square itself, unless you've narrowed it down to this number or less
+                </span>
+            </span>
+            </span>
+            <span class="hd-limit">
+              <input placeholder="x"></input>
+              <span class='error-msg'></span>
+            </span>
+          </li>
+        </ul>
+      </button>
+      <button class='hd-btn hd-new'>new puzzle</button>
+      <button class='hd-btn hd-reset'>reset</button>
+      <!-- <button class='hd-btn hd-menu'><i class="fas fa-bars"></i></button> -->
+    </div>
+  </header>
+</section>
 
 </html>
