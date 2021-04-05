@@ -44,5 +44,4 @@ function makeSquareReactive(square, squareEle) {
   ]
 
   const disposers = reactions.map(fn => autorun(fn))
-  window.disposers = disposers
 }

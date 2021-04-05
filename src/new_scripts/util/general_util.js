@@ -74,6 +74,21 @@ export const areEqualArrays = (a, b) => (
   && a.every((ele, idx) => ele === b[idx])
 )
 
+export const arrayUnion = (a, b) => {
+  const aCounts = {}
+  a.forEach(ele => aCounts[ele] = aCounts[ele] ? aCounts[ele] + 1 : 1)
+
+  const union = []
+  b.forEach(ele => {
+    if (aCounts[ele] && aCounts[ele] > 0) {
+      aCounts[ele]--
+      union.push(ele)
+    }
+  })
+
+  return union
+}
+
 export const includesArray = (outerArray, innerArray) =>
   outerArray.some(subArray => areEqualArrays(subArray, innerArray))
 
@@ -135,23 +150,6 @@ export const difference = ([a, b]) => {
 export const quotient = ([a, b]) => {
   const [larger, smaller] = a > b ? [a, b] : [b, a]
   return larger / smaller
-}
-
-// TODO: implement an AVL BST https://en.wikipedia.org/wiki/AVL_tree
-export class ArrayBST {
-  static compare(arr1, arr2) {
-    return arr1.length === 0
-      ? 0
-      : Math.sign(arr1[0] - arr2[0]) === 0
-        ? this.compare(arr1.slice(1), arr2.slice(1))
-        : 0
-  }
-  constructor(arrays) {
-
-  }
-  insert() { }
-  remove() { }
-  includes() { }
 }
 
 function deepClone(obj) {

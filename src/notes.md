@@ -35,6 +35,7 @@
   - when erasing a square, go back to point in game where you added it
   - redo
   - note pad
+  - label cages / squares with a chess like notation, for logging when creating an implication
 
   ## Info
   - collection info
@@ -152,3 +153,25 @@ group possibilities subset of considerations
 
 active:
 mode: ['primary', null], ['consider', int], ['implication', int]
+
+# Implication: Brain Dump
+- from main, need to go back
+  -- back: rehydrate most recent snapshot in history
+- from main, need to compare with implications
+  * each implication is a tuple of two snapshot ids, an if and a then
+  * compare: rehydrate an implication to compare
+- from main, need to start implication
+  * 
+- from `if` or `then`, go back to main
+  * rehydrate main snapshot
+- from `if`, compare with main
+  * stage main for comparison
+- from `then`, compare with `if`
+  * stage `if` for comparison
+
+implications: [
+  (if snapshot, then snapshot)
+],
+curMain: snapshot,
+curIf: snapshot,
+staged: an orphan mobx puzzle store that is rehydrated for comparison

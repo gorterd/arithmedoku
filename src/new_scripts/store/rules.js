@@ -1,37 +1,8 @@
-import { types, getRoot, getEnv } from 'mobx-state-tree'
-import { nextId, includesArray, indexOfArray } from '../util'
+import { types } from 'mobx-state-tree'
+import { includesArray, indexOfArray } from '../util/general_util'
+import { GameBase } from './base'
 
-export const Id = types.optional(types.identifier, nextId)
-
-export const Position = types.refinement(
-  'Position',
-  types.array(types.integer),
-  array => array.length === 2
-)
-
-export const GameBase = types
-  .model('GameBase')
-  .views(self => {
-    return {
-      get rootOptions() {
-        return getRoot(self).options
-      },
-      get rootUi() {
-        return getRoot(self).ui
-      },
-      get rootPuzzle() {
-        return getRoot(self).puzzle
-      },
-      get env() {
-        return getEnv(self)
-      },
-      get globals() {
-        return self.env?.globals
-      }
-    }
-  })
-
-export const Rules = GameBase
+const Rules = GameBase
   .named('Rules')
   .props({
     includesAll: types.array(types.integer),
@@ -94,3 +65,4 @@ export const Rules = GameBase
     }
   })
 
+export default Rules

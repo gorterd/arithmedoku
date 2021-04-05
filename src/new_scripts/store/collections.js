@@ -9,8 +9,9 @@ import {
   difference,
   includesDistinct,
   maxPossibleRepeats,
-} from '../util'
-import { Id, Rules, GameBase } from './base'
+} from '../util/general_util'
+import { Id, GameBase } from './base'
+import Rules from './rules'
 import Square from './square'
 
 const Collection = GameBase
@@ -50,7 +51,7 @@ const Collection = GameBase
       get allCombinations() {
         return combinations(self.numSquares, ({
           min: 1,
-          max: self.globals.size,
+          max: self.env.globals.size,
           numRepeatsAllowed: self.numPossibleRepeats
         }))
       },

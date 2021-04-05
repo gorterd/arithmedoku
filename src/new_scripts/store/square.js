@@ -1,5 +1,5 @@
 import { flow, types } from 'mobx-state-tree'
-import { wait, classes } from '../util'
+import { wait, classes, arrayUnion } from '../util/general_util'
 import { Id, Position, GameBase } from './base'
 import { Cage } from './collections'
 
@@ -189,16 +189,18 @@ const Square = GameBase
           }
         },
         isLogicalSupersetOf(otherSquare) {
-          if (self.value) {
-            return self.value === otherSquare.value
-          } else if (otherSquare.value) {
-            return self.isPossibility(otherSquare.value)
-          } else {
-            return otherSquare.possibilities.every(self.isPossibility)
-          }
+          return otherSquare.possibilities.every(self.isPossibleValue)
         },
         isLogicalSubsetOf(otherSquare) {
           return otherSquare.isLogicalSupersetOf(self)
+        },
+        isConsistentWith(otherSquare) {
+          const possibilityOverlap = arrayUnion(
+            otherSquare.possibilities,
+            self.possibilities
+          )
+
+          return possibilityOverlap.length > 0
         }
       },
       actions: {
@@ -206,13 +208,13 @@ const Square = GameBase
           const oldVal = self.value
           self.value = val
           self.status = 'mistake'
-          yield wait(self.globals.mistakeTimeoutMs)
+          yield wait(self.env.globals.mistakeTimeoutMs)
           self.status = null
           self.value = oldVal
         }),
         setConflict: flow(function* setConflict() {
           self.status = 'conflict'
-          yield wait(self.globals.mistakeTimeoutMs)
+          yield wait(self.env.globals.mistakeTimeoutMs)
           self.status = null
         }),
         eliminateValue(val) {
