@@ -152,6 +152,44 @@ export const quotient = ([a, b]) => {
   return larger / smaller
 }
 
+export const stringSwitch = (
+  input,
+  casesFn,
+  {
+    fallthrough = false,
+    multipleMatches = false
+  } = {}
+) => {
+  if (typeof input !== 'string') {
+    throw new Error('First argument to stringSwitch must be a string')
+  } else if (typeof casesFn !== 'function') {
+    throw new Error('Second argument to stringSwitch must be a function')
+  }
+  let matched = false
+
+  function _case(...args) {
+    const { exec, isMatch } = _parseCaseArgs(args)
+
+    const shouldExecByMatch = isMatch(input) && (!matched || multipleMatches)
+    const shouldExecByFallthrough = matched && fallthrough
+
+    if (shouldExecByMatch || shouldExecByFallthrough) {
+      matched = true
+      exec(input)
+    }
+  }
+
+  function _default(exec) {
+    if (typeof exec !== 'function') {
+      throw new Error('Argument to default function must be a function')
+    }
+
+    if (!matched || fallthrough) exec(input)
+  }
+
+  casesFn(_case, _default)
+}
+
 function deepClone(obj) {
   switch (obj.constructor.name) {
     case 'Object':
@@ -162,5 +200,29 @@ function deepClone(obj) {
       return obj.map(ele => deepClone(ele))
     default:
       return obj
+  }
+}
+
+function _parseCaseArgs(args) {
+  const exec = args.pop()
+  if (typeof exec !== 'function') {
+    throw new Error('Last argument to case function must be a callback to execute if the case matches')
+  }
+
+  const isMatch = input => args.every(matcher => _parseMatcher(matcher)(input))
+  return { exec, isMatch }
+}
+function _parseMatcher(matcher) {
+  switch (matcher.constructor.name) {
+    case 'RegExp':
+      return input => matcher.test(input)
+    case 'String':
+      return input => matcher === input
+    case 'Boolean':
+      return () => matcher
+    case 'Array':
+      return input => matcher.some(sub => _parseMatcher(sub)(input))
+    default:
+      throw new Error('Matcher arguments to case function must be a string, regular expression, boolean, or array of such')
   }
 }

@@ -50,8 +50,21 @@ const Game = GameBase
           self.ui.focusedSquare.value = value
         }
       },
+      eliminateFocusedSquarePossibility(value) {
+        if (self.ui.focusedSquare.isSquareEliminatedValue(value)) {
+          self.ui.focusedSquare.uneliminatePossibility(value)
+        } else {
+          self.ui.focusedSquare.eliminatePossibility(value)
+        }
+      },
+      setFocusedSquarePossibilities(values) {
+        self.ui.focusedSquare.setPossibilities(values)
+      },
       clearFocusedSquare() {
         self.setFocusedSquare(null)
+      },
+      clearFocus() {
+        self.ui.focusedSquare = null
       },
       enterIf() {
         const mainSnapshotId = takePuzzleSnapshot()

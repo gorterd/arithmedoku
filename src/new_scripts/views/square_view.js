@@ -1,25 +1,22 @@
 import { autorun } from 'mobx'
 
-export default function mountSquare(square, template) {
-  const ele = createSquare(square, template)
-  makeSquareReactive(square, ele)
-  return ele
-}
-
-function createSquare(square, template) {
-  const ele = template.cloneNode(true)
-  ele.dataset.pos = square.dataPos
-  return ele
+export default function createSquare(square, template) {
+  const squareEle = template.cloneNode(true)
+  squareEle.dataset.pos = square.dataPos
+  makeSquareReactive(square, squareEle)
+  return squareEle
 }
 
 function makeSquareReactive(square, squareEle) {
-  const labelEle = squareEle.querySelector('.square_label')
-  const valueEle = squareEle.querySelector('.square_value')
-  const possibilityEles = squareEle.querySelectorAll('.square_possibility')
+  const {
+    labelEle,
+    valueEle,
+    possibilityEles
+  } = getSquareElements(squareEle)
 
   const possibilityReactions = Array.from(possibilityEles).map(possibilityEle =>
     () => {
-      const val = possibilityEle.dataset.val
+      const val = parseInt(possibilityEle.dataset.val)
       possibilityEle.className = square.possibilityClassName(val)
     }
   )
@@ -38,10 +35,21 @@ function makeSquareReactive(square, squareEle) {
       squareEle.style = square.inlineStyle
     },
     function focusSquare() {
-      if (square.isFocused) squareEle.focus()
+      if (square.isFocused) {
+        squareEle.focus()
+      }
     },
     ...possibilityReactions
   ]
 
   const disposers = reactions.map(fn => autorun(fn))
+  return disposers
+}
+
+function getSquareElements(squareEle) {
+  return {
+    labelEle: squareEle.querySelector('.square_label'),
+    valueEle: squareEle.querySelector('.square_value'),
+    possibilityEles: squareEle.querySelectorAll('.square_possibility')
+  }
 }

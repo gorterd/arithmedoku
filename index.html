@@ -56,7 +56,7 @@
       <div class='header_right'>
         <button id='header-options' class='header_button'>
           options
-          <ul class='header_dropdown options'>
+          <ul class='header_dropdown header_dropdown--list options'>
             <li class='option'>
               <span class='option_info'>
                 block contradictory moves
@@ -87,6 +87,20 @@
               </span>
             </li>
             <li class='option'>
+              <span class='option_info'>
+                auto-eliminate mathematical impossibilities
+                <span>
+                  <i class="fas fa-info-circle"></i>
+                  <span class='option_hover-text'>
+                    only certain combinations of numbers can mathematically appear in a cage; eliminate those that can't
+                  </span>
+                </span>
+              </span>
+              <span id='option-auto-elim-math-impossibilities' class='toggle toggle--on'>
+                <span class='toggle_circle'></span>
+              </span>
+            </li>
+            <li class='option'>
               <span class="option_info">
                 max possibilities to display in square
                 <span>
@@ -104,6 +118,7 @@
             </li>
           </ul>
         </button>
+        <button id='header-undo' class='header_button'>undo</button>
         <button id='header-new' class='header_button'>new puzzle</button>
         <button id='header-reset' class='header_button'>reset</button>
       </div>

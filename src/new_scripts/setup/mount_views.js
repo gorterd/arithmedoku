@@ -1,7 +1,8 @@
-import mountSquare from '../views/square_view'
+import { setupHeaderListeners } from '../views/header_view'
+import { setupOptions } from '../views/options_view'
+import createSquare from '../views/square_view'
 
-export default ({ gameStore, puzzleEle, infoBoxEle }) => {
-
+export default ({ gameStore, puzzleEle, infoBoxEle, optionsEle }) => {
   const squareTemplate = document
     .getElementById('square-template')
     .content.firstElementChild
@@ -9,11 +10,14 @@ export default ({ gameStore, puzzleEle, infoBoxEle }) => {
   const squareEles = new DocumentFragment()
 
   gameStore.puzzle.squares.forEach(square => {
-    const squareEle = mountSquare(square, squareTemplate)
+    const squareEle = createSquare(square, squareTemplate)
     squareEles.appendChild(squareEle)
   })
 
   puzzleEle.appendChild(squareEles)
+
+  setupHeaderListeners(gameStore)
+  setupOptions(gameStore.options, optionsEle)
 }
 
 /*

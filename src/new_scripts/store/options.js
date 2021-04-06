@@ -3,21 +3,38 @@ import { GameBase } from './base'
 const Options = GameBase
   .named('Options')
   .props({
-    autoEliminate: true,
     autoBlock: true,
+    autoEliminate: true,
     autoElimMathImpossibilities: true,
     maxDisplayedPossibilities: 4,
+  })
+  .views(self => {
+    const toggleClassName = isActive => isActive
+      ? 'toggle toggle--on'
+      : 'toggle'
+
+    return {
+      get autoBlockClassName() {
+        return toggleClassName(self.autoBlock)
+      },
+      get autoElimClassName() {
+        return toggleClassName(self.autoEliminate)
+      },
+      get autoElimMathImpossibilitiesClassName() {
+        return toggleClassName(self.autoElimMathImpossibilities)
+      },
+    }
   })
   .actions(self => {
     return {
       setOption(option, val) {
         self[option] = val
       },
-      toggleAutoEliminate() {
-        self.autoEliminate = !self.autoEliminate
-      },
       toggleAutoBlock() {
         self.autoBlock = !self.autoBlock
+      },
+      toggleAutoEliminate() {
+        self.autoEliminate = !self.autoEliminate
       },
       toggleAutoElimMathImpossibilities() {
         self.autoElimMathImpossibilities = !self.autoElimMathImpossibilities

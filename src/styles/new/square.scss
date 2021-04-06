@@ -42,6 +42,11 @@
   border-left: 4px solid black;
 }
 
+.square_value {
+  position: relative;
+  top: 5px;
+}
+
 .square_possibilities {
   position: absolute;
   right: 5%;
@@ -49,15 +54,16 @@
   top: 40%;
   bottom: 10%;
   display: flex;
-  flex-flow: row-reverse wrap-reverse;
+  flex-flow: wrap;
   justify-content: center;
-  align-items: flex-start;
+  align-items: flex-end;
   color: $ocean;
   opacity: 0.5;
 }
 
 .square_possibility {
   display: none;
+  padding: 0 1px;
 }
 
 .square_possibility--show {

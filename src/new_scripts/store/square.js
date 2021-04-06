@@ -11,7 +11,7 @@ const Square = GameBase
     cage: types.maybeNull(types.reference(types.late(() => Cage))),
     value: types.maybeNull(types.integer),
     solution: types.integer,
-    eliminatedValues: types.optional(types.array(types.integer), () => []),
+    eliminatedPossibilities: types.optional(types.array(types.integer), () => []),
     status: types.maybeNull(
       types.enumeration('Status', ['mistake', 'conflict'])
     ),
@@ -47,7 +47,11 @@ const Square = GameBase
         },
         get squarePossiblities() {
           return initialPossibilities.filter(val =>
-            !self.eliminatedValues.includes(val)
+            !self.eliminatedPossibilities.includes(val)
+            && (
+              self.setPossibilities.length === 0
+              || self.setPossibilities.includes(val)
+            )
           )
         },
         get squareAndCollectionPossibilities() {
@@ -122,7 +126,7 @@ const Square = GameBase
             : self.possibilities.includes(val)
         },
         isSquareEliminatedValue(val) {
-          return self.eliminatedValues.includes(val)
+          return self.eliminatedPossibilities.includes(val)
         },
         isCollectionEliminatedValue(val) {
           return (
@@ -217,22 +221,22 @@ const Square = GameBase
           yield wait(self.env.globals.mistakeTimeoutMs)
           self.status = null
         }),
-        eliminateValue(val) {
-          if (!self.eliminatedValues.includes(val)) {
-            self.eliminatedValues.push(val)
+        eliminatePossibility(val) {
+          if (!self.eliminatedPossibilities.includes(val)) {
+            self.eliminatedPossibilities.push(val)
           }
         },
-        uneliminateValue(val) {
-          const valIndex = self.eliminatedValues.indexOf(val)
+        uneliminatePossibility(val) {
+          const valIndex = self.eliminatedPossibilities.indexOf(val)
 
           if (valIndex >= 0) {
-            self.eliminatedValues.splice(valIndex, 1)
+            self.eliminatedPossibilities.splice(valIndex, 1)
           }
         },
-        setPossibilities(nums) {
-          self.eliminatedValues = initialPossibilities
-            .filter(num => !nums.includes(num))
-        }
+        setPossibilities(vals) {
+          self.eliminatedPossibilities = initialPossibilities
+            .filter(num => !vals.includes(num))
+        },
       }
     }
   })
