@@ -5,7 +5,7 @@ const Options = GameBase
   .props({
     autoBlock: true,
     autoEliminate: true,
-    autoElimMathImpossibilities: true,
+    autoElimMathImpossibilities: false,
     maxDisplayedPossibilities: 4,
   })
   .views(self => {

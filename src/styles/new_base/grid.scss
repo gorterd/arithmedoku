@@ -1,0 +1,50 @@
+// All Grids
+@mixin grid-container($rows, $cols) {
+  display: grid;
+  grid-template: repeat(#{$rows}, 1fr) / repeat(#{$cols}, 1fr);
+}
+
+// Ordinal Grid
+@function ord-template-areas-row($min, $max) {
+  $row-string: 'o' + $min;
+  @for $val from $min + 1 through $max {
+    $row-string: $row-string + ' o' + $val;
+  }
+  @return '\"#{$row-string}\"';
+}
+
+@function ord-template-areas($rows, $cols) {
+  $area: ord-template-areas-row(1, $cols);
+
+  @for $row from 2 through $rows {
+    $min-val: 1 + $cols * ($row - 1);
+    $max-val: $min-val + $cols - 1;
+    $area: $area + ' ' + ord-template-areas-row($min-val, $max-val);
+  }
+
+  @return #{$area};
+}
+
+@mixin ord-grid-container($rows, $cols) {
+  @include grid-container($rows, $cols);
+  grid-template-areas: ord-template-areas($rows, $cols);
+}
+
+@mixin ord-grid-element($min-val, $max-val) {
+  @for $val from $min-val through $max-val {
+    &[data-val="#{$val}"] {
+      grid-area: #{'o' + $val};
+    }
+  }
+}
+
+// Coordinate-Based Grid
+@mixin coord-grid-element($rows, $cols) {
+  @for $row from 1 through $rows {
+    @for $col from 1 through $cols {
+      &[data-pos^="#{$row - 1},#{$col - 1}"] {
+        grid-area: #{$row} / #{$col};
+      }
+    }
+  }
+}

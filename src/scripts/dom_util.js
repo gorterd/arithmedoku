@@ -9,11 +9,11 @@ export const getSquareInp = square => {
 
 export const handleConflicts = (square, conflictingSquares) => {
   illumineSquares(conflictingSquares);
-  
+
   const squareInp = getSquareInp(square);
   squareInp.classList.add('mistake');
 
-  window.setTimeout( () => {
+  window.setTimeout(() => {
     squareInp.classList.remove('mistake');
     squareInp.value = '';
   }, 600);
@@ -28,3 +28,5 @@ export const illumineSquares = squares => {
     squareDivs.forEach(sq => sq.classList.remove('conflicting'));
   }, 600);
 }
+
+e

@@ -146,8 +146,21 @@
             <li class='square-info_possibility' data-val='9'>9</li>
           </ol>
           <div class='square-info_actions'>
-            <button class='square-info_select-only'>
-              <i class='fas fa-check-circle'></i>
+            <button id='square-info_select-only' class='square-info_btn'>
+              <span class='square-info_icon'>
+                <i class='far fa-check-circle'></i>
+              </span>
+              <span class='square-info_staging-icon'>
+                <i class='fas fa-check-circle'></i>
+              </span>
+            </button>
+            <button id='square-info_clear' class='square-info_btn'>
+              <span class='square-info_icon'>
+                <i class='fas fa-eraser'></i>
+              </span>
+              <span class='square-info_staging-icon'>
+                <i class='fas fa-undo-alt'></i>
+              </span>
             </button>
           </div>
         </div>
@@ -167,6 +180,8 @@
 
   <template id='square-template'>
     <div class='square' tabindex='-1'>
+      <span class='square_cage-top'></span>
+      <span class='square_cage-left'></span>
       <span class='square_label'></span>
       <span class='square_value'></span>
       <ol class='square_possibilities'>

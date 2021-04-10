@@ -2,18 +2,36 @@ import { autorun } from 'mobx'
 
 export default function createSquare(square, template) {
   const squareEle = template.cloneNode(true)
-  squareEle.dataset.pos = square.dataPos
-  makeSquareReactive(square, squareEle)
+  const squareElements = getSquareElements(squareEle)
+
+  setupSquare(square, squareElements)
+  makeSquareReactive(square, squareElements)
+
   return squareEle
 }
 
-function makeSquareReactive(square, squareEle) {
-  const {
-    labelEle,
-    valueEle,
-    possibilityEles
-  } = getSquareElements(squareEle)
+function setupSquare(square, {
+  squareEle,
+  label,
+  cageTop,
+  cageLeft,
+}) {
+  squareEle.dataset.pos = square.dataPos
+  label.innerText = square.label
 
+  if (!square.isCageTop) {
+    cageTop.remove()
+  }
+  if (!square.isCageLeft) {
+    cageLeft.remove()
+  }
+}
+
+function makeSquareReactive(square, {
+  squareEle,
+  value,
+  possibilityEles
+}) {
   const possibilityReactions = Array.from(possibilityEles).map(possibilityEle =>
     () => {
       const val = parseInt(possibilityEle.dataset.val)
@@ -23,21 +41,10 @@ function makeSquareReactive(square, squareEle) {
 
   const reactions = [
     function renderValNode() {
-      valueEle.innerText = square.value
+      value.innerText = square.displayedValue
     },
     function renderClassName() {
       squareEle.className = square.className
-    },
-    function renderLabel() {
-      labelEle.innerText = square.label
-    },
-    function renderInlineStyle() {
-      squareEle.style = square.inlineStyle
-    },
-    function focusSquare() {
-      if (square.isFocused) {
-        squareEle.focus()
-      }
     },
     ...possibilityReactions
   ]
@@ -48,8 +55,11 @@ function makeSquareReactive(square, squareEle) {
 
 function getSquareElements(squareEle) {
   return {
-    labelEle: squareEle.querySelector('.square_label'),
-    valueEle: squareEle.querySelector('.square_value'),
+    squareEle,
+    cageTop: squareEle.querySelector('.square_cage-top'),
+    cageLeft: squareEle.querySelector('.square_cage-left'),
+    label: squareEle.querySelector('.square_label'),
+    value: squareEle.querySelector('.square_value'),
     possibilityEles: squareEle.querySelectorAll('.square_possibility')
   }
 }

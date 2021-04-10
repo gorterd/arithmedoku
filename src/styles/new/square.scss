@@ -1,29 +1,38 @@
 .square {
+  @include large($sm-pz-size, 9);
+  @include coord-grid-element(9, 9);
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100%;
   width: 100%;
+  outline: none;
   border-top: 1px solid grey;
   border-left: 1px solid grey;
-  @include large($sm-pz-size, 9);
+}
 
-  &::before {
-    position: absolute;
-    bottom: -2px;
-    top: -2px;
-    right: -2px;
-    left: -2px;
-    display: block;
-    z-index: 1;
-    content: '';
-  }
+.square_cage-top,
+.square_cage-left {
+  position: absolute;
+  z-index: 1;
+  background: black;
+}
 
-  &:focus {
-    background-color: $robin-light;
-    outline: none;
-  }
+.square_cage-top {
+  top: -2px;
+  height: 3px;
+  width: calc(100% + 3px);
+}
+
+.square_cage-left {
+  left: -2px;
+  width: 3px;
+  height: calc(100% + 3px);
+}
+
+.square--focused {
+  background-color: $robin-light;
 }
 
 .square--conflict {
@@ -34,12 +43,12 @@
   animation: shake 600ms ease-in-out 50ms 1;
 }
 
-.square--top-bound::before {
-  border-top: 4px solid black;
+.square[data-pos^="0"] {
+  border-top: none;
 }
 
-.square--left-bound::before {
-  border-left: 4px solid black;
+.square[data-pos$="0"] {
+  border-left: none;
 }
 
 .square_value {
@@ -48,22 +57,20 @@
 }
 
 .square_possibilities {
+  @include ord-grid-container(3, 3);
   position: absolute;
-  right: 5%;
-  left: 5%;
-  top: 40%;
-  bottom: 10%;
-  display: flex;
-  flex-flow: wrap;
-  justify-content: center;
-  align-items: flex-end;
+  right: 10%;
+  left: 15%;
+  bottom: 5%;
+  justify-items: end;
   color: $ocean;
   opacity: 0.5;
 }
 
 .square_possibility {
+  @include ord-grid-element(1, 9);
   display: none;
-  padding: 0 1px;
+  line-height: 95%;
 }
 
 .square_possibility--show {
@@ -74,7 +81,7 @@
   position: absolute;
   font-weight: bold;
   left: 7%;
-  top: 7%;
+  top: 5%;
   @include small($lg-pz-size, 9);
 }
 

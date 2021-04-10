@@ -1,55 +1,44 @@
 import { ARROW_REGEX, NUM_REGEX } from '../util/constants'
 import { extractPosFromEvent } from '../util/dom_util'
-import { stringSwitch } from '../util/general_util'
+import { getDirFromCode, getNumFromCode, stringSwitch } from '../util/general_util'
 
 
-export default ({ gameStore, puzzleEle }) => {
-  puzzleEle.addEventListener('focusout', e => {
-    window.setTimeout(() => {
-      if (!puzzleEle.contains(document.activeElement)) {
-        gameStore.clearFocus()
-      }
-    }, 30)
+export default ({ gameStore, puzzleEle, infoBoxEle }) => {
+  document.addEventListener('click', e => {
+    if (!puzzleEle.contains(e.target) && !infoBoxEle.contains(e.target)) {
+      gameStore.clearFocus()
+    }
   })
 
   puzzleEle.addEventListener('click', e => {
     gameStore.selectSquareByPos(extractPosFromEvent(e))
   })
 
-  let altMode = false
-  let altNums = []
   document.addEventListener('keydown', e => {
     if (!gameStore.ui.focusedSquare) return
-    const key = e.key
+    e.preventDefault()
 
-    stringSwitch(key, (kase, def) => {
-      kase(e.altKey, !altMode, () => {
-        altMode = true
-
-        const onAltUp = function onAltUp(upEvent) {
-          if (upEvent.key === 'Alt') {
-            if (altNums.length > 0) {
-              gameStore.setFocusedSquarePossibilities(altNums)
-            }
-            altMode = false
-            altNums = []
-            document.removeEventListener('keyup', onAltUp)
-          }
-        }
-
-        document.addEventListener('keyup', onAltUp)
-      })
-      kase(!altMode, NUM_REGEX, e.ctrlKey, () =>
-        gameStore.eliminateFocusedSquarePossibility(parseInt(key)))
-      kase(altMode, NUM_REGEX, () => altNums.push(parseInt(key)))
-      kase(!altMode, NUM_REGEX, () =>
-        gameStore.setFocusedSquare(parseInt(key)))
-      kase(!altMode, ARROW_REGEX, () =>
-        gameStore.selectSquareByKey(key))
-      kase(!altMode, ['Delete', 'Backspace'], () =>
+    stringSwitch(e.code, (kase, def) => {
+      kase(/^Alt/, () =>
+        gameStore.beginStaging())
+      kase(!e.altKey, e.ctrlKey, NUM_REGEX, () =>
+        gameStore.toggleFocusedSquarePossibility(getNumFromCode(e.code)))
+      kase(!e.altKey, NUM_REGEX, () =>
+        gameStore.setFocusedSquare(getNumFromCode(e.code)))
+      kase(e.altKey, NUM_REGEX, () =>
+        gameStore.toggleStagedPossibility(getNumFromCode(e.code)))
+      kase(!e.altKey, ARROW_REGEX, () =>
+        gameStore.selectSquareByDir(getDirFromCode(e.code)))
+      kase(!e.altKey, ['Delete', 'Backspace'], () =>
         gameStore.clearFocusedSquare())
-      def(() =>
-        console.log(key, e.ctrlKey))
+      kase(e.altKey, ['Delete', 'Backspace'], () =>
+        gameStore.clearStagedPossibilities())
     })
+  })
+
+  document.addEventListener('keyup', e => {
+    if (e.key === 'Alt') {
+      gameStore.stopStaging()
+    }
   })
 }

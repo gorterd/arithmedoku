@@ -10,10 +10,12 @@ const Square = GameBase
     position: Position,
     cage: types.maybeNull(types.reference(types.late(() => Cage))),
     value: types.maybeNull(types.integer),
+    mistakeValue: types.maybeNull(types.integer),
     solution: types.integer,
     eliminatedPossibilities: types.optional(types.array(types.integer), () => []),
-    status: types.maybeNull(
-      types.enumeration('Status', ['mistake', 'conflict'])
+    status: types.optional(
+      types.enumeration('Status', ['none', 'mistake', 'conflict']),
+      () => 'none'
     ),
   })
   .extend(self => {
@@ -48,10 +50,6 @@ const Square = GameBase
         get squarePossiblities() {
           return initialPossibilities.filter(val =>
             !self.eliminatedPossibilities.includes(val)
-            && (
-              self.setPossibilities.length === 0
-              || self.setPossibilities.includes(val)
-            )
           )
         },
         get squareAndCollectionPossibilities() {
@@ -76,37 +74,48 @@ const Square = GameBase
         get isCorrect() {
           return self.value === self.solution
         },
-        get isConflicting() {
-          return self.conflictingSquares.length > 0
+        get isCageTop() {
+          return self.row > 0 && self.cage.bounds.topSquares.includes(self)
         },
-        get isTopSquare() {
-          return self.cage.bounds.topSquares.includes(self)
-        },
-        get isLeftSquare() {
-          return self.cage.bounds.leftSquares.includes(self)
+        get isCageLeft() {
+          return self.col > 0 && self.cage.bounds.leftSquares.includes(self)
         },
         get isFocused() {
           return self.rootUi.focusedSquare === self
         },
+        get isStaging() {
+          return self.isFocused && self.rootUi.isStaging
+        },
+        get hasEliminations() {
+          return self.eliminatedPossibilities.length > 0
+        },
         get label() {
           return self.cage.anchor === self ? self.cage.labelText : ''
+        },
+        get displayedValue() {
+          return self.status === 'mistake'
+            ? self.mistakeValue
+            : self.value
+        },
+        get displayedPossibilities() {
+          return self.isStaging
+            ? self.rootUi.stagedPossibilities
+            : self.possibilities
         },
         get className() {
           return classes(
             'square',
-            [self.isTopSquare, 'square--top-bound'],
-            [self.isLeftSquare, 'square--left-bound'],
             [self.status === 'mistake', 'square--mistake'],
             [self.status === 'conflict', 'square--conflict'],
+            [self.isFocused, 'square--focused'],
           )
-        },
-        get inlineStyle() {
-          return `grid-area: ${self.row + 1} / ${self.col + 1} / span 1 / span 1;`
         },
         get shouldShowPossibilities() {
           return (
-            self.rootOptions.maxDisplayedPossibilities >= self.possibilities.length
+            self.rootOptions.maxDisplayedPossibilities >=
+            self.displayedPossibilities.length
             && self.value === null
+            && self.mistakeValue === null
           )
         },
         get initialHtml() {
@@ -142,26 +151,38 @@ const Square = GameBase
           )
         },
         isActiveMistake(val) {
-          return self.status === 'mistake' && self.value === val
+          return self.status === 'mistake' && self.mistakeValue === val
         },
         possibilityClassName(val) {
-          return self.shouldShowPossibilities && self.possibilities.includes(val)
+          return (
+            self.shouldShowPossibilities
+            && self.displayedPossibilities.includes(val)
+          )
             ? 'square_possibility square_possibility--show'
             : 'square_possibility'
+        },
+        infoPossibilityStagingClassName(val) {
+          return self.rootUi.stagedPossibilities.includes(val)
+            ? 'square-info_possibility--possible'
+            : 'square-info_possibility--squareEliminated'
         },
         infoPossibilityClassName(val) {
           return classes(
             'square-info_possibility',
-            [self.isPossibleValue(val),
-              'square-info_possibility--possible'],
-            [self.isActiveMistake(val),
-              'square-info_possibility--mistake'],
-            [self.isCollectionEliminatedValue(val),
-              'square-info_possibility--collectionEliminated'],
-            [self.isSquareEliminatedValue(val),
-              'square-info_possibility--squareEliminated'],
-            [self.isAutoEliminatedValue(val),
-              'square-info_possibility--autoEliminated'],
+            self.isStaging
+              ? self.infoPossibilityStagingClassName(val)
+              : classes(
+                [self.isPossibleValue(val),
+                  'square-info_possibility--possible'],
+                [self.isActiveMistake(val),
+                  'square-info_possibility--mistake'],
+                [self.isCollectionEliminatedValue(val),
+                  'square-info_possibility--collectionEliminated'],
+                [self.isSquareEliminatedValue(val),
+                  'square-info_possibility--squareEliminated'],
+                [self.isAutoEliminatedValue(val),
+                  'square-info_possibility--autoEliminated'],
+              )
           )
         },
         isBelow(otherSquare) {
@@ -209,33 +230,29 @@ const Square = GameBase
       },
       actions: {
         setMistake: flow(function* setMistake(val) {
-          const oldVal = self.value
-          self.value = val
+          self.mistakeValue = val
           self.status = 'mistake'
           yield wait(self.env.globals.mistakeTimeoutMs)
-          self.status = null
-          self.value = oldVal
+          self.status = 'none'
+          self.mistakeValue = null
         }),
         setConflict: flow(function* setConflict() {
           self.status = 'conflict'
           yield wait(self.env.globals.mistakeTimeoutMs)
-          self.status = null
+          self.status = 'none'
         }),
-        eliminatePossibility(val) {
-          if (!self.eliminatedPossibilities.includes(val)) {
-            self.eliminatedPossibilities.push(val)
-          }
-        },
-        uneliminatePossibility(val) {
+        togglePossibility(val) {
           const valIndex = self.eliminatedPossibilities.indexOf(val)
 
           if (valIndex >= 0) {
             self.eliminatedPossibilities.splice(valIndex, 1)
+          } else {
+            self.eliminatedPossibilities.push(val)
           }
         },
-        setPossibilities(vals) {
+        setStagedPossibilities() {
           self.eliminatedPossibilities = initialPossibilities
-            .filter(num => !vals.includes(num))
+            .filter(num => !self.rootUi.stagedPossibilities.includes(num))
         },
       }
     }

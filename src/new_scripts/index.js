@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   onAction(gameStore, (action) => {
     if (gameStore.shouldRecordAction(action)) {
+      console.log(action)
       const curState = {
         puzzle: getSnapshot(gameStore.puzzle),
         meta: getSnapshot(gameStore.meta)

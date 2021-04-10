@@ -1,3 +1,5 @@
+import { ARROW_REGEX, NUM_REGEX } from "./constants"
+
 export const combinations = (numElements, {
   min = 1,
   max = 9,
@@ -117,12 +119,15 @@ export const nextId = (() => {
 })()
 
 export const classes = (...args) => args
-  .map(arg => arg instanceof Array
-    ? arg[0]
-      ? arg[1]
-      : null
-    : arg
-  )
+  .map(arg => {
+    if (arg instanceof Array) {
+      return arg[0]
+        ? arg[1]
+        : arg[2]
+    } else {
+      return arg
+    }
+  })
   .filter(arg => arg)
   .join(' ')
 
@@ -166,6 +171,7 @@ export const stringSwitch = (
     throw new Error('Second argument to stringSwitch must be a function')
   }
   let matched = false
+  let result
 
   function _case(...args) {
     const { exec, isMatch } = _parseCaseArgs(args)
@@ -175,7 +181,7 @@ export const stringSwitch = (
 
     if (shouldExecByMatch || shouldExecByFallthrough) {
       matched = true
-      exec(input)
+      result = exec(input)
     }
   }
 
@@ -184,11 +190,18 @@ export const stringSwitch = (
       throw new Error('Argument to default function must be a function')
     }
 
-    if (!matched || fallthrough) exec(input)
+    if (!matched || fallthrough) {
+      result = exec(input)
+    }
   }
 
   casesFn(_case, _default)
+  return result
 }
+
+export const getNumFromCode = code => parseInt(NUM_REGEX.exec(code)?.groups.num)
+
+export const getDirFromCode = code => ARROW_REGEX.exec(code)?.groups?.dir
 
 function deepClone(obj) {
   switch (obj.constructor.name) {
@@ -213,7 +226,9 @@ function _parseCaseArgs(args) {
   return { exec, isMatch }
 }
 function _parseMatcher(matcher) {
-  switch (matcher.constructor.name) {
+  const matcherType = matcher.constructor.name
+  switch (matcherType) {
+    case 'BabelRegExp':
     case 'RegExp':
       return input => matcher.test(input)
     case 'String':
@@ -223,6 +238,6 @@ function _parseMatcher(matcher) {
     case 'Array':
       return input => matcher.some(sub => _parseMatcher(sub)(input))
     default:
-      throw new Error('Matcher arguments to case function must be a string, regular expression, boolean, or array of such')
+      throw new Error(`Matcher arguments to case function must be a string, regular expression, boolean, or array of such. Instead, received ${matcherType}`)
   }
 }

@@ -16,7 +16,7 @@ export const mountListeners = ctx => {
   mountHeader.call(ctx);
 }
 
-function mountHeader(){
+function mountHeader() {
   document.querySelector('.hd-new').onclick = e => {
     e.target.blur();
     this.newPuzzle.call(this)
@@ -28,7 +28,7 @@ function mountHeader(){
   mountOptions.call(this);
 }
 
-function mountOptions(){
+function mountOptions() {
   mountDropdown.call(this, 'options', '.hd-options', 'ul');
   mountDropdown.call(this, 'about', '.hd-about', 'div');
   mountDropdown.call(this, 'instructions', '.hd-instructions', 'ol');
@@ -45,7 +45,7 @@ function optionToggle(option) {
   }
 }
 
-function mountDropdown(name, selector, subselector){
+function mountDropdown(name, selector, subselector) {
   document.querySelector(selector).onclick = e => {
     const btn = e.currentTarget;
     const classList = btn.querySelector(subselector).classList;
@@ -70,50 +70,5 @@ function mountDropdown(name, selector, subselector){
     this.status.disableUnfocus[name] = true;
   }
 }
-
-function keyHandler(e) {
-  e.preventDefault();
-  e.stopPropagation();
-  
-  if (/^\d/.test(e.key)) {
-    const n = parseInt(e.key);
-    const inp = e.target;
-    const errorMsg = document.querySelector('.error-msg');
-    window.clearTimeout(this.fadeOut);
-
-    if (n < 2 || n > 4){
-      errorMsg.innerText = 'input a number between 2 and 4';
-      errorMsg.classList.add('show');
-      inp.classList.add('error');
-      inp.value = n;
-
-      this.fadeOut = window.setTimeout( () => {
-        errorMsg.classList.add('leaving');
-        inp.classList.add('leaving');
-      }, 2300);
-
-      window.setTimeout( () => {
-        errorMsg.innerText = '';
-        errorMsg.classList.remove('show');
-        inp.classList.remove('error');
-        errorMsg.classList.remove('leaving');
-        inp.classList.remove('leaving');
-        inp.value = this.opts.limit || '';
-      }, 2600);
-
-    }  else {
-      this.opts.limit = n;
-      inp.value = n;
-      errorMsg.innerText = '';
-      errorMsg.classList.remove('show');
-      inp.classList.remove('error');
-    }
-  } else if (e.key === 'Delete' || e.key === 'Backspace') {
-    this.opts.limit = null;
-    e.target.value = '';
-  } 
-}
-
-
 
 

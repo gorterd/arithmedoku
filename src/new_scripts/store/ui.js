@@ -11,35 +11,52 @@ const UI = GameBase
       types.reference(Group),
       types.reference(Cage),
     )),
-    focusedCombination: types.maybeNull(types.array(types.integer)),
+    isStaging: types.optional(
+      types.boolean,
+      () => false
+    ),
+    stagedPossibilities: types.optional(types.array(types.integer), () => []),
   })
   .views(self => {
     return {
       get focusedPosition() {
         return self.focusedSquare?.position
       },
+      get hasStagedPossibilities() {
+        return self.stagedPossibilities.length > 0
+      },
+      get squareInfoButtonClassName() {
+        return self.isStaging
+          ? 'square-info_btn square-info_btn--staging'
+          : 'square-info_btn'
+      },
+      squareInfoPossibilityClassName(val) {
+        return self.focusedSquare
+          ? self.focusedSquare.infoPossibilityClassName(val)
+          : 'square-info_possibility square-info_possibility--disabled'
+      },
     }
   })
   .actions(self => {
     return {
-      selectSquareByKey(key) {
+      selectSquareByDir(dir) {
         const [curRow, curCol] = self.focusedPosition
 
         let newPos
-        switch (key) {
-          case 'ArrowUp': {
+        switch (dir) {
+          case 'Up': {
             newPos = [curRow - 1, curCol]
             break
           }
-          case 'ArrowRight': {
+          case 'Right': {
             newPos = [curRow, curCol + 1]
             break
           }
-          case 'ArrowDown': {
+          case 'Down': {
             newPos = [curRow + 1, curCol]
             break
           }
-          case 'ArrowLeft': {
+          case 'Left': {
             newPos = [curRow, curCol - 1]
             break
           }
@@ -53,6 +70,18 @@ const UI = GameBase
       selectSquareByPos(pos) {
         self.focusedSquare = self.rootPuzzle.getSquareByPos(pos)
       },
+      clearStagedPossibilities() {
+        self.stagedPossibilities = []
+      },
+      toggleStagedPossibility(val) {
+        const valIndex = self.stagedPossibilities.indexOf(val)
+
+        if (valIndex >= 0) {
+          self.stagedPossibilities.splice(valIndex, 1)
+        } else {
+          self.stagedPossibilities.push(val)
+        }
+      }
     }
   })
 

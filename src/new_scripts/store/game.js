@@ -50,21 +50,18 @@ const Game = GameBase
           self.ui.focusedSquare.value = value
         }
       },
-      eliminateFocusedSquarePossibility(value) {
-        if (self.ui.focusedSquare.isSquareEliminatedValue(value)) {
-          self.ui.focusedSquare.uneliminatePossibility(value)
-        } else {
-          self.ui.focusedSquare.eliminatePossibility(value)
-        }
+      toggleFocusedSquarePossibility(val) {
+        self.ui.focusedSquare.togglePossibility(val)
       },
-      setFocusedSquarePossibilities(values) {
-        self.ui.focusedSquare.setPossibilities(values)
+      resetFocusedSquarePossibilities() {
+        self.ui.focusedSquare.eliminatedPossibilities = []
+      },
+      setStagedPossibilities() {
+        self.ui.focusedSquare.setStagedPossibilities()
+        self.ui.clearStagedPossibilities()
       },
       clearFocusedSquare() {
         self.setFocusedSquare(null)
-      },
-      clearFocus() {
-        self.ui.focusedSquare = null
       },
       enterIf() {
         const mainSnapshotId = takePuzzleSnapshot()
@@ -100,14 +97,34 @@ const Game = GameBase
           })
         })
       },
-      selectSquareByKey(key) {
-        self.ui.selectSquareByKey(key)
+      beginStaging() {
+        self.ui.isStaging = true
+      },
+      stopStaging() {
+        self.ui.isStaging = false
+
+        if (self.ui.hasStagedPossibilities) {
+          self.setStagedPossibilities()
+        }
+      },
+      toggleStagedPossibility(val) {
+        self.ui.toggleStagedPossibility(val)
+      },
+      clearStagedPossibilities() {
+        self.ui.clearStagedPossibilities()
+      },
+      selectSquareByDir(dir) {
+        self.ui.selectSquareByDir(dir)
       },
       selectSquareByPos(pos) {
         self.ui.selectSquareByPos(pos)
       },
+      clearFocus() {
+        self.ui.focusedSquare = null
+      },
       undo() {
         if (self.env.history.length > 0) {
+          console.log(self.env.history)
           const { meta, puzzle } = self.env.history.pop()
           applySnapshot(self.puzzle, puzzle)
           applySnapshot(self.meta, meta)
