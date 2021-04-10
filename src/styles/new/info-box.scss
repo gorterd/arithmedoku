@@ -1,6 +1,6 @@
 .info-box {
-  width: $sm-info-size;
-  height: $sm-info-size;
+  width: $info-width;
+  height: $info-height;
   border: 4px solid black;
   border-radius: 10px;
   background: $robin-light;
@@ -12,11 +12,41 @@
 }
 
 .square-info_possibilities {
-
+  display: flex;
+  width: 95%;
+  margin: 10px auto;
+  justify-content: space-evenly;
 }
 
 .square-info_possibility {
+  color: darken($ocean, 5);
+  user-select: none;
+  width: $info-square-poss-size;
+  height: $info-square-poss-size;
+  font-size: 2.5vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid $ocean;
+  border-radius: 50%;
 
+  &:hover { 
+    cursor: pointer; 
+  }
+}
+
+.square-info_possibility--disabled {
+  opacity: 0.2;
+}
+
+.square-info_possibility--squareEliminated {
+  color: rgb(173, 72, 72);
+  border-color: rgb(173, 72, 72);
+  opacity: 0.5;
+}
+
+.square-info_possibility--collectionEliminated {
+  opacity: 0.2;
 }
 
 .square-info_actions {
@@ -24,6 +54,19 @@
 }
 
 .square-info_btn {
+  color: darken($ocean, 5);
+  user-select: none;
+  width: $info-square-poss-size;
+  height: $info-square-poss-size;
+  font-size: 2.5vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:hover { 
+    cursor: pointer; 
+  }
+
   .square-info_staging-icon {
     display: none;
   }
@@ -35,140 +78,5 @@
   }
   .square-info_staging-icon {
     display: initial;
-  }
-}
-
-// .gm-info-nums {
-//   width: 100%;
-//   height: 65%;
-//   border-bottom: 2px dashed $ocean;
-//   padding: 5% 0;
-
-//   display: grid;
-//   grid-template: [first] 1fr 1fr 1fr [last] / 3fr 1fr;
-  
-//   &.small {
-//     grid-template: [first] 1fr 1fr [last] / 3fr 1fr;
-//   }
-// }
-
-// .info-num-wrapper {
-//   font-size: 3vw;
-//   display: flex;
-//   justify-content: space-around;
-//   align-items: center;
-// }
-
-// .info-num {
-//   &:hover { cursor: pointer; }
-//   color: darken($ocean, 5);
-//   opacity: 0.3;
-//   user-select: none;
-//   width: 3.5vw;
-//   height: 3.5vw;
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-  
-//   &:hover {
-//     opacity: 0.8;
-//   }
-  
-//   &.selected {
-//     opacity: 1;
-//     border: 1px solid $ocean;
-//     border-radius: 50%;
-//   }
-  
-//   &.ruled-in {
-//     background-color: $robin-darker;
-//     font-weight: 600;
-//     transform: scale(1.1);
-//     cursor: not-allowed;
-//   }
-
-//   &.ruled-out {
-//     visibility: hidden;
-//   }
-// }
-
-// .info-actions {
-//   grid-area: 1 / 2 / last / 3;
-//   display: flex;
-//   flex-direction: column;
-//   justify-content: center;
-//   align-items: center;
-// }
-
-// .info-nums-check {
-//   height: 3.5vw;
-//   width: 3.5vw;
-//   font-size: 3.5vw;
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   color: $ocean;
-//   opacity: 0.3;
-//   cursor: pointer;
-//   outline: none;
-//   position: relative;
-
-//   &:hover {
-//     opacity: 0.5;
-//   }
-
-//   &.selected {
-//     opacity: 1;
-//     transform: scale(1.1);
-
-//     &::after {
-//       position: absolute;
-//       top: 15%;
-//       left: 15%;
-//       width: 70%;
-//       height: 70%;
-//       background-color: darken($mint, 35);
-//       content: '';
-//       z-index: -1;
-//       border-radius: 40%;
-//     }
-//   }
-// }
-
-// .gm-info-grps {
-//   height: 35%;
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   color: $ocean;
-//   font-size: 1.5vw;
-// }
-
-@media only screen 
-and (max-width: $breakpoint-1) {
-  .info-box {
-    position: absolute;
-    top: 50%;
-    bottom: 50%;
-    left: 50%;
-    right: 50%;
-    transform: translate(-50%, -50%);
-  }
-
-}
-
-@media only screen 
-and (min-width: $breakpoint-1) 
-and (max-width: $breakpoint-2) {
-  .info-box {
-    height: calc(#{$md-pz-size} / 2 - 5px);
-    width: $md-info-size;
-  }
-}
-
-@media only screen and (min-width: $breakpoint-2){
-  .info-box {
-    height: $lg-info-size;
-    width: $lg-info-size;
   }
 }

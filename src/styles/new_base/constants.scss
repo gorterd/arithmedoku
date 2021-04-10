@@ -35,6 +35,19 @@ $mint: #c3ffc9;
 
 $forest: hsl(126°, 80%, 35%);
 
+// new size
+
+$puzzle-size: #{'min(55vw, 85vh)'};
+
+$square-val-font-size: calc(#{$puzzle-size} / 9 * 0.5);
+$square-label-font-size: calc(#{$puzzle-size} / 9 * 0.24);
+$square-poss-font-size: calc(#{$puzzle-size} / 9 * 0.22);
+
+$info-width: calc(min(40vw, (95vw - #{$puzzle-size})));
+$info-height: calc(#{$puzzle-size} * 0.95);
+
+$info-square-poss-size: calc(#{$info-width} / 15);
+
 // size
 
 $lg-pz-size: 42vw;

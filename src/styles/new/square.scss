@@ -1,5 +1,5 @@
 .square {
-  @include large($sm-pz-size, 9);
+  // @include large($sm-pz-size, 9);
   @include coord-grid-element(9, 9);
   position: relative;
   display: flex;
@@ -52,6 +52,7 @@
 }
 
 .square_value {
+  font-size: $square-val-font-size;
   position: relative;
   top: 5px;
 }
@@ -60,17 +61,18 @@
   @include ord-grid-container(3, 3);
   position: absolute;
   right: 10%;
-  left: 15%;
-  bottom: 5%;
+  left: 20%;
+  bottom: 4%;
   justify-items: end;
   color: $ocean;
-  opacity: 0.5;
+  opacity: 0.4;
 }
 
 .square_possibility {
   @include ord-grid-element(1, 9);
+  font-size: $square-poss-font-size;
   display: none;
-  line-height: 95%;
+  line-height: 90%;
 }
 
 .square_possibility--show {
@@ -80,39 +82,39 @@
 .square_label {
   position: absolute;
   font-weight: bold;
-  left: 7%;
+  left: 5%;
   top: 5%;
-  @include small($lg-pz-size, 9);
+  font-size: $square-label-font-size;
 }
 
-@media only screen 
-and (min-width: $breakpoint-1) 
-and (max-width: $breakpoint-2) {
+// @media only screen 
+// and (min-width: $breakpoint-1) 
+// and (max-width: $breakpoint-2) {
 
-  .square {
-    @include large($md-pz-size, 9)
-  }
+//   .square {
+//     @include large($md-pz-size, 9)
+//   }
 
-  .square_label {
-    @include small($md-pz-size, 9)
-  }
+//   .square_label {
+//     @include small($md-pz-size, 9)
+//   }
 
-  .square_possibilities {
-    @include small($md-pz-size, 9);
-  }
-}
+//   .square_possibilities {
+//     @include small($md-pz-size, 9);
+//   }
+// }
 
-@media only screen and (min-width: $breakpoint-2){
-  .square {
-    @include large($lg-pz-size, 9)
-  }
+// @media only screen and (min-width: $breakpoint-2){
+//   .square {
+//     @include large($lg-pz-size, 9)
+//   }
 
-  .square_label{
-    @include small($lg-pz-size, 9)
-  }
+//   .square_label{
+//     @include small($lg-pz-size, 9)
+//   }
 
-  .square_possibilities {
-    @include small($lg-pz-size, 9);
-  }
-}
+//   .square_possibilities {
+//     @include small($lg-pz-size, 9);
+//   }
+// }
 
