@@ -78,7 +78,7 @@
   color: rgb(173, 72, 72);
 
   &:hover:not(.prevent-hover) {
-    color: darken($ocean, 5);
+    // color: darken($ocean, 5);
   }
 }
 
@@ -140,7 +140,7 @@
     content: '';
     position: absolute;
     bottom: -20%;
-    background:rgb(173, 72, 72);
+    background:rgb(255, 208, 0);
     height: 5px;
     // width: 100%;
 
