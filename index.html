@@ -61,7 +61,7 @@
               <span class='option_info'>
                 block contradictory moves
                 <span>
-                  <i class="fas fa-info-circle"></i>
+                  <i class="info"></i>
                   <span class='option_hover-text'>
                     prevents you from entering a number that's eliminated as a possibility
                   </span>
@@ -75,7 +75,7 @@
               <span class='option_info'>
                 auto-eliminate possibilities
                 <span>
-                  <i class="fas fa-info-circle"></i>
+                  <i class="info"></i>
                   <span class='option_hover-text'>
                     when you enter a number, remove that number as a possibility from all the squares in the same row or
                     column
@@ -90,7 +90,7 @@
               <span class='option_info'>
                 auto-eliminate mathematical impossibilities
                 <span>
-                  <i class="fas fa-info-circle"></i>
+                  <i class="info"></i>
                   <span class='option_hover-text'>
                     only certain combinations of numbers can mathematically appear in a cage; eliminate those that can't
                   </span>
@@ -104,7 +104,7 @@
               <span class="option_info">
                 max possibilities to display in square
                 <span>
-                  <i class="fas fa-info-circle"></i>
+                  <i class="info"></i>
                   <span class='option_hover-text'>
                     don't display the possibilites in the square itself, unless you've narrowed it down to this number
                     or less
@@ -119,6 +119,7 @@
           </ul>
         </button>
         <button id='header-undo' class='header_button'>undo</button>
+        <button id='header-redo' class='header_button'>redo</button>
         <button id='header-new' class='header_button'>new puzzle</button>
         <button id='header-reset' class='header_button'>reset</button>
       </div>
@@ -130,30 +131,92 @@
       <div class='info-box'>
         <div class='square-info'>
           <ol class='square-info_possibilities'>
-            <li class='square-info_possibility' data-val='1'>1</li>
-            <li class='square-info_possibility' data-val='2'>2</li>
-            <li class='square-info_possibility' data-val='3'>3</li>
-            <li class='square-info_possibility' data-val='4'>4</li>
-            <li class='square-info_possibility' data-val='5'>5</li>
-            <li class='square-info_possibility' data-val='6'>6</li>
-            <li class='square-info_possibility' data-val='7'>7</li>
-            <li class='square-info_possibility' data-val='8'>8</li>
-            <li class='square-info_possibility' data-val='9'>9</li>
+            <li class='square-info_possibility' data-val='1'>
+              <span class='possibility-icon no-hover'>
+                <i class='circle'></i>
+              </span>
+              <span class='possibility-icon hover'>
+                <i class='banned'></i>
+              </span>
+              <span class='square-info_possibility-val'>1</span>
+            </li>
+            <li class='square-info_possibility' data-val='2'>
+              <span class='possibility-icon no-hover'>
+                <i class='circle'></i>
+              </span>
+              <span class='possibility-icon hover'>
+                <i class='banned'></i>
+              </span>
+              <span class='square-info_possibility-val'>2</span>
+            </li>
+            <li class='square-info_possibility' data-val='3'>
+              <span class='possibility-icon no-hover'>
+                <i class='circle'></i>
+              </span>
+              <span class='possibility-icon hover'>
+                <i class='banned'></i>
+              </span>
+              <span class='square-info_possibility-val'>3</span>
+            </li>
+            <li class='square-info_possibility' data-val='4'>
+              <span class='possibility-icon no-hover'>
+                <i class='circle'></i>
+              </span>
+              <span class='possibility-icon hover'>
+                <i class='banned'></i>
+              </span>
+              <span class='square-info_possibility-val'>4</span>
+            </li>
+            <li class='square-info_possibility' data-val='5'>
+              <span class='possibility-icon no-hover'>
+                <i class='circle'></i>
+              </span>
+              <span class='possibility-icon hover'>
+                <i class='banned'></i>
+              </span>
+              <span class='square-info_possibility-val'>5</span>
+            </li>
+            <li class='square-info_possibility' data-val='6'>
+              <span class='possibility-icon no-hover'>
+                <i class='circle'></i>
+              </span>
+              <span class='possibility-icon hover'>
+                <i class='banned'></i>
+              </span>
+              <span class='square-info_possibility-val'>6</span>
+            </li>
+            <li class='square-info_possibility' data-val='7'>
+              <span class='possibility-icon no-hover'>
+                <i class='circle'></i>
+              </span>
+              <span class='possibility-icon hover'>
+                <i class='banned'></i>
+              </span>
+              <span class='square-info_possibility-val'>7</span>
+            </li>
+            <li class='square-info_possibility' data-val='8'>
+              <span class='possibility-icon no-hover'>
+                <i class='circle'></i>
+              </span>
+              <span class='possibility-icon hover'>
+                <i class='banned'></i>
+              </span>
+              <span class='square-info_possibility-val'>8</span>
+            </li>
+            <li class='square-info_possibility' data-val='9'>
+              <span class='possibility-icon no-hover'>
+                <i class='circle'></i>
+              </span>
+              <span class='possibility-icon hover'>
+                <i class='banned'></i>
+              </span>
+              <span class='square-info_possibility-val'>9</span>
+            </li>
             <button id='square-info_select-only' class='square-info_btn'>
-              <span class='square-info_icon'>
-                <i class='far fa-check-circle'></i>
-              </span>
-              <span class='square-info_staging-icon'>
-                <i class='fas fa-check-circle'></i>
-              </span>
+              <i class='select'></i>
             </button>
             <button id='square-info_clear' class='square-info_btn'>
-              <span class='square-info_icon'>
-                <i class='fas fa-eraser'></i>
-              </span>
-              <span class='square-info_staging-icon'>
-                <i class='fas fa-undo-alt'></i>
-              </span>
+              <i class='clear'></i>
             </button>
           </ol>
           <div class='square-info_actions'>
@@ -197,94 +260,5 @@
     </div>
   </template>
 </body>
-<section hidden id='deprecated'>
-  <header class='gm-header'>
-    <div class='gm-header-left'>
-      <button class='hd-btn hd-about'>about
-        <div>
-          Arithmedoku is inspired by the popular puzzle game
-          <a href='https://en.wikipedia.org/wiki/KenKen'>KenKen</a>,
-          a sudoku-like game with a math twist, invented by Japanese math teacher
-          <a href='https://en.wikipedia.org/wiki/Tetsuya_Miyamoto'>Tetsuya Miyamoto</a>.
-          <br></br>
-          All of the puzzles in Arithmedoku were written by Jim Bumgardner, aka Krazydad. He calls them Inkies. From
-          the Krazydad
-          <a href='https://krazydad.com/about.php'>about page</a>:
-
-          <p>
-            This website has been offering free puzzles to the public since 2005. My mission is to provide puzzles to
-            under-served groups that need them, including prisoners, pensioners, home-schoolers, hospitals, churches,
-            and classrooms. There are currently about two million individual puzzles on the site, and over sixty
-            unique varieties.
-          </p>
-          <br></br>
-          Check out the
-          <a href='https://krazydad.com/'>Krazydad website</a>, or
-          <a href='https://krazydad.com/inkies/'>find more Inkies</a>.
-        </div>
-      </button>
-      <button class='hd-btn hd-instructions'>instructions
-        <ol>
-          <li>Each row and colum contain each of the numbers 1 through 9, no repeats</li>
-          <li>Cages are outlined in bold. They usually contain 2-4 squares.</li>
-          <li>In the upper left is a result, and an operation. Performing this operation on the numbers in the cage
-            must produce the listed result.</li>
-          <li>E.g. a cage with two squares and label <span>42 x</span> could contain 6 and 7, since 6 * 7 = 42, but
-            not 8 and 5, since 8 * 5 != 42.</li>
-          <li>You can note possible numbers in the box on the left. If you've noted every possibility, hit the
-            checkmark to finalize them.</li>
-        </ol>
-      </button>
-    </div>
-    <div class='gm-header-right'>
-      <button class='hd-btn hd-options'>options
-        <ul>
-          <li>
-            <span class='tg-info'>
-              block contradictory moves
-              <span>
-                <i class="fas fa-info-circle"></i>
-                <span class='hvr-text'>
-                  prevent you from entering a number that already appears in the same row or column
-                </span>
-              </span>
-            </span>
-            <span class='hd-toggle on' id='tg-block'><span class='tg-circle'></span></span>
-          </li>
-          <li>
-            <span class='tg-info'>
-              auto-eliminate options
-              <span>
-                <i class="fas fa-info-circle"></i>
-                <span class='hvr-text'>
-                  when you enter a number, remove that number as an option from all the squares in the same row or
-                  column
-                </span>
-              </span>
-            </span>
-            <span class='hd-toggle on' id='tg-elim'><span class='tg-circle'></span></span>
-          </li>
-          <li>
-            <span class="tg-info">
-              only show options when <= <span>
-                <i class="fas fa-info-circle"></i>
-                <span class='hvr-text'>
-                  don't show the options in the square itself, unless you've narrowed it down to this number or less
-                </span>
-            </span>
-            </span>
-            <span class="hd-limit">
-              <input placeholder="x"></input>
-              <span class='error-msg'></span>
-            </span>
-          </li>
-        </ul>
-      </button>
-      <button class='hd-btn hd-new'>new puzzle</button>
-      <button class='hd-btn hd-reset'>reset</button>
-      <!-- <button class='hd-btn hd-menu'><i class="fas fa-bars"></i></button> -->
-    </div>
-  </header>
-</section>
 
 </html>

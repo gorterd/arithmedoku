@@ -46,7 +46,7 @@ $square-poss-font-size: calc(#{$puzzle-size} / 9 * 0.22);
 $info-width: calc(min(40vw, (95vw - #{$puzzle-size})));
 $info-height: calc(#{$puzzle-size} * 0.95);
 
-$info-square-poss-size: calc(#{$info-width} / 15);
+$info-square-poss-size: calc(#{$info-width} / 13);
 
 // size
 

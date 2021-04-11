@@ -1,4 +1,5 @@
 import { autorun } from 'mobx'
+import { ICONS } from '../util/constants'
 
 export default function setupSquareInfo(gameStore, squareInfoEle) {
   const squareInfoElements = getSquareInfoElements(squareInfoEle)
@@ -8,7 +9,7 @@ export default function setupSquareInfo(gameStore, squareInfoEle) {
 
 function setupListeners(gameStore, {
   possibilityEles,
-  selectOnly,
+  select,
   clear
 }) {
   possibilityEles.forEach(possibilityEle => {
@@ -19,10 +20,18 @@ function setupListeners(gameStore, {
       } else {
         gameStore.toggleFocusedSquarePossibility(val)
       }
+
+      function restoreHover() {
+        possibilityEle.classList.remove('prevent-hover')
+        possibilityEle.removeEventListener('mouseleave', restoreHover)
+      }
+
+      possibilityEle.classList.add('prevent-hover')
+      possibilityEle.addEventListener('mouseleave', restoreHover)
     })
   })
 
-  selectOnly.addEventListener('click', () => {
+  select.addEventListener('click', () => {
     if (gameStore.ui.isStaging) {
       gameStore.stopStaging()
     } else {
@@ -41,19 +50,24 @@ function setupListeners(gameStore, {
 
 function makeReactive(gameStore, {
   possibilityEles,
-  selectOnly,
-  clear
+  selectIcon,
+  clearIcon
 }) {
   const possibilityReactions = Array.from(possibilityEles).map(possibilityEle =>
     () => {
       const val = parseInt(possibilityEle.dataset.val)
       possibilityEle.className = gameStore.ui.squareInfoPossibilityClassName(val)
+
+      const icons = gameStore.ui.squareInfoPossibilityIconClassNames(val)
+      const { noHover, hover } = getPossibilityIcons(possibilityEle)
+      noHover.className = icons.noHover
+      hover.className = icons.hover
     }
   )
   const reactions = [
-    function renderButtonClassNames() {
-      selectOnly.className = gameStore.ui.squareInfoButtonClassName
-      clear.className = gameStore.ui.squareInfoButtonClassName
+    function renderIconClassNames() {
+      selectIcon.className = gameStore.ui.squareInfoSelectIconClassName
+      clearIcon.className = gameStore.ui.squareInfoClearIconClassName
     },
     ...possibilityReactions
   ]
@@ -65,7 +79,16 @@ function makeReactive(gameStore, {
 function getSquareInfoElements(squareInfoEle) {
   return {
     possibilityEles: squareInfoEle.querySelectorAll('.square-info_possibility'),
-    selectOnly: squareInfoEle.querySelector('#square-info_select-only'),
+    select: squareInfoEle.querySelector('#square-info_select-only'),
+    selectIcon: squareInfoEle.querySelector('#square-info_select-only i'),
     clear: squareInfoEle.querySelector('#square-info_clear'),
+    clearIcon: squareInfoEle.querySelector('#square-info_clear i'),
+  }
+}
+
+function getPossibilityIcons(possibilityEle) {
+  return {
+    noHover: possibilityEle.querySelector('.no-hover i'),
+    hover: possibilityEle.querySelector('.hover i'),
   }
 }

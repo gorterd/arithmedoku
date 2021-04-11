@@ -10,6 +10,7 @@ export function setupHeaderListeners(gameStore) {
     optionsButton,
     optionsDropdown,
     undoButton,
+    redoButton,
     newButton,
     resetButton,
   } = getHeaderElements()
@@ -18,6 +19,7 @@ export function setupHeaderListeners(gameStore) {
   mountDropdown(instructionsButton, instructionsDropdown, 'show')
   mountDropdown(optionsButton, optionsDropdown, 'show')
   undoButton.addEventListener('click', () => gameStore.undo())
+  redoButton.addEventListener('click', () => gameStore.redo())
 }
 
 function getHeaderElements() {
@@ -31,6 +33,7 @@ function getHeaderElements() {
     optionsButton: headerEle.querySelector('#header-options'),
     optionsDropdown: headerEle.querySelector('#header-options .header_dropdown'),
     undoButton: headerEle.querySelector('#header-undo'),
+    redoButton: headerEle.querySelector('#header-redo'),
     newButton: headerEle.querySelector('#header-new'),
     resetButton: headerEle.querySelector('#header-reset'),
   }

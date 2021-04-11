@@ -195,13 +195,33 @@ export const stringSwitch = (
     }
   }
 
-  casesFn(_case, _default)
+  function _ensure(exec) {
+    if (typeof exec !== 'function') {
+      throw new Error('Argument to ensure function must be a function')
+    }
+
+    if (matched) {
+      exec(input)
+    }
+  }
+
+  casesFn({ _case, _default, _ensure })
   return result
 }
 
 export const getNumFromCode = code => parseInt(NUM_REGEX.exec(code)?.groups.num)
 
 export const getDirFromCode = code => ARROW_REGEX.exec(code)?.groups?.dir
+
+export const kebabToCamel = string => {
+  return string
+    .split('-')
+    .map((segment, idx) => idx > 0
+      ? segment[0].toUpperCase() + segment.slice(1)
+      : segment
+    )
+    .join('')
+}
 
 function deepClone(obj) {
   switch (obj.constructor.name) {

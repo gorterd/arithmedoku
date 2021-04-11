@@ -1,4 +1,5 @@
 import { types } from 'mobx-state-tree'
+import { ICONS } from '../util/constants'
 import { GameBase } from './base'
 import { Cage, Group } from './collections'
 import Square from './square'
@@ -25,16 +26,22 @@ const UI = GameBase
       get hasStagedPossibilities() {
         return self.stagedPossibilities.length > 0
       },
-      get squareInfoButtonClassName() {
-        return self.isStaging
-          ? 'square-info_btn square-info_btn--staging'
-          : 'square-info_btn'
+      get squareInfoSelectIconClassName() {
+        return self.isStaging ? ICONS.confirm : ICONS.select
+      },
+      get squareInfoClearIconClassName() {
+        return self.isStaging ? ICONS.reset : ICONS.clear
       },
       squareInfoPossibilityClassName(val) {
         return self.focusedSquare
           ? self.focusedSquare.infoPossibilityClassName(val)
           : 'square-info_possibility square-info_possibility--disabled'
       },
+      squareInfoPossibilityIconClassNames(val) {
+        return self.focusedSquare
+          ? self.focusedSquare.infoPossibilityIconClassNames(val)
+          : { hover: ICONS.circle, noHover: ICONS.circle }
+      }
     }
   })
   .actions(self => {

@@ -3,16 +3,20 @@ import puzzle_01 from './data/puzzle_01'
 import Game from './store/game'
 import mountListeners from './setup/mount_listeners'
 import mountViews from './setup/mount_views'
+import LRUCache from './util/lru_cache'
 // DEV
 import remotedev from 'remotedev'
-import { unprotect, getPropertyMembers, onSnapshot, onPatch, onAction, applyPatch, applySnapshot, getSnapshot } from 'mobx-state-tree'
+import { unprotect, onAction, applySnapshot, getSnapshot } from 'mobx-state-tree'
 import { connectReduxDevtools } from 'mst-middlewares'
-import LRUCache from './util/lru_cache'
+import { ICONS } from './util/constants'
+import initialMount from './setup/initial_mount'
 
 document.addEventListener('DOMContentLoaded', () => {
+  initialMount()
   const env = {
     snapshots: {},
     history: [],
+    future: [],
     puzzleCache: new LRUCache(50, 10 * 60 * 1000),
     globals: {
       size: 9,
@@ -25,12 +29,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   onAction(gameStore, (action) => {
     if (gameStore.shouldRecordAction(action)) {
-      console.log(action)
-      const curState = {
-        puzzle: getSnapshot(gameStore.puzzle),
-        meta: getSnapshot(gameStore.meta)
-      }
-      env.history.push(curState)
+      env.future = []
+      env.history.push(gameStore.currentState)
     }
   })
 
@@ -52,10 +52,5 @@ document.addEventListener('DOMContentLoaded', () => {
   window.lru = LRUCache
   window.getSnap = getSnapshot
   window.applySnap = applySnapshot
+  window.icons = ICONS
 })
-// window.getPropertyMembers = getPropertyMembers
-// window.sq = gameStore.puzzle.getSquareByPos([0, 1])
-// window.c = window.sq.cage
-// window.r = window.c.rules
-// window.combo = [8, 9]
-// window.incone = [1, 2, 3, 4, 5]

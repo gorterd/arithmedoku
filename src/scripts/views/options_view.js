@@ -24,11 +24,11 @@ function setupListeners(options, {
   maxPossibilitiesInput.addEventListener('keydown', e => {
     e.preventDefault()
 
-    const num = stringSwitch(e.code, (kase) => {
-      kase(NUM_REGEX, () => {
+    const num = stringSwitch(e.code, ({ _case }) => {
+      _case(NUM_REGEX, () => {
         return getNumFromCode(e.code)
       })
-      kase(UP_OR_DOWN_REGEX, () => {
+      _case(UP_OR_DOWN_REGEX, () => {
         const dir = getDirFromCode(e.code)
         let num = options.maxDisplayedPossibilities
         return dir === 'Up' ? num + 1 : num - 1

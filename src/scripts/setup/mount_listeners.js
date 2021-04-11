@@ -16,23 +16,39 @@ export default ({ gameStore, puzzleEle, infoBoxEle }) => {
 
   document.addEventListener('keydown', e => {
     if (!gameStore.ui.focusedSquare) return
-    e.preventDefault()
 
-    stringSwitch(e.code, (kase, def) => {
-      kase(/^Alt/, () =>
+    stringSwitch(e.code, ({ _case, _ensure }) => {
+      _case(!e.metaKey, !e.ctrlKey, /^Alt/, () =>
         gameStore.beginStaging())
-      kase(!e.altKey, e.ctrlKey, NUM_REGEX, () =>
+      _case(!e.altKey, e.ctrlKey, NUM_REGEX, () =>
         gameStore.toggleFocusedSquarePossibility(getNumFromCode(e.code)))
-      kase(!e.altKey, NUM_REGEX, () =>
+      _case(!e.altKey, NUM_REGEX, () =>
         gameStore.setFocusedSquare(getNumFromCode(e.code)))
-      kase(e.altKey, NUM_REGEX, () =>
+      _case(e.altKey, NUM_REGEX, () =>
         gameStore.toggleStagedPossibility(getNumFromCode(e.code)))
-      kase(!e.altKey, ARROW_REGEX, () =>
+      _case(!e.altKey, ARROW_REGEX, () =>
         gameStore.selectSquareByDir(getDirFromCode(e.code)))
-      kase(!e.altKey, ['Delete', 'Backspace'], () =>
+      _case(!e.altKey, ['Delete', 'Backspace'], () =>
         gameStore.clearFocusedSquare())
-      kase(e.altKey, ['Delete', 'Backspace'], () =>
+      _case(e.altKey, ['Delete', 'Backspace'], () =>
         gameStore.clearStagedPossibilities())
+      _ensure(() => {
+        e.preventDefault()
+      })
+    })
+  })
+
+  document.addEventListener('keydown', e => {
+    stringSwitch(e.code, ({ _case, _ensure }) => {
+      _case([e.metaKey, e.ctrlKey], 'KeyZ', () => {
+        gameStore.undo()
+      })
+      _case([e.metaKey, e.ctrlKey], 'KeyY', () => {
+        gameStore.redo()
+      })
+      _ensure(() => {
+        e.preventDefault()
+      })
     })
   })
 

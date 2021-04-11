@@ -1,0 +1,128 @@
+.info-box {
+  width: $info-width;
+  height: $info-height;
+  border: 4px solid black;
+  border-radius: 10px;
+  background: $robin-light;
+  border: 2px solid $ocean;
+}
+
+.square-info {
+
+}
+
+.square-info_possibilities {
+  display: flex;
+  width: 95%;
+  margin: 4% auto;
+  justify-content: space-between;
+}
+
+.square-info_possibility {
+  position: relative;
+  color: darken($ocean, 5);
+  user-select: none;
+  width: $info-square-poss-size;
+  height: $info-square-poss-size;
+  font-size: 2.3vw;
+  font-weight: 300;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .hover {
+    display: none;
+  }
+
+  .no-hover {
+    display: flex;
+  }
+
+  &:hover:not(.square-info_possibility--disabled):not(.prevent-hover) { 
+    cursor: pointer; 
+
+    .hover {
+      display: flex;
+    }
+    
+    .no-hover {
+      display: none;
+    }
+
+    &:not(.square-info_possibility--squareEliminated) {
+      color: rgb(173, 72, 72);
+    }
+  }
+
+}
+
+.possibility-icon {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  font-size: $info-square-poss-size;
+  opacity: 0.8;
+}
+
+.square-info_possibility--disabled {
+  & > span {
+    opacity: 0.2;
+  }
+  
+  &:hover {
+    cursor: not-allowed;
+  }
+}
+
+.square-info_possibility--squareEliminated {
+  color: rgb(173, 72, 72);
+
+  &:hover:not(.prevent-hover) {
+    color: darken($ocean, 5);
+  }
+}
+
+.square-info_possibility--collectionEliminated {
+  & > span {
+    opacity: 0.2;
+  }
+}
+
+.square-info_possibility--autoEliminated {
+  & > span {
+    opacity: 0.2;
+  }
+}
+
+.square-info_possibility--mistake {
+  &::before {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    width: calc(#{$info-square-poss-size} - 25%);
+    height: calc(#{$info-square-poss-size} - 25%);
+    top: 10%;
+    background: rgba(255, 255, 0, 0.5);
+  }
+
+  transform:translateY(-4px);
+}
+
+.square-info_actions {
+
+}
+
+.square-info_btn {
+  color: darken($ocean, 5);
+  user-select: none;
+  width: $info-square-poss-size;
+  height: $info-square-poss-size;
+  font-size: 2.6vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:hover { 
+    cursor: pointer; 
+  }
+}

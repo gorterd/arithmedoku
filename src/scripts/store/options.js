@@ -5,8 +5,8 @@ const Options = GameBase
   .props({
     autoBlock: true,
     autoEliminate: true,
-    autoElimMathImpossibilities: false,
-    maxDisplayedPossibilities: 4,
+    autoElimMathImpossibilities: true,
+    maxDisplayedPossibilities: 9,
   })
   .views(self => {
     const toggleClassName = isActive => isActive

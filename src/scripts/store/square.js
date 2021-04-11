@@ -1,4 +1,5 @@
 import { flow, types } from 'mobx-state-tree'
+import { ICONS } from '../util/constants'
 import { wait, classes, arrayUnion } from '../util/general_util'
 import { Id, Position, GameBase } from './base'
 import { Cage } from './collections'
@@ -139,14 +140,12 @@ const Square = GameBase
         },
         isCollectionEliminatedValue(val) {
           return (
-            self.squarePossiblities.includes(val)
-            && !self.collectionPossibilities.includes(val)
+            !self.collectionPossibilities.includes(val)
           )
         },
         isAutoEliminatedValue(val) {
           return (
             self.rootOptions.autoEliminate
-            && self.squareAndCollectionPossibilities.includes(val)
             && self.rowColValues.includes(val)
           )
         },
@@ -184,6 +183,11 @@ const Square = GameBase
                   'square-info_possibility--autoEliminated'],
               )
           )
+        },
+        infoPossibilityIconClassNames(val) {
+          return self.isSquareEliminatedValue(val)
+            ? { hover: ICONS.circle, noHover: ICONS.ban }
+            : { hover: ICONS.ban, noHover: ICONS.circle }
         },
         isBelow(otherSquare) {
           return (

@@ -122,13 +122,25 @@ const Game = GameBase
       clearFocus() {
         self.ui.focusedSquare = null
       },
-      undo() {
-        if (self.env.history.length > 0) {
-          console.log(self.env.history)
-          const { meta, puzzle } = self.env.history.pop()
-          applySnapshot(self.puzzle, puzzle)
-          applySnapshot(self.meta, meta)
+      undoOrRedo({ popFrom, pushTo }) {
+        if (popFrom.length > 0) {
+          pushTo.push(self.currentState)
+          const nextState = popFrom.pop()
+          applySnapshot(self.puzzle, nextState.puzzle)
+          applySnapshot(self.meta, nextState.meta)
         }
+      },
+      undo() {
+        self.undoOrRedo({
+          popFrom: self.env.history,
+          pushTo: self.env.future
+        })
+      },
+      redo() {
+        self.undoOrRedo({
+          popFrom: self.env.future,
+          pushTo: self.env.history
+        })
       }
     }
 
@@ -136,6 +148,12 @@ const Game = GameBase
       views: {
         get recordedActions() {
           return Object.keys(recordedActions)
+        },
+        get currentState() {
+          return {
+            puzzle: getSnapshot(self.puzzle),
+            meta: getSnapshot(self.meta)
+          }
         },
         shouldRecordAction(action) {
           return self.recordedActions.includes(action.name)
