@@ -1,54 +1,17 @@
-// color 
-$rose-lighter: #fff7f6;
-$rose-light: #ffe0dd;
-$rose: #ffc9c3;
-$rose-dark: #ffb2aa;
-$rose-darker: #ff9b90;
-$rose-darker2: #ff8477;
-
-$ruby: #990f00;
-$ruby-dark: #800d00;
-
-
-$robin-lighter: #f6feff;
-$robin-light: #ddfcff;
-$robin: #c3f9ff;
-$robin-dark: #aaf6ff;
-$robin-darker: #90f4ff;
-
-$ocean: #00818f;
-
-$cream-lighter: #fffbf6;
-$cream-light: #fff1dd;
-$cream: #ffe7c3;
-$cream-dark: #ffddaa;
-$cream-darker: #ffd390;
-$cream-darker2: #ffc877;
-$cream-darker3: #f4a125;
-
-$cappuccino: hsl(36, 100%, 30%);
-$cappuccino-dark: hsl(36, 100%, 25%);
-$cappuccino-darker: hsl(36, 100%, 18%);
-
-$mint: #c3ffc9;
-
-
-$forest: hsl(126°, 80%, 35%);
-
 // new size
+$sz-puzzle: #{'min(55vw, 85vh)'};
 
-$puzzle-size: #{'min(55vw, 85vh)'};
+$fnt-sz-square-val: calc(#{$sz-puzzle} / 9 * 0.5);
+$fnt-sz-square-label: calc(#{$sz-puzzle} / 9 * 0.24);
+$fnt-sz-square-poss: calc(#{$sz-puzzle} / 9 * 0.22);
 
-$square-val-font-size: calc(#{$puzzle-size} / 9 * 0.5);
-$square-label-font-size: calc(#{$puzzle-size} / 9 * 0.24);
-$square-poss-font-size: calc(#{$puzzle-size} / 9 * 0.22);
+$w-info: calc(min(40vw, (95vw - #{$sz-puzzle})));
+$h-info: calc(#{$sz-puzzle} * 0.95);
 
-$info-width: calc(min(40vw, (95vw - #{$puzzle-size})));
-$info-height: calc(#{$puzzle-size} * 0.95);
+$sz-info-square-poss: calc(#{$w-info} / 13);
+$sz-info-square-chosen: calc(#{$sz-info-square-poss} * 1.2);
 
-$info-square-poss-size: calc(#{$info-width} / 13);
-
-// size
+// old size
 
 $lg-pz-size: 42vw;
 $md-pz-size: 60vw;
@@ -66,22 +29,22 @@ $lg-nav-height: 40px;
 $breakpoint-1: 700px;
 $breakpoint-2: 1050px;
 
-@mixin hd-small() {
-  min-width: 90vw;
-  min-height: $lg-hdr-height;
-}
+// @mixin hd-small() {
+//   min-width: 90vw;
+//   min-height: $lg-hdr-height;
+// }
 
-@mixin hd-large() {
-  min-width: 42vw;
-  min-height: $lg-hdr-height;
-}
+// @mixin hd-large() {
+//   min-width: 42vw;
+//   min-height: $lg-hdr-height;
+// }
 
-@mixin small($pz-size, $num-squares) {
-  font-size: calc(#{$pz-size} / #{$num-squares} / 4.5);
-}
+// @mixin small($pz-size, $num-squares) {
+//   font-size: calc(#{$pz-size} / #{$num-squares} / 4.5);
+// }
 
-@mixin large($pz-size, $num-squares) {
-  font-size: calc(#{$pz-size} / #{$num-squares} / 2);
-}
+// @mixin large($pz-size, $num-squares) {
+//   font-size: calc(#{$pz-size} / #{$num-squares} / 2);
+// }
 
 

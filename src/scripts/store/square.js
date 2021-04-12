@@ -58,7 +58,7 @@ const Square = GameBase
             .filter(val => self.squarePossiblities.includes(val))
         },
         get possibilities() {
-          return typeof self.value === 'number'
+          return self.hasValue
             ? [self.value]
             : self.squareAndCollectionPossibilities
               .filter(val => !self.isAutoEliminatedValue(val))
@@ -89,6 +89,9 @@ const Square = GameBase
         },
         get hasEliminations() {
           return self.eliminatedPossibilities.length > 0
+        },
+        get hasValue() {
+          return typeof self.value === 'number'
         },
         get label() {
           return self.cage.anchor === self ? self.cage.labelText : ''
@@ -150,7 +153,14 @@ const Square = GameBase
           )
         },
         isActiveMistake(val) {
-          return self.status === 'mistake' && self.mistakeValue === val
+          return (
+            self.status === 'mistake'
+            && self.mistakeValue === val
+            && !self.isAutoEliminatedValue(val)
+          )
+        },
+        isStagedPossibility(val) {
+          return self.rootUi.stagedPossibilities.includes(val)
         },
         possibilityClassName(val) {
           return (
@@ -161,33 +171,52 @@ const Square = GameBase
             : 'square_possibility'
         },
         infoPossibilityStagingClassName(val) {
-          return self.rootUi.stagedPossibilities.includes(val)
+          return self.isStagedPossibility(val)
             ? 'square-info_possibility--possible'
-            : 'square-info_possibility--squareEliminated'
+            : 'square-info_possibility--staged-eliminated'
         },
         infoPossibilityClassName(val) {
-          return classes(
-            'square-info_possibility',
-            self.isStaging
-              ? self.infoPossibilityStagingClassName(val)
-              : classes(
+          const classesArgs = ['square-info_possibility']
+
+          if (self.hasValue) {
+            classesArgs.push(self.value === val
+              ? 'square-info_possibility--chosen'
+              : 'square-info_possibility--unchosen'
+            )
+          } else {
+            classesArgs.push(
+              [self.isCollectionEliminatedValue(val),
+                'square-info_possibility--collection-eliminated'],
+              [self.isAutoEliminatedValue(val),
+                'square-info_possibility--auto-eliminated']
+            )
+
+            if (self.isStaging) {
+              classesArgs.push(self.infoPossibilityStagingClassName(val))
+            } else {
+              classesArgs.push(
                 [self.isPossibleValue(val),
                   'square-info_possibility--possible'],
                 [self.isActiveMistake(val),
                   'square-info_possibility--mistake'],
-                [self.isCollectionEliminatedValue(val),
-                  'square-info_possibility--collectionEliminated'],
                 [self.isSquareEliminatedValue(val),
-                  'square-info_possibility--squareEliminated'],
-                [self.isAutoEliminatedValue(val),
-                  'square-info_possibility--autoEliminated'],
+                  'square-info_possibility--square-eliminated'],
               )
-          )
+            }
+          }
+
+          return classes(...classesArgs)
         },
         infoPossibilityIconClassNames(val) {
-          return self.isSquareEliminatedValue(val)
-            ? { hover: ICONS.circle, noHover: ICONS.ban }
-            : { hover: ICONS.ban, noHover: ICONS.circle }
+          if (self.isStaging) {
+            return self.isStagedPossibility(val)
+              ? { hover: ICONS.ban, noHover: ICONS.circle }
+              : { hover: ICONS.circle, noHover: ICONS.ban }
+          } else {
+            return self.isSquareEliminatedValue(val) && !self.hasValue
+              ? { hover: ICONS.ban, noHover: ICONS.ban }
+              : { hover: ICONS.ban, noHover: ICONS.circle }
+          }
         },
         isBelow(otherSquare) {
           return (

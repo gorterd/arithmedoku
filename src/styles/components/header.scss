@@ -22,21 +22,21 @@
 
 .header_button, 
 .header_dropdown {
-  color: $cappuccino;
-  background: $cream;
+  color: $cappuccino-1;
+  background: $cream-3;
   border-radius: 15px;
   font-weight: 700;
-  border: 1px solid $cream-dark;
+  border: 1px solid $cream-4;
 }
 
 .header_button {
   padding: 10px;
   margin-left: 15px;
-  box-shadow: 2px 3px 0px 0px $cream-darker3;
+  box-shadow: 2px 3px 0px 0px $cream-7;
   position: relative;
 
   &:hover, &:focus {
-    box-shadow: 3.5px 4.5px 0px 0px $cream-darker3;
+    box-shadow: 3.5px 4.5px 0px 0px $cream-7;
     transform: translate(-0.5px, -0.5px);
     z-index: 4;
   }
@@ -73,7 +73,7 @@
   a {
     text-decoration: underline;
     &:hover {
-      color: $cappuccino-darker;
+      color: $cappuccino-3;
     }
   }
 
@@ -81,7 +81,7 @@
     display: inline-block;
     padding: 15px;
     margin-top: 10px;
-    background-color: $cream-light;
+    background-color: $cream-2;
     border-radius: 10px;
     font-style: italic;
   }
@@ -143,8 +143,8 @@
   left: -50%;
   padding: 15px;
   border-radius: 10px;
-  background-color: transparentize($cappuccino-darker, .03);
-  color: $cream-light;
+  background-color: transparentize($cappuccino-3, .03);
+  color: $cream-2;
   font-weight: 400;
   line-height: 1.5rem;
 }
@@ -162,7 +162,7 @@
   
   box-shadow: inset 0 0 2px 0 hsl(36,30,50);
   border-radius: 15px;
-  background-color: $cream-light;
+  background-color: $cream-2;
 
   transition: background-color 150ms ease-in-out;
 }
@@ -170,7 +170,7 @@
 .toggle_circle {
   height: 1.3rem;
   width: 1.3rem;
-  background-color: $cappuccino;
+  background-color: $cappuccino-1;
   border-radius: 50%;
   position: relative;
   left: 2px;
@@ -179,7 +179,7 @@
 }
 
 .toggle--on {
-  background-color: $cream-darker2;
+  background-color: $cream-6;
   transition: background-color 150ms ease-in-out;
 
   .toggle_circle {
@@ -192,7 +192,7 @@
   width: 53.5px;
   height: 2rem;
   font-size: 1.4rem;
-  background-color: $cream-light;
+  background-color: $cream-2;
   box-shadow: inset 0 0 2px 0 hsl(36,30,50);
   border-radius: 15px;
   text-align: center;
@@ -202,7 +202,7 @@
   &:focus {
     outline: none;
     box-shadow: inset 0 0 3px 0 hsl(36,30,40);
-    background-color: $robin-lighter;
+    background-color: $light-ocean-1;
   }
 
   &:focus::placeholder {
@@ -210,7 +210,7 @@
   }
 
   &::placeholder {
-    color: transparentize($cappuccino, 0.5);
+    color: transparentize($cappuccino-1, 0.5);
   }
 }
 
@@ -234,7 +234,7 @@
   left: 100%;
   top: 50%;
   width: 15vw;
-  background-color: $ruby;
+  background-color: $brick-1;
   color: white;
   padding: 10px;
   font-weight: 400;
@@ -252,23 +252,23 @@
   }
 }
 
-@media only screen 
-and (max-width: $breakpoint-2) {
-  .header {
-    @include hd-small();
-  }
-}
+// @media only screen 
+// and (max-width: $breakpoint-2) {
+//   .header {
+//     @include hd-small();
+//   }
+// }
 
-@media only screen 
-and (min-width: $breakpoint-2) {
-  .header {
-    @include hd-large();
-  }
-}
+// @media only screen 
+// and (min-width: $breakpoint-2) {
+//   .header {
+//     @include hd-large();
+//   }
+// }
 
-@media only screen 
-and (min-width: $breakpoint-1) {
-  .hd-menu {
-    display: none;
-  }
-}
+// @media only screen 
+// and (min-width: $breakpoint-1) {
+//   .hd-menu {
+//     display: none;
+//   }
+// }

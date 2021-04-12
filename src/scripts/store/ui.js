@@ -26,11 +26,32 @@ const UI = GameBase
       get hasStagedPossibilities() {
         return self.stagedPossibilities.length > 0
       },
+      get hasFocusedSquareValue() {
+        return self.focusedSquare.hasValue
+      },
+      get squareInfoSelectIsDisabled() {
+        return !self.focusedSquare || self.focusedSquare.hasValue
+      },
+      get squareInfoClearIsDisabled() {
+        return !self.focusedSquare
+      },
+      get squareInfoSelectClassName() {
+        return self.squareInfoSelectIsDisabled
+          ? 'square-info_btn square-info_btn--disabled'
+          : 'square-info_btn'
+      },
+      get squareInfoClearClassName() {
+        return self.squareInfoClearIsDisabled
+          ? 'square-info_btn square-info_btn--disabled'
+          : 'square-info_btn'
+      },
       get squareInfoSelectIconClassName() {
         return self.isStaging ? ICONS.confirm : ICONS.select
       },
       get squareInfoClearIconClassName() {
-        return self.isStaging ? ICONS.reset : ICONS.clear
+        return self.isStaging
+          ? ICONS.reset
+          : ICONS.clear
       },
       squareInfoPossibilityClassName(val) {
         return self.focusedSquare
@@ -41,7 +62,7 @@ const UI = GameBase
         return self.focusedSquare
           ? self.focusedSquare.infoPossibilityIconClassNames(val)
           : { hover: ICONS.circle, noHover: ICONS.circle }
-      }
+      },
     }
   })
   .actions(self => {

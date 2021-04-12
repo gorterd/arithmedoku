@@ -219,8 +219,6 @@
               <i class='clear'></i>
             </button>
           </ol>
-          <div class='square-info_actions'>
-          </div>
         </div>
         <div class='collection-info'>
           <ul class='collection-combos'>
@@ -259,6 +257,64 @@
       </ol>
     </div>
   </template>
+
+  <button id='toggle-palette'>Toggle Palette</button>
+  <section id='color-palette' class='hidden'>
+  </section>
+
+  <script>
+    COLORS = [
+      'light-brick-1',
+      'light-brick-2',
+      'light-brick-3',
+      'light-brick-4',
+      'light-brick-5',
+      'light-brick-6',
+
+      'brick-1',
+      'brick-2',
+
+      'light-ocean-1',
+      'light-ocean-2',
+      'light-ocean-3',
+      'light-ocean-4',
+      'light-ocean-5',
+
+      'ocean',
+
+      'green',
+
+      'cream-1',
+      'cream-2',
+      'cream-3',
+      'cream-4',
+      'cream-5',
+      'cream-6',
+      'cream-7',
+
+      'cappuccino-1',
+      'cappuccino-2',
+      'cappuccino-3',
+    ]
+
+    let palette = document.getElementById('color-palette')
+
+    COLORS.forEach(color => {
+      let colorDiv = document.createElement('div')
+      colorDiv.className = `color-div ${color}`
+
+      let colorLabel = document.createElement('span')
+      colorLabel.className = `color-label`
+      colorLabel.innerText = color
+      colorDiv.appendChild(colorLabel)
+
+      palette.appendChild(colorDiv)
+    })
+
+    document.getElementById('toggle-palette').addEventListener('click', () => {
+      palette.classList.toggle('hidden')
+    })
+  </script>
 </body>
 
 </html>

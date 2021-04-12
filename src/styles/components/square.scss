@@ -33,7 +33,7 @@
 }
 
 .square--focused {
-  background-color: $robin-light;
+  background-color: $light-ocean-2;
 }
 
 .square--conflict {
@@ -53,7 +53,7 @@
 }
 
 .square_value {
-  font-size: $square-val-font-size;
+  font-size: $fnt-sz-square-val;
   position: relative;
   top: 10%;
   user-select: none;
@@ -72,7 +72,7 @@
 
 .square_possibility {
   @include ord-grid-element(1, 9);
-  font-size: $square-poss-font-size;
+  font-size: $fnt-sz-square-poss;
   display: none;
   line-height: 90%;
   user-select: none;
@@ -87,7 +87,7 @@
   font-weight: bold;
   left: 5%;
   top: 5%;
-  font-size: $square-label-font-size;
+  font-size: $fnt-sz-square-label;
 }
 
 // @media only screen 

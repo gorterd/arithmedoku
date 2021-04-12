@@ -1,5 +1,4 @@
 import { autorun } from 'mobx'
-import { ICONS } from '../util/constants'
 
 export default function setupSquareInfo(gameStore, squareInfoEle) {
   const squareInfoElements = getSquareInfoElements(squareInfoEle)
@@ -15,6 +14,10 @@ function setupListeners(gameStore, {
   possibilityEles.forEach(possibilityEle => {
     const val = parseInt(possibilityEle.dataset.val)
     possibilityEle.addEventListener('click', () => {
+      if (!gameStore.ui.focusedSquare || gameStore.ui.hasFocusedSquareValue) {
+        return
+      }
+
       if (gameStore.ui.isStaging) {
         gameStore.toggleStagedPossibility(val)
       } else {
@@ -32,7 +35,9 @@ function setupListeners(gameStore, {
   })
 
   select.addEventListener('click', () => {
-    if (gameStore.ui.isStaging) {
+    if (!gameStore.ui.focusedSquare || gameStore.ui.hasFocusedSquareValue) {
+      return
+    } else if (gameStore.ui.isStaging) {
       gameStore.stopStaging()
     } else {
       gameStore.beginStaging()
@@ -40,10 +45,18 @@ function setupListeners(gameStore, {
   })
 
   clear.addEventListener('click', () => {
-    if (gameStore.ui.isStaging) {
+    if (!gameStore.ui.focusedSquare) {
+      return
+    } else if (gameStore.ui.isStaging) {
       gameStore.clearStagedPossibilities()
-    } else if (gameStore.ui.focusedSquare.hasEliminations) {
-      gameStore.resetFocusedSquarePossibilities()
+    } else {
+      if (gameStore.ui.hasFocusedSquareValue) {
+        gameStore.clearFocusedSquare()
+      }
+
+      if (gameStore.ui.focusedSquare.hasEliminations) {
+        gameStore.resetFocusedSquarePossibilities()
+      }
     }
   })
 }
@@ -51,23 +64,43 @@ function setupListeners(gameStore, {
 function makeReactive(gameStore, {
   possibilityEles,
   selectIcon,
-  clearIcon
+  clearIcon,
+  select,
+  clear,
 }) {
   const possibilityReactions = Array.from(possibilityEles).map(possibilityEle =>
     () => {
       const val = parseInt(possibilityEle.dataset.val)
       possibilityEle.className = gameStore.ui.squareInfoPossibilityClassName(val)
 
-      const icons = gameStore.ui.squareInfoPossibilityIconClassNames(val)
+      const iconClassNames = gameStore.ui.squareInfoPossibilityIconClassNames(val)
       const { noHover, hover } = getPossibilityIcons(possibilityEle)
-      noHover.className = icons.noHover
-      hover.className = icons.hover
+      noHover.className = iconClassNames.noHover
+      hover.className = iconClassNames.hover
     }
   )
   const reactions = [
     function renderIconClassNames() {
       selectIcon.className = gameStore.ui.squareInfoSelectIconClassName
       clearIcon.className = gameStore.ui.squareInfoClearIconClassName
+    },
+    function renderButtonsClassName() {
+      select.className = gameStore.ui.squareInfoSelectClassName
+      clear.className = gameStore.ui.squareInfoClearClassName
+    },
+    function renderDisabledSelect() {
+      if (gameStore.ui.squareInfoSelectIsDisabled) {
+        select.disabled = true
+      } else {
+        select.disabled = false
+      }
+    },
+    function renderDisabledClear() {
+      if (gameStore.ui.squareInfoClearIsDisabled) {
+        clear.disabled = true
+      } else {
+        clear.disabled = false
+      }
     },
     ...possibilityReactions
   ]

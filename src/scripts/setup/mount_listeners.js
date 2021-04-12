@@ -28,6 +28,8 @@ export default ({ gameStore, puzzleEle, infoBoxEle }) => {
         gameStore.toggleStagedPossibility(getNumFromCode(e.code)))
       _case(!e.altKey, ARROW_REGEX, () =>
         gameStore.selectSquareByDir(getDirFromCode(e.code)))
+      _case(e.ctrlKey, ['Delete', 'Backspace'], () =>
+        gameStore.resetFocusedSquarePossibilities())
       _case(!e.altKey, ['Delete', 'Backspace'], () =>
         gameStore.clearFocusedSquare())
       _case(e.altKey, ['Delete', 'Backspace'], () =>
