@@ -55,16 +55,27 @@ const Collection = GameBase
           numRepeatsAllowed: self.numPossibleRepeats
         }))
       },
+      get rulePossibleCombinations() {
+        return self.allCombinations
+          .filter(self.isRulePossibleCombination)
+      },
       get possibleCombinations() {
-        return self.allCombinations.filter(self.isPossibleCombination)
+        return self.allCombinations
+          .filter(self.isPossibleCombination)
       },
       get numPossibleRepeats() {
         return maxPossibleRepeats(self.positions)
       },
+      isRulePossibleCombination() {
+        return self.rules.isPossibleCombination
+      },
+      isEliminatedCombination(combo) {
+        return includesArray(self.eliminatedCombinations, combo)
+      },
       isPossibleCombination(combo) {
         return (
-          self.rules.isPossibleCombination(combo)
-          && !includesArray(self.eliminatedCombinations, combo)
+          self.isRulePossibleCombination(combo)
+          && !self.isEliminatedCombination(combo)
         )
       },
       isPossibleValue(value) {
@@ -108,7 +119,7 @@ export const Cage = Collection
     autoElimMathImpossibilities: types.optional(types.boolean, () => false),
   })
   .views(self => {
-    const superIsPossibleCombination = self.isPossibleCombination
+    const superIsRulePossibleCombination = self.isRulePossibleCombination
 
     return {
       get bounds() {
@@ -137,14 +148,14 @@ export const Cage = Collection
       get labelText() {
         return `${self.result} ${self.operation}`
       },
-      isPossibleCombination(combo) {
+      isRulePossibleCombination(combo) {
         return (
           self.rootOptions.autoElimMathImpossibilities
           || self.autoElimMathImpossibilities
         ) ? (
-          superIsPossibleCombination(combo)
+          superIsRulePossibleCombination(combo)
           && self.isMathematicalPossibility(combo)
-        ) : superIsPossibleCombination(combo)
+        ) : superIsRulePossibleCombination(combo)
       },
       isMathematicalPossibility(combo) {
         switch (self.operation) {

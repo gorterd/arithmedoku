@@ -8,7 +8,7 @@ const UI = GameBase
   .named('UI')
   .props({
     focusedSquare: types.maybeNull(types.reference(Square)),
-    focusedGroup: types.maybeNull(types.union(
+    focusedCollection: types.maybeNull(types.union(
       types.reference(Group),
       types.reference(Cage),
     )),
@@ -22,6 +22,15 @@ const UI = GameBase
     return {
       get focusedPosition() {
         return self.focusedSquare?.position
+      },
+      get focusedCage() {
+        return self.focusedSquare?.cage
+      },
+      get focusedCageRulePossibleCombinations() {
+        return self.focusedCage?.rulePossibleCombinations || []
+      },
+      get focusedCagePossibleCombinations() {
+        return self.focusedCage?.possibleCombinations || []
       },
       get hasStagedPossibilities() {
         return self.stagedPossibilities.length > 0

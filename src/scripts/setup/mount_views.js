@@ -1,4 +1,5 @@
 import { setupHeaderListeners } from '../views/header_view'
+import setupCollectionInfo from '../views/info_collection_view'
 import setupSquareInfo from '../views/info_square_view'
 import { setupOptions } from '../views/options_view'
 import createSquare from '../views/square_view'
@@ -20,6 +21,7 @@ export default ({ gameStore, puzzleEle, infoBoxEle, optionsEle }) => {
   setupHeaderListeners(gameStore)
   setupOptions(gameStore.options, optionsEle)
   setupSquareInfo(gameStore, infoBoxEle.querySelector('.square-info'))
+  setupCollectionInfo(gameStore, infoBoxEle.querySelector('.collection-info'))
 }
 
 /*
