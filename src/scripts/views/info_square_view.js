@@ -13,8 +13,14 @@ function setupListeners(gameStore, {
 }) {
   possibilityEles.forEach(possibilityEle => {
     const val = parseInt(possibilityEle.dataset.val)
+
+    function restoreHover() {
+      possibilityEle.classList.remove('prevent-hover')
+      possibilityEle.removeEventListener('mouseleave', restoreHover)
+    }
+
     possibilityEle.addEventListener('click', () => {
-      if (!gameStore.ui.focusedSquare || gameStore.ui.hasFocusedSquareValue) {
+      if (!gameStore.ui.curSquare || gameStore.ui.hasFocusedSquareValue) {
         return
       }
 
@@ -24,18 +30,13 @@ function setupListeners(gameStore, {
         gameStore.toggleFocusedSquarePossibility(val)
       }
 
-      function restoreHover() {
-        possibilityEle.classList.remove('prevent-hover')
-        possibilityEle.removeEventListener('mouseleave', restoreHover)
-      }
-
       possibilityEle.classList.add('prevent-hover')
       possibilityEle.addEventListener('mouseleave', restoreHover)
     })
   })
 
   select.addEventListener('click', () => {
-    if (!gameStore.ui.focusedSquare || gameStore.ui.hasFocusedSquareValue) {
+    if (!gameStore.ui.curSquare || gameStore.ui.hasFocusedSquareValue) {
       return
     } else if (gameStore.ui.isStaging) {
       gameStore.stopStaging()
@@ -45,7 +46,7 @@ function setupListeners(gameStore, {
   })
 
   clear.addEventListener('click', () => {
-    if (!gameStore.ui.focusedSquare) {
+    if (!gameStore.ui.curSquare) {
       return
     } else if (gameStore.ui.isStaging) {
       gameStore.clearStagedPossibilities()
@@ -54,7 +55,7 @@ function setupListeners(gameStore, {
         gameStore.clearFocusedSquare()
       }
 
-      if (gameStore.ui.focusedSquare.hasEliminations) {
+      if (gameStore.ui.curSquare.hasEliminations) {
         gameStore.resetFocusedSquarePossibilities()
       }
     }
@@ -68,17 +69,17 @@ function makeReactive(gameStore, {
   select,
   clear,
 }) {
-  const possibilityReactions = Array.from(possibilityEles).map(possibilityEle =>
-    () => {
-      const val = parseInt(possibilityEle.dataset.val)
+  const possibilityReactions = Array.from(possibilityEles).map(possibilityEle => {
+    const val = parseInt(possibilityEle.dataset.val)
+    return () => {
       possibilityEle.className = gameStore.ui.squareInfoPossibilityClassName(val)
-
       const iconClassNames = gameStore.ui.squareInfoPossibilityIconClassNames(val)
       const { noHover, hover } = getPossibilityIcons(possibilityEle)
       noHover.className = iconClassNames.noHover
       hover.className = iconClassNames.hover
     }
-  )
+  })
+
   const reactions = [
     function renderIconClassNames() {
       selectIcon.className = gameStore.ui.squareInfoSelectIconClassName

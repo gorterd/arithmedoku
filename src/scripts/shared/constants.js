@@ -12,6 +12,8 @@ export const ICONS = {
   ban: 'fas fa-ban',
   circle: 'far fa-circle',
   circleFilled: 'fas fa-circle',
+  square: 'far fa-square',
+  slash: 'fas fa-slash',
   clear: 'fas fa-eraser',
   reset: 'fas fa-undo-alt',
   select: 'far fa-check-circle',

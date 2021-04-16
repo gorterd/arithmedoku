@@ -3,7 +3,7 @@ import {
   SUBTRACT,
   MULTIPLY,
   DIVIDE,
-} from '../util/constants'
+} from '../shared/constants'
 
 export default {
   id: 1,

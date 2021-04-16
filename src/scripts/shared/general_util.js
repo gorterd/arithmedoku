@@ -223,6 +223,15 @@ export const kebabToCamel = string => {
     .join('')
 }
 
+export const genStepper = iterable => {
+  const basicStepper = genBasicStepper(iterable)
+  return () => basicStepper.next().value
+}
+
+function* genBasicStepper(iterable) {
+  yield* iterable
+}
+
 function deepClone(obj) {
   switch (obj.constructor.name) {
     case 'Object':

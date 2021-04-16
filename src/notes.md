@@ -1,28 +1,24 @@
 # Current Goals
 
-  ## Mechanics
-  - undo
-  - hold `s` to set square possibilities
-  - hold `e` to eliminate square possibilities
-
   ## Info
-  - square
-    * rule out
-    * choose only
-    * reset
-  - combos
-    * rule out
-    * choose only
-    * reset
+  - finish info box styling 
+  - filter / rules reset
+  - make square possibilities and collection possibilities more consistent
+  - make naming more consistent: 
+    * focused vs cur, 
+    * rule vs filter, 
+    * num vs val, 
+    * combo vs combination, 
+    * value vs possibility,
+  - test square select value by default, eliminate with ctrl down
+  - alter behavior of 'or' so that it doesn't immediately take effect
+  - search combos
+  - set combos
+  - button for cage-specific elim math impossibilities
 
   ## Implications
   - create
-    * enter `if` mode
-    * track and store `if` mode
-    * enter `then` mode
-    * track and store `then` mode
-    * lock in implication
-    * exit implication
+    * trigger if & then with keyboard and/or buttons
   - see and use
     * show active implications
     * show inactive implications
@@ -33,7 +29,6 @@
 
   ## Mechanics
   - when erasing a square, go back to point in game where you added it
-  - redo
   - note pad
   - label cages / squares with a chess like notation, for logging when creating an implication
 
@@ -57,9 +52,6 @@
   ## Implications
   - creating implication adds further possiblity filters
   - switching back and forth between possiblity branches
-
-
-
 
 
 # Implications: if then

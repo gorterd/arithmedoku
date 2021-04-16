@@ -1,5 +1,4 @@
-import { autorun } from 'mobx'
-import { mountDropdown } from "../util/dom_util"
+import { mountDropdown } from "../shared/dom_util"
 
 export function setupHeaderListeners(gameStore) {
   const {

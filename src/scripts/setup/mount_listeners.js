@@ -1,11 +1,11 @@
-import { ARROW_REGEX, NUM_REGEX } from '../util/constants'
-import { extractPosFromEvent } from '../util/dom_util'
-import { getDirFromCode, getNumFromCode, stringSwitch } from '../util/general_util'
+import { ARROW_REGEX, NUM_REGEX } from '../shared/constants'
+import { extractPosFromEvent } from '../shared/dom_util'
+import { getDirFromCode, getNumFromCode, stringSwitch } from '../shared/general_util'
 
 
 export default ({ gameStore, puzzleEle, infoBoxEle }) => {
   document.addEventListener('click', e => {
-    if (!puzzleEle.contains(e.target) && !infoBoxEle.contains(e.target)) {
+    if (!e.path.includes(puzzleEle) && !e.path.includes(infoBoxEle)) {
       gameStore.clearFocus()
     }
   })
@@ -15,7 +15,7 @@ export default ({ gameStore, puzzleEle, infoBoxEle }) => {
   })
 
   document.addEventListener('keydown', e => {
-    if (!gameStore.ui.focusedSquare) return
+    if (!gameStore.ui.curSquare) return
 
     stringSwitch(e.code, ({ _case, _ensure }) => {
       _case(!e.metaKey, !e.ctrlKey, /^Alt/, () =>

@@ -1,6 +1,6 @@
 import { flow, types } from 'mobx-state-tree'
-import { ICONS } from '../util/constants'
-import { wait, classes, arrayUnion } from '../util/general_util'
+import { ICONS } from '../shared/constants'
+import { wait, classes, arrayUnion } from '../shared/general_util'
 import { Id, Position, GameBase } from './base'
 import { Cage } from './collections'
 
@@ -82,7 +82,7 @@ const Square = GameBase
           return self.col > 0 && self.cage.bounds.leftSquares.includes(self)
         },
         get isFocused() {
-          return self.rootUi.focusedSquare === self
+          return self.rootUi.curSquare === self
         },
         get isStaging() {
           return self.isFocused && self.rootUi.isStaging

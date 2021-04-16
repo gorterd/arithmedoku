@@ -1,4 +1,5 @@
 import { autorun } from 'mobx'
+import { haveEquivalentChildren, updateChildrenToMatch } from '../shared/dom_util'
 
 export default function setupCollectionInfo(gameStore, collectionInfoEle) {
   const collectionInfoElements = getCollectionInfoElements(collectionInfoEle)
@@ -7,34 +8,83 @@ export default function setupCollectionInfo(gameStore, collectionInfoEle) {
 }
 
 function setupListeners(gameStore, {
-
+  combinationsEle,
+  possibilityEles,
+  andModeButton,
+  notModeButton,
+  orModeButton,
 }) {
+  combinationsEle.addEventListener('click', e => {
+    if (!gameStore.ui.curCage) return
+    const comboEle = e.target.closest('.combination')
+    if (comboEle) {
+      const combo = comboEle.dataset.combo.split(',')
+        .map(valStr => parseInt(valStr))
 
+      gameStore.ui.curCage.toggleCombo(combo)
+    }
+  })
+
+  Array.from(possibilityEles).map(possibilityEle => {
+    const val = parseInt(possibilityEle.dataset.val)
+
+    possibilityEle.addEventListener('click', () => {
+      console.log('clicked poss ele')
+      if (!gameStore.ui.curCage) return
+      gameStore.ui.toggleRulePossibility(val)
+    })
+  })
+
+  andModeButton.addEventListener('click',
+    () => gameStore.ui.setFilterMode('and'))
+  notModeButton.addEventListener('click',
+    () => gameStore.ui.setFilterMode('not'))
+  orModeButton.addEventListener('click',
+    () => gameStore.ui.setFilterMode('or'))
 }
 
 function makeReactive(gameStore, {
   combinationsEle,
-  combinationEles,
-  comboTemplate,
-  includesAll,
-  includesOne,
-  includesNone,
+  possibilityEles,
+  andModeButton,
+  notModeButton,
+  orModeButton,
 }) {
-  const combinationReactions = Array.from(combinationEles).map(combinationEle =>
-    () => {
+  const possibilityReactions = Array.from(possibilityEles).map(possibilityEle => {
+    const val = parseInt(possibilityEle.dataset.val)
+    const iconsDiv = possibilityEle.querySelector('.possibility-icons')
 
+    return () => {
+      const iconsFragment = gameStore.ui.filterIconsFragment(val)
+
+      if (!haveEquivalentChildren(iconsDiv, iconsFragment, {
+        attributes: ['class']
+      })) {
+        iconsDiv.replaceChildren(iconsFragment)
+      }
     }
-  )
+  })
+
   const reactions = [
     function renderCombinations() {
-      combinationsEle.innerHTML = ''
-      gameStore.ui.focusedCageRulePossibleCombinations.forEach(c => {
-        const comboEle = comboTemplate.cloneNode(true)
-        comboEle.innerText = c.join('')
-        combinationsEle.append(comboEle)
-      })
+      if (gameStore.ui.curCage) {
+        updateChildrenToMatch(
+          combinationsEle,
+          gameStore.ui.curCage.comboEles,
+          gameStore.ui.curCage.compareComboEles
+        )
+
+        combinationsEle.hidden = false
+      } else {
+        combinationsEle.hidden = true
+      }
     },
-    ...combinationReactions
+    function renderFilterModeClassNames() {
+      andModeButton.className = gameStore.ui.andModeButtonClassName
+      notModeButton.className = gameStore.ui.notModeButtonClassName
+      orModeButton.className = gameStore.ui.orModeButtonClassName
+    },
+    ...possibilityReactions
   ]
 
   const disposers = reactions.map(fn => autorun(fn))
@@ -44,11 +94,10 @@ function makeReactive(gameStore, {
 function getCollectionInfoElements(collectionInfoEle) {
   return {
     combinationsEle: collectionInfoEle.querySelector('.collection-combos'),
-    combinationEles: collectionInfoEle.querySelectorAll('.combination'),
-    includesAll: collectionInfoEle.querySelector('.collection-rules_includes-all'),
-    includesOne: collectionInfoEle.querySelector('.collection-rules_includes-one'),
-    includesNone: collectionInfoEle.querySelector('.collection-rules_includes-none'),
-    comboTemplate: document.getElementById('combination-template')
-      .content.firstElementChild
+    possibilityEles: collectionInfoEle
+      .querySelectorAll('.collection-rule_possibility'),
+    andModeButton: collectionInfoEle.querySelector('#rule_and'),
+    notModeButton: collectionInfoEle.querySelector('#rule_not'),
+    orModeButton: collectionInfoEle.querySelector('#rule_or'),
   }
 }

@@ -7,7 +7,18 @@
   border: 2px solid $ocean;
 }
 
-.square-info_possibilities {
+.possibility-icon {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  font-size: $sz-info-square-poss;
+  opacity: 0.8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin possibilities {
   display: flex;
   width: 95%;
   margin: 3% auto;
@@ -15,17 +26,60 @@
   align-items: center;
 }
 
-.square-info_possibility {
+@mixin possibilities_grid {
+  @include ord-grid-container(3, 3);
+  // display: flex;
+  width: 95%;
+  margin: 3% auto;
+  justify-content: space-between;
+  align-items: center;
+}
+
+@mixin possibilities_child {
   position: relative;
   user-select: none;
   width: $sz-info-square-poss;
   height: $sz-info-square-poss;
-  color: darken($ocean, 5);
-  font-size: 2.3vw;
-  font-weight: 300;
   display: flex;
   justify-content: center;
   align-items: center;
+
+  &:hover { 
+    cursor: pointer; 
+  }
+
+  &--disabled { 
+    &:hover {
+      cursor: not-allowed;
+    }
+  }
+}
+@mixin possibilities_child_grid {
+  @include ord-grid-element(1, 9);
+  position: relative;
+  user-select: none;
+  width: $sz-info-square-poss;
+  height: $sz-info-square-poss;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:hover { 
+    cursor: pointer; 
+  }
+
+  &--disabled { 
+    &:hover {
+      cursor: not-allowed;
+    }
+  }
+}
+
+@mixin possibilities_num($hover-selector) {
+  @include possibilities_child();
+
+  font-size: 2.3vw;
+  font-weight: 300;
 
   .no-hover {
     display: flex;
@@ -34,6 +88,33 @@
   .hover {
     display: none;
   }
+
+  &#{$hover-selector} {
+    .hover {
+      display: flex;
+    }
+    
+    .no-hover {
+      display: none;
+    }
+  }
+}
+
+@mixin possibilities_btn {
+  @include possibilities_child();
+
+  font-size: 2.6vw;
+}
+
+.square-info {
+  @include possibilities();
+}
+
+.square-info_possibility {
+  $hover-selector: ':hover:not(&--disabled):not(&--chosen):not(.prevent-hover)';
+  
+  @include possibilities_num($hover-selector);
+  color: darken($ocean, 5);
 
   &--chosen {
     color: $green;
@@ -72,66 +153,68 @@
     & > span {
       animation: lift 800ms forwards;
     }
-  
   }
 
-  &--disabled:hover {
-    cursor: not-allowed;
-  }
-
-  $true-hover: ':hover:not(&--disabled):not(&--chosen):not(.prevent-hover)';
-
-  &#{$true-hover} {
-    cursor: pointer; 
-
-    .hover {
-      display: flex;
-    }
-    
-    .no-hover {
-      display: none;
-    }
-  }
-
-  &--staged-eliminated#{$true-hover} {
+  &--staged-eliminated#{$hover-selector} {
     color: darken($ocean, 5);
   }
 
-  &:not(&--square-eliminated):not(&--staged-eliminated)#{$true-hover} {
+  &:not(&--square-eliminated):not(&--staged-eliminated)#{$hover-selector} {
     color: $brick-1;
   }
 }
 
-.possibility-icon {
-  height: 100%;
-  width: 100%;
-  position: absolute;
-  font-size: $sz-info-square-poss;
-  opacity: 0.8;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .square-info_btn {
+  @include possibilities_btn();
   color: darken($ocean, 5);
-  user-select: none;
-  width: $sz-info-square-poss;
-  height: $sz-info-square-poss;
-  font-size: 2.6vw;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  &:hover { 
-    cursor: pointer; 
-  }
 
   &--disabled {
     opacity: 0.2;
-    
-    &:hover {
-      cursor: not-allowed;
+  }
+}
+
+.collection-rule {
+  @include possibilities();
+}
+
+.collection-rule_possibility {
+  $hover-selector: ':hover';
+  @include possibilities_num($hover-selector);
+
+  &:hover {
+    .possibility-icon--hover {
+      display: flex;  
+    }
+    .possibility-icon--no-hover {
+      display: none;  
     }
   }
 }
+
+.possibility-icons {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+}
+
+.combination--eliminated {
+  color: red;
+}
+
+.possibility-icon--hover {
+  display: none;
+}
+
+.possibility-icon--required {
+  color: green;
+}
+
+.possibility-icon--eliminated {
+  color: red;
+}
+
+.possibility-icon--alternative {
+  font-size: 120%;
+  color: orange;
+}
+

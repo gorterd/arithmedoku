@@ -4,7 +4,7 @@ import UI from './ui'
 import Options from './options'
 import Puzzle from './puzzle'
 import Meta from './meta'
-import { nextId } from '../util/general_util'
+import { nextId } from '../shared/general_util'
 
 const Game = GameBase
   .named('Game')
@@ -37,27 +37,27 @@ const Game = GameBase
       setFocusedSquare(value) {
         if (
           self.options.autoBlock
-          && !self.ui.focusedSquare.isPossibleValue(value)
+          && !self.ui.curSquare.isPossibleValue(value)
         ) {
-          self.ui.focusedSquare.conflictingSquares(value)
+          self.ui.curSquare.conflictingSquares(value)
             .forEach(square => square.setConflict())
 
-          self.ui.focusedSquare.setMistake(value)
+          self.ui.curSquare.setMistake(value)
           window.setTimeout(() => {
             self.env.history.pop()
           }, 0)
         } else {
-          self.ui.focusedSquare.value = value
+          self.ui.curSquare.value = value
         }
       },
       toggleFocusedSquarePossibility(val) {
-        self.ui.focusedSquare.togglePossibility(val)
+        self.ui.curSquare.togglePossibility(val)
       },
       resetFocusedSquarePossibilities() {
-        self.ui.focusedSquare.eliminatedPossibilities = []
+        self.ui.curSquare.eliminatedPossibilities = []
       },
       setStagedPossibilities() {
-        self.ui.focusedSquare.setStagedPossibilities()
+        self.ui.curSquare.setStagedPossibilities()
         self.ui.clearStagedPossibilities()
       },
       clearFocusedSquare() {
@@ -86,6 +86,7 @@ const Game = GameBase
       initialize({ cages, solution }) {
         cages.forEach(({ operation, result, squares }) => {
           const cage = self.puzzle.cages.put({ operation, result })
+          cage.rules.initialize(self.env.globals.size)
 
           squares.forEach(position => {
             const square = self.puzzle.squares.put({
@@ -120,7 +121,7 @@ const Game = GameBase
         self.ui.selectSquareByPos(pos)
       },
       clearFocus() {
-        self.ui.focusedSquare = null
+        self.ui.curSquare = null
       },
       undoOrRedo({ popFrom, pushTo }) {
         if (popFrom.length > 0) {

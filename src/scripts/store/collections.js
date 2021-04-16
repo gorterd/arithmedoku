@@ -1,4 +1,5 @@
 import { types } from 'mobx-state-tree'
+import { createIcon, getTemplateById } from '../shared/dom_util'
 import {
   combinations,
   includesArray,
@@ -9,7 +10,8 @@ import {
   difference,
   includesDistinct,
   maxPossibleRepeats,
-} from '../util/general_util'
+  stringSwitch,
+} from '../shared/general_util'
 import { Id, GameBase } from './base'
 import Rules from './rules'
 import Square from './square'
@@ -38,16 +40,16 @@ const Collection = GameBase
           .map(square => square.value)
           .filter(val => typeof val === 'number')
       },
-      get boundingBox() {
-        const sortedSquareRows = self.squares.map(sq => sq.row).sort()
-        const sortedSquareCols = self.squares.map(sq => sq.col).sort()
-        const minRow = sortedSquareRows[0]
-        const minCol = sortedSquareCols[0]
-        const maxRow = sortedSquareRows[sortedSquareRows.length - 1]
-        const maxCol = sortedSquareCols[sortedSquareCols.length - 1]
+      // get boundingBox() {
+      //   const sortedSquareRows = self.squares.map(sq => sq.row).sort()
+      //   const sortedSquareCols = self.squares.map(sq => sq.col).sort()
+      //   const minRow = sortedSquareRows[0]
+      //   const minCol = sortedSquareCols[0]
+      //   const maxRow = sortedSquareRows[sortedSquareRows.length - 1]
+      //   const maxCol = sortedSquareCols[sortedSquareCols.length - 1]
 
-        return [[minRow, minCol], [maxRow, maxCol]]
-      },
+      //   return [[minRow, minCol], [maxRow, maxCol]]
+      // },
       get allCombinations() {
         return combinations(self.numSquares, ({
           min: 1,
@@ -55,9 +57,9 @@ const Collection = GameBase
           numRepeatsAllowed: self.numPossibleRepeats
         }))
       },
-      get rulePossibleCombinations() {
+      get filteredCombos() {
         return self.allCombinations
-          .filter(self.isRulePossibleCombination)
+          .filter(self.isFilteredCombo)
       },
       get possibleCombinations() {
         return self.allCombinations
@@ -66,22 +68,46 @@ const Collection = GameBase
       get numPossibleRepeats() {
         return maxPossibleRepeats(self.positions)
       },
-      isRulePossibleCombination() {
-        return self.rules.isPossibleCombination
+      get comboEles() {
+        return self.filteredCombos.map(combo => {
+          const comboEle = self.env.templates.combination.cloneNode(true)
+          comboEle.dataset.combo = combo.join(',')
+          comboEle.innerText = combo.join(' | ')
+
+          if (self.isEliminatedCombination(combo)) {
+            comboEle.classList.add('combination--eliminated')
+          }
+
+          return comboEle
+        })
+      },
+      compareComboEles(comboA, comboB) {
+        const comboStrA = comboA.dataset.combo
+        const comboStrB = comboB.dataset.combo
+        if (comboStrA === comboStrB) {
+          return 0
+        } else if (comboStrA < comboStrB) {
+          return -1
+        } else {
+          return 1
+        }
+      },
+      isFilteredCombo(combo) {
+        return self.rules.isPossibleCombination(combo)
       },
       isEliminatedCombination(combo) {
         return includesArray(self.eliminatedCombinations, combo)
       },
       isPossibleCombination(combo) {
         return (
-          self.isRulePossibleCombination(combo)
+          self.isFilteredCombo(combo)
           && !self.isEliminatedCombination(combo)
         )
       },
       isPossibleValue(value) {
         return self.possibleCombinations.some(combo =>
           includesDistinct(combo, ...self.squareValues, value))
-      }
+      },
     }
   })
   .actions(self => {
@@ -89,18 +115,27 @@ const Collection = GameBase
       addSquare(square) {
         self.squares.push(square.id)
       },
-      eliminateCombination(combo) {
-        if (!includesArray(self.eliminatedCombinations, combo)) {
-          self.eliminatedCombinations.push(combo)
-        }
-      },
-      uneliminateCombination(combo) {
+      toggleCombo(combo) {
         const comboIndex = indexOfArray(self.eliminatedCombinations, combo)
 
         if (comboIndex >= 0) {
           self.eliminatedCombinations.splice(comboIndex, 1)
+        } else {
+          self.eliminatedCombinations.push(combo)
         }
       },
+      // eliminateCombination(combo) {
+      //   if (!includesArray(self.eliminatedCombinations, combo)) {
+      //     self.eliminatedCombinations.push(combo)
+      //   }
+      // },
+      // uneliminateCombination(combo) {
+      //   const comboIndex = indexOfArray(self.eliminatedCombinations, combo)
+
+      //   if (comboIndex >= 0) {
+      //     self.eliminatedCombinations.splice(comboIndex, 1)
+      //   }
+      // },
       setCombinations(combos) {
         const sortedCombos = combos.map(combo => combo.sort())
 
@@ -119,7 +154,7 @@ export const Cage = Collection
     autoElimMathImpossibilities: types.optional(types.boolean, () => false),
   })
   .views(self => {
-    const superIsRulePossibleCombination = self.isRulePossibleCombination
+    const superIsRulePossibleCombination = self.isFilteredCombo
 
     return {
       get bounds() {
@@ -148,7 +183,7 @@ export const Cage = Collection
       get labelText() {
         return `${self.result} ${self.operation}`
       },
-      isRulePossibleCombination(combo) {
+      isFilteredCombo(combo) {
         return (
           self.rootOptions.autoElimMathImpossibilities
           || self.autoElimMathImpossibilities

@@ -1,6 +1,6 @@
 import { autorun } from 'mobx'
-import { UP_OR_DOWN_REGEX, NUM_REGEX } from "../util/constants"
-import { getDirFromCode, getNumFromCode, stringSwitch } from '../util/general_util'
+import { UP_OR_DOWN_REGEX, NUM_REGEX } from "../shared/constants"
+import { getDirFromCode, getNumFromCode, stringSwitch } from '../shared/general_util'
 
 export function setupOptions(options, optionsEle) {
   const optionsElements = getOptionsElements(optionsEle)

@@ -1,6 +1,5 @@
-import { types, getRoot, getEnv, getParentOfType } from 'mobx-state-tree'
-import { nextId } from '../util/general_util'
-// import Puzzle from './puzzle'
+import { types, getRoot, getEnv } from 'mobx-state-tree'
+import { nextId } from '../shared/general_util'
 
 export const Id = types.optional(types.identifier, nextId)
 

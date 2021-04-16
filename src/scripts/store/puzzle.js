@@ -1,5 +1,5 @@
 import { types } from 'mobx-state-tree'
-import { nextId } from '../util/general_util'
+import { nextId } from '../shared/general_util'
 import { Id, GameBase } from './base'
 import { Cage, Group } from './collections'
 import Square from './square'

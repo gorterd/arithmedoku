@@ -1,5 +1,6 @@
 import { types } from 'mobx-state-tree'
-import { ICONS } from '../util/constants'
+import { ICONS } from '../shared/constants'
+import { baseIcons } from '../shared/dom_partials'
 import { GameBase } from './base'
 import { Cage, Group } from './collections'
 import Square from './square'
@@ -7,8 +8,8 @@ import Square from './square'
 const UI = GameBase
   .named('UI')
   .props({
-    focusedSquare: types.maybeNull(types.reference(Square)),
-    focusedCollection: types.maybeNull(types.union(
+    curSquare: types.maybeNull(types.reference(Square)),
+    curCollection: types.maybeNull(types.union(
       types.reference(Group),
       types.reference(Cage),
     )),
@@ -17,32 +18,57 @@ const UI = GameBase
       () => false
     ),
     stagedPossibilities: types.optional(types.array(types.integer), () => []),
+    filterMode: types.optional(
+      types.enumeration('FilterMode', ['and', 'not', 'or']),
+      () => 'and'
+    )
   })
   .views(self => {
+    const baseFilterIconsFragment = () => {
+      const iconsFragment = new DocumentFragment()
+      iconsFragment.append(...baseIcons('--no-hover', '--disabled'))
+      return iconsFragment
+    }
+
     return {
-      get focusedPosition() {
-        return self.focusedSquare?.position
+      get curPosition() {
+        return self.curSquare?.position
       },
-      get focusedCage() {
-        return self.focusedSquare?.cage
+      get curCage() {
+        return self.curSquare?.cage
       },
-      get focusedCageRulePossibleCombinations() {
-        return self.focusedCage?.rulePossibleCombinations || []
+      get curCageFilteredCombos() {
+        return self.curCage?.filteredCombos || []
       },
-      get focusedCagePossibleCombinations() {
-        return self.focusedCage?.possibleCombinations || []
+      get curCagePossibleCombos() {
+        return self.curCage?.possibleCombinations || []
+      },
+      get andModeButtonClassName() {
+        return self.filterMode === 'and'
+          ? 'filter_mode-btn filter_mode-btn--selected'
+          : 'filter_mode-btn'
+      },
+      get notModeButtonClassName() {
+        return self.filterMode === 'not'
+          ? 'filter_mode-btn filter_mode-btn--selected'
+          : 'filter_mode-btn'
+      },
+      get orModeButtonClassName() {
+        return self.filterMode === 'or'
+          ? 'filter_mode-btn filter_mode-btn--selected'
+          : 'filter_mode-btn'
       },
       get hasStagedPossibilities() {
         return self.stagedPossibilities.length > 0
       },
-      get hasFocusedSquareValue() {
-        return self.focusedSquare.hasValue
+      get hasCurSquareValue() {
+        return self.curSquare.hasValue
       },
       get squareInfoSelectIsDisabled() {
-        return !self.focusedSquare || self.focusedSquare.hasValue
+        return !self.curSquare || self.curSquare.hasValue
       },
       get squareInfoClearIsDisabled() {
-        return !self.focusedSquare
+        return !self.curSquare
       },
       get squareInfoSelectClassName() {
         return self.squareInfoSelectIsDisabled
@@ -62,14 +88,19 @@ const UI = GameBase
           ? ICONS.reset
           : ICONS.clear
       },
+      filterIconsFragment(val) {
+        return self.curCage
+          ? self.curCage.rules.iconsFragment(val, self.filterMode)
+          : baseFilterIconsFragment()
+      },
       squareInfoPossibilityClassName(val) {
-        return self.focusedSquare
-          ? self.focusedSquare.infoPossibilityClassName(val)
+        return self.curSquare
+          ? self.curSquare.infoPossibilityClassName(val)
           : 'square-info_possibility square-info_possibility--disabled'
       },
       squareInfoPossibilityIconClassNames(val) {
-        return self.focusedSquare
-          ? self.focusedSquare.infoPossibilityIconClassNames(val)
+        return self.curSquare
+          ? self.curSquare.infoPossibilityIconClassNames(val)
           : { hover: ICONS.circle, noHover: ICONS.circle }
       },
     }
@@ -77,7 +108,7 @@ const UI = GameBase
   .actions(self => {
     return {
       selectSquareByDir(dir) {
-        const [curRow, curCol] = self.focusedPosition
+        const [curRow, curCol] = self.curPosition
 
         let newPos
         switch (dir) {
@@ -99,13 +130,13 @@ const UI = GameBase
           }
         }
 
-        const newSquare = self.rootPuzzle.getSquareByPos(newPos)
-        if (newSquare) {
-          self.focusedSquare = newSquare
-        }
+        self.selectSquareByPos(newPos)
       },
       selectSquareByPos(pos) {
-        self.focusedSquare = self.rootPuzzle.getSquareByPos(pos)
+        const newSquare = self.rootPuzzle.getSquareByPos(pos)
+        if (newSquare) {
+          self.curSquare = newSquare
+        }
       },
       clearStagedPossibilities() {
         self.stagedPossibilities = []
@@ -118,6 +149,12 @@ const UI = GameBase
         } else {
           self.stagedPossibilities.push(val)
         }
+      },
+      toggleRulePossibility(val) {
+        self.curCage.rules.toggle(val, self.filterMode)
+      },
+      setFilterMode(mode) {
+        self.filterMode = mode
       }
     }
   })
