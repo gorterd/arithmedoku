@@ -4,7 +4,9 @@
   border: 4px solid black;
   border-radius: 10px;
   background: $light-ocean-2;
-  border: 2px solid $ocean;
+  border: 2px solid $ocean-1;
+  display: grid;
+  grid-template-rows: 1fr 2fr 1.5fr;
 }
 
 .possibility-icon {
@@ -12,7 +14,6 @@
   width: 100%;
   position: absolute;
   font-size: $sz-info-square-poss;
-  opacity: 0.8;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -43,15 +44,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-
-  &:hover { 
-    cursor: pointer; 
-  }
+  cursor: pointer; 
 
   &--disabled { 
-    &:hover {
-      cursor: not-allowed;
-    }
+    cursor: not-allowed;
   }
 }
 @mixin possibilities_child_grid {
@@ -63,15 +59,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-
-  &:hover { 
-    cursor: pointer; 
-  }
+  cursor: pointer; 
 
   &--disabled { 
-    &:hover {
-      cursor: not-allowed;
-    }
+    cursor: not-allowed;
   }
 }
 
@@ -108,13 +99,14 @@
 
 .square-info {
   @include possibilities();
+  grid-row: 1;
 }
 
 .square-info_possibility {
   $hover-selector: ':hover:not(&--disabled):not(&--chosen):not(.prevent-hover)';
   
   @include possibilities_num($hover-selector);
-  color: darken($ocean, 5);
+  color: $ocean-2;
 
   &--chosen {
     color: $green;
@@ -156,7 +148,7 @@
   }
 
   &--staged-eliminated#{$hover-selector} {
-    color: darken($ocean, 5);
+    color: $ocean-2;
   }
 
   &:not(&--square-eliminated):not(&--staged-eliminated)#{$hover-selector} {
@@ -166,29 +158,68 @@
 
 .square-info_btn {
   @include possibilities_btn();
-  color: darken($ocean, 5);
+  color: $ocean-2;
 
   &--disabled {
     opacity: 0.2;
   }
 }
 
-.collection-rule {
+.collection-combos {
+  grid-row: 2;
+}
+
+.collection-filter {
+  grid-row: 3;
+}
+
+.filter {
   @include possibilities();
 }
 
-.collection-rule_possibility {
+.filter-possibility {
   $hover-selector: ':hover';
   @include possibilities_num($hover-selector);
 
-  &:hover {
-    .possibility-icon--hover {
+  &:hover:not(.prevent-hover) {
+    .possibility-icons--hover {
       display: flex;  
     }
-    .possibility-icon--no-hover {
+    .possibility-icons--no-hover {
       display: none;  
     }
   }
+
+  &--required,
+  &--hover-required:hover:not(.prevent-hover) {
+    color: $green;
+  }
+
+  &--eliminated,
+  &--hover-eliminated:hover:not(.prevent-hover) {
+    color: $brick-1;
+  }
+
+  &--none,
+  &--hover-none:hover:not(.prevent-hover),
+  &--alternative,
+  &--hover-alternative:hover:not(.prevent-hover) {
+    color: $ocean-2;
+  }
+
+  &--alternative,
+  &--hover-alternative:hover:not(.prevent-hover) {
+    border: 2px dashed $green;
+    border-radius: 8px;
+  }
+
+  &--not-allowed {
+    cursor: not-allowed;
+  }
+}
+
+.combo--eliminated {
+  color: $brick-1;
 }
 
 .possibility-icons {
@@ -197,24 +228,11 @@
   position: absolute;
 }
 
-.combination--eliminated {
-  color: red;
-}
-
-.possibility-icon--hover {
+.possibility-icons--hover {
   display: none;
 }
 
-.possibility-icon--required {
-  color: green;
+.possibility-icon--small {
+  font-size: 90%;
+  opacity: 0.9;
 }
-
-.possibility-icon--eliminated {
-  color: red;
-}
-
-.possibility-icon--alternative {
-  font-size: 120%;
-  color: orange;
-}
-

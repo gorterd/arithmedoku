@@ -113,14 +113,6 @@ const Square = GameBase
             [self.status === 'conflict', 'square--conflict'],
             [self.isFocused, 'square--focused'],
           )
-          // return gcn({
-          //   base: 'square',
-          //   flags: [
-          //     [self.status === 'mistake', 'mistake'],
-          //     [self.status === 'conflict', 'conflict'],
-          //     [self.isFocused, 'focused']
-          //   ]
-          // })
         },
         get shouldShowPossibilities() {
           return (

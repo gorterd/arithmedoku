@@ -1,6 +1,8 @@
 import { ARROW_REGEX, NUM_REGEX } from "./constants"
 
-export const combinations = (numElements, {
+export const isTruthy = a => a
+
+export const combos = (numElements, {
   min = 1,
   max = 9,
   numRepeatsAllowed = 0,
@@ -9,24 +11,24 @@ export const combinations = (numElements, {
   const nextOptions = { min: min + 1, max, numRepeatsAllowed }
 
   if (numElements === 0) {
-    // 0 elements; return the empty combination
+    // 0 elements; return the empty combo
     return [[]]
   } else if (rangeSize <= 0 || numElements > rangeSize + numRepeatsAllowed) {
-    // impossible request; return no combinations
+    // impossible request; return no combos
     return []
   } else {
     // recursive step
     const withRepeatedMin = numRepeatsAllowed > 0 && numElements >= 2
-      ? combinations(numElements - 2, {
+      ? combos(numElements - 2, {
         ...nextOptions,
         numRepeatsAllowed: numRepeatsAllowed - 1
       }).map(combo => [min, min, ...combo])
       : []
 
-    const withMin = combinations(numElements - 1, nextOptions)
+    const withMin = combos(numElements - 1, nextOptions)
       .map(combo => [min, ...combo])
 
-    const withoutMin = combinations(numElements, nextOptions)
+    const withoutMin = combos(numElements, nextOptions)
 
     return [...withRepeatedMin, ...withMin, ...withoutMin]
   }
@@ -130,6 +132,54 @@ export const classes = (...args) => args
   })
   .filter(arg => arg)
   .join(' ')
+
+function evalClassNameComponent(component) {
+  if (component instanceof Array) {
+    return component[0] ? component[1] : component[2]
+  } else {
+    return component
+  }
+}
+
+function evalClassNameComponents(components) {
+  return components
+    .map(evalClassNameComponent)
+    .filter(isTruthy)
+}
+
+function evalClassNameFlags(base, flags) {
+  return evalClassNameComponents(flags)
+    .map(flag => `${base}--${flag}`)
+}
+
+function generateClassNameFromArray(components) {
+  return evalClassNameComponents(components).join(' ')
+}
+
+function generateClassNameFromBaseAndFlags(base, flags) {
+  return [base, ...evalClassNameFlags(base, flags)].join(' ')
+}
+
+function generateClassNameFromOptions({
+  base = null,
+  flags = [],
+  classes = []
+}) {
+  const classNames = evalClassNameComponents([base, ...classes])
+  const flagNames = evalClassNameFlags(base, flags)
+
+  return [...classNames, ...flagNames].join(' ')
+}
+
+export const generateClassName = (dynamicArg, flags) => {
+  if (dynamicArg instanceof Array) {
+    return generateClassNameFromArray(dynamicArg)
+  } else if (dynamicArg instanceof String && flags instanceof Array) {
+    return generateClassNameFromBaseAndFlags(dynamicArg, flags)
+  } else {
+    return generateClassNameFromOptions(dynamicArg)
+  }
+}
 
 export const copyPuzzle = puzzle => {
   const copy = puzzle.clone()

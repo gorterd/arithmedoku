@@ -219,12 +219,10 @@
           </button>
         </ol>
 
-        <div class='collection-info'>
-          <ul class='collection-combos'>
+        <ul class='collection-combos'>
 
-          </ul>
-          <div class='collection-rules'>
-          </div>
+        </ul>
+        <div class='collection-filter'>
         </div>
       </div>
     </section>
@@ -254,55 +252,40 @@
     </div>
   </template>
 
-  <template id='combination-template'>
-    <li class='combination' tabindex='-1'>
+  <template id='combo-template'>
+    <li class='combo' tabindex='-1'>
     </li>
   </template>
 
-  <template id='rule-template'>
-    <ol class='collection-rule'>
-      <!-- rule nums here -->
-      <button id='rule_and' class='rule_btn'>
-        AND MODE!!
+  <template id='filter-template'>
+    <ol class='filter'>
+      <!-- filter possibilities here -->
+      <button id='filter_and' class='filter_btn'>
+        AND
       </button>
-      <button id='rule_not' class='rule_btn'>
-        NOT MODE!!
+      <button id='filter_not' class='filter_btn'>
+        NOT
       </button>
-      <button id='rule_or' class='rule_btn'>
-        OR MODE!!
+      <button id='filter_or' class='filter_btn'>
+        OR
       </button>
-      <button id='rule_clear' class='rule_btn'>
+      <button id='filter_clear' class='filter_btn'>
         <i class='clear'></i>
       </button>
-      <button></button>
     </ol>
   </template>
 
-  <template id='rule-num-template'>
-    <li class='collection-rule_possibility'>
-      <div class='possibility-icons'></div>
-      <span class='collection-rule_possibility-val'></span>
+  <template id='filter-possibility-template'>
+    <li class='filter-possibility'>
+      <div class='possibility-icons possibility-icons--no-hover'></div>
+      <div class='possibility-icons possibility-icons--hover'></div>
+      <span class='filter-possibility_val'></span>
     </li>
   </template>
 
   <button id='toggle-palette'>Toggle Palette</button>
   <section id='color-palette' class='hidden'>
   </section>
-
-  <div class='possibility-icons'>
-    <span class='possibility-icon possibility-icon--hover'>
-
-    </span>
-    <span class='possibility-icon possibility-icon--no-hover'>
-
-    </span>
-    <span class='possibility-icon possibility-icon--large'>
-
-    </span>
-  </div>
-  <span class='possibility-icon hover'>
-    <i class='ban'></i>
-  </span>
 
   <script>
     COLORS = [
@@ -322,7 +305,8 @@
       'light-ocean-4',
       'light-ocean-5',
 
-      'ocean',
+      'ocean-1',
+      'ocean-2',
 
       'green',
 

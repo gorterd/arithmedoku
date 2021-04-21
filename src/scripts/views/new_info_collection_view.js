@@ -1,8 +1,8 @@
 import { autorun } from 'mobx'
-import { haveEquivalentChildren, updateChildrenToMatch } from '../shared/dom_util'
+import { haveEquivalentChildren, updateChildrenToMatch, isEquivalentNode } from '../shared/dom_util'
 
-export default function setupCollectionInfo(gameStore, collectionInfoEle) {
-  const collectionInfoElements = getCollectionInfoElements(collectionInfoEle)
+export default function setupCollectionInfo(gameStore, infoBoxEle) {
+  const collectionInfoElements = getCollectionInfoElements(infoBoxEle)
   setupListeners(gameStore, collectionInfoElements)
   makeReactive(gameStore, collectionInfoElements)
 }
@@ -28,10 +28,17 @@ function setupListeners(gameStore, {
   Array.from(possibilityEles).map(possibilityEle => {
     const val = parseInt(possibilityEle.dataset.val)
 
+    function restoreHover() {
+      possibilityEle.classList.remove('prevent-hover')
+      possibilityEle.removeEventListener('mouseleave', restoreHover)
+    }
+
     possibilityEle.addEventListener('click', () => {
-      console.log('clicked poss ele')
       if (!gameStore.ui.curCage) return
-      gameStore.ui.toggleRulePossibility(val)
+      gameStore.ui.toggleFilterPossibility(val)
+
+      possibilityEle.classList.add('prevent-hover')
+      possibilityEle.addEventListener('mouseleave', restoreHover)
     })
   })
 
@@ -52,16 +59,24 @@ function makeReactive(gameStore, {
 }) {
   const possibilityReactions = Array.from(possibilityEles).map(possibilityEle => {
     const val = parseInt(possibilityEle.dataset.val)
-    const iconsDiv = possibilityEle.querySelector('.possibility-icons')
 
-    return () => {
-      const iconsFragment = gameStore.ui.filterIconsFragment(val)
+    const noHoverIconsDiv = possibilityEle
+      .querySelector('.possibility-icons--no-hover')
+    const hoverIconsDiv = possibilityEle
+      .querySelector('.possibility-icons--hover')
 
-      if (!haveEquivalentChildren(iconsDiv, iconsFragment, {
+    const updateIcons = (iconsDiv, newIcons) => {
+      if (!haveEquivalentChildren(iconsDiv, newIcons, {
         attributes: ['class']
       })) {
-        iconsDiv.replaceChildren(iconsFragment)
+        iconsDiv.replaceChildren(...newIcons)
       }
+    }
+
+    return () => {
+      possibilityEle.className = gameStore.ui.filterClassName(val)
+      updateIcons(noHoverIconsDiv, gameStore.ui.filterNoHoverIcons(val))
+      updateIcons(hoverIconsDiv, gameStore.ui.filterHoverIcons(val))
     }
   })
 
@@ -91,13 +106,13 @@ function makeReactive(gameStore, {
   return disposers
 }
 
-function getCollectionInfoElements(collectionInfoEle) {
+function getCollectionInfoElements(infoBoxEle) {
   return {
-    combosEle: collectionInfoEle.querySelector('.collection-combos'),
-    possibilityEles: collectionInfoEle
-      .querySelectorAll('.collection-rule_possibility'),
-    andModeButton: collectionInfoEle.querySelector('#rule_and'),
-    notModeButton: collectionInfoEle.querySelector('#rule_not'),
-    orModeButton: collectionInfoEle.querySelector('#rule_or'),
+    combosEle: infoBoxEle.querySelector('.collection-combos'),
+    possibilityEles: infoBoxEle
+      .querySelectorAll('.filter-possibility'),
+    andModeButton: infoBoxEle.querySelector('#filter_and'),
+    notModeButton: infoBoxEle.querySelector('#filter_not'),
+    orModeButton: infoBoxEle.querySelector('#filter_or'),
   }
 }

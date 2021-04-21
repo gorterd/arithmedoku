@@ -1,5 +1,17 @@
 # Current Goals
 
+  ## Cur Todo
+  - underline style tabs: "Require All, Require One, Eliminate"
+  - purplish background to the collection info
+  - purple outline to cage in game
+  - reset button; that's all for filter
+  - upper left badge: square / cage
+  - header: combinations, filter
+  - keyboard shortcut to switch between tabs
+  - very slight opacity to not-allowed numbers
+  - if possible, select only combinations (when you hit enter, start new combination, esc ends without change, button locks it in)
+  - fix menus etc
+
   ## Info
   - finish info box styling 
   - filter / rules reset
@@ -8,7 +20,7 @@
     * focused vs cur, 
     * rule vs filter, 
     * num vs val, 
-    * combo vs combination, 
+    * combo vs combo, 
     * value vs possibility,
   - test square select value by default, eliminate with ctrl down
   - alter behavior of 'or' so that it doesn't immediately take effect
@@ -36,7 +48,7 @@
   - collection info
     * swipe between collections
     * show little diagram of collection
-  - combinations
+  - combos
     * search / filter
     * show number of direct and indirect implications from choosing that combo
     * starring combos

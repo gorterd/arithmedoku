@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
       mistakeTimeoutMs: 600,
     },
     templates: {
-      combination: getTemplateById('combination-template')
+      combo: getTemplateById('combo-template')
     }
   }
 

@@ -8,8 +8,8 @@ import {
 import { stringSwitch } from '../shared/general_util'
 import { GameBase } from './base'
 
-const RulePossibility = GameBase
-  .named('RulePossibility')
+const FilterPossibility = GameBase
+  .named('FilterPossibility')
   .props({
     value: types.integer,
     status: types.optional(
@@ -21,7 +21,6 @@ const RulePossibility = GameBase
       ]),
       () => 'none'
     ),
-    value: types.integer
   })
   .views(self => {
     return {
@@ -69,16 +68,6 @@ const RulePossibility = GameBase
           _case('or', () => self.orModeIcons)
         })
       },
-      iconsFragment(mode) {
-        const iconsFragment = new DocumentFragment()
-
-        iconsFragment.append(
-          ...self.noHoverIcons,
-          ...self.hoverIcons(mode),
-        )
-
-        return iconsFragment
-      }
     }
   })
   .actions(self => {
@@ -95,11 +84,11 @@ const RulePossibility = GameBase
     }
   })
 
-const Rules = GameBase
-  .named('Rules')
+const Filter = GameBase
+  .named('Filter')
   .props({
     possibilities: types.optional(
-      types.array(RulePossibility),
+      types.array(FilterPossibility),
       () => []
     ),
   })
@@ -125,23 +114,23 @@ const Rules = GameBase
     get alternativeValues() {
       return self.alternatives.map(possibility => possibility.value)
     },
-    getPossibilityByVal(val) {
+    getPossibilityByValue(val) {
       return self.possibilities.find(possibility => possibility.value === val)
     },
-    possibilityStatus(val) {
-      return self.getPossibilityByVal(val).status
+    filterPossibilityStatus(val) {
+      return self.getPossibilityByValue(val).status
     },
     isRequiredValue(val) {
-      return self.possibilityStatus(val) === 'required'
+      return self.filterPossibilityStatus(val) === 'required'
     },
     isEliminatedValue(val) {
-      return self.possibilityStatus(val) === 'eliminated'
+      return self.filterPossibilityStatus(val) === 'eliminated'
     },
     isAlternativeValue(val) {
-      return self.possibilityStatus(val) === 'alternative'
+      return self.filterPossibilityStatus(val) === 'alternative'
     },
     isStandardValue(val) {
-      return self.possibilityStatus(val) === 'none'
+      return self.filterPossibilityStatus(val) === 'none'
     },
     isPossibleCombo(combo) {
       return (
@@ -153,8 +142,11 @@ const Rules = GameBase
         )
       )
     },
-    iconsFragment(val, mode) {
-      return self.getPossibilityByVal(val).iconsFragment(mode)
+    noHoverIcons(val) {
+      return self.getPossibilityByValue(val).noHoverIcons
+    },
+    hoverIcons(val, mode) {
+      return self.getPossibilityByValue(val).hoverIcons(mode)
     }
   }))
   .actions(self => {
@@ -162,7 +154,7 @@ const Rules = GameBase
       initialize(size) {
         self.possibilities = Array.from(
           Array(size),
-          (_, idx) => RulePossibility.create({ value: idx + 1 })
+          (_, idx) => FilterPossibility.create({ value: idx + 1 })
         )
       },
       toggle(val, mode) {
@@ -171,18 +163,9 @@ const Rules = GameBase
           _case('not', () => 'eliminated')
           _case('or', () => 'alternative')
         })
-        self.getPossibilityByVal(val).toggle(status)
-      },
-      toggleRequired(val) {
-        self.toggle(val, 'required')
-      },
-      toggleEliminated(val) {
-        self.toggle(val, 'eliminated')
-      },
-      toggleAlternative(val) {
-        self.toggle(val, 'alternative')
+        self.getPossibilityByValue(val).toggle(status)
       },
     }
   })
 
-export default Rules
+export default Filter

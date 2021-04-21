@@ -59,9 +59,13 @@ export function isEquivalentNode(nodeA, nodeB, options = {}) {
   )
 }
 
-export function haveEquivalentChildren(nodeA, nodeB, options = {}) {
-  const childrenA = nodeA.childNodes
-  const childrenB = nodeB.childNodes
+export function haveEquivalentChildren(nodeOrListA, nodeOrListB, options = {}) {
+  const childrenA = nodeOrListA instanceof Node
+    ? Array.from(nodeOrListA.childNodes)
+    : nodeOrListA
+  const childrenB = nodeOrListB instanceof Node
+    ? Array.from(nodeOrListB.childNodes)
+    : nodeOrListB
 
   if (childrenA.length !== childrenB.length) {
     return false
