@@ -44,17 +44,17 @@ export const baseIcons = () => ([
 ])
 
 export const eliminatedIcons = () => ([
-  createIcon('square'),
+  createIcon('square', '--eliminated'),
   createIcon('slash', '--small'),
 ])
 
 export const alternativeIcons = () => ([
-  createIcon('square'),
   createIcon('square', '--alternative'),
+  createIcon('square', '--alternative-inner'),
 ])
 
 export const requiredIcons = () => ([
-  createIcon('square'),
+  createIcon('square', '--required'),
 ])
 
 export const filterPossibilityClassName = (...flags) => {

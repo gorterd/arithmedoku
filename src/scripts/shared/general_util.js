@@ -172,9 +172,13 @@ function generateClassNameFromOptions({
 }
 
 export const generateClassName = (dynamicArg, flags) => {
+  console.log('before')
+  console.log(dynamicArg, dynamicArg instanceof String)
+  console.log(flags instanceof Array)
+  console.log('after')
   if (dynamicArg instanceof Array) {
     return generateClassNameFromArray(dynamicArg)
-  } else if (dynamicArg instanceof String && flags instanceof Array) {
+  } else if (typeof dynamicArg === 'string' && flags instanceof Array) {
     return generateClassNameFromBaseAndFlags(dynamicArg, flags)
   } else {
     return generateClassNameFromOptions(dynamicArg)

@@ -21,7 +21,7 @@ function setupListeners(gameStore, {
       const combo = comboEle.dataset.combo.split(',')
         .map(valStr => parseInt(valStr))
 
-      gameStore.ui.curCage.toggleCombo(combo)
+      gameStore.toggleCurCageCombo(combo)
     }
   })
 
@@ -35,7 +35,7 @@ function setupListeners(gameStore, {
 
     possibilityEle.addEventListener('click', () => {
       if (!gameStore.ui.curCage) return
-      gameStore.ui.toggleFilterPossibility(val)
+      gameStore.toggleFilterPossibility(val)
 
       possibilityEle.classList.add('prevent-hover')
       possibilityEle.addEventListener('mouseleave', restoreHover)
@@ -52,6 +52,7 @@ function setupListeners(gameStore, {
 
 function makeReactive(gameStore, {
   combosEle,
+  filterEle,
   possibilityEles,
   andModeButton,
   notModeButton,
@@ -74,7 +75,7 @@ function makeReactive(gameStore, {
     }
 
     return () => {
-      possibilityEle.className = gameStore.ui.filterClassName(val)
+      possibilityEle.className = gameStore.ui.filterPossibilityClassName(val)
       updateIcons(noHoverIconsDiv, gameStore.ui.filterNoHoverIcons(val))
       updateIcons(hoverIconsDiv, gameStore.ui.filterHoverIcons(val))
     }
@@ -95,6 +96,7 @@ function makeReactive(gameStore, {
       }
     },
     function renderFilterModeClassNames() {
+      filterEle.className = gameStore.ui.filterClassName
       andModeButton.className = gameStore.ui.andModeButtonClassName
       notModeButton.className = gameStore.ui.notModeButtonClassName
       orModeButton.className = gameStore.ui.orModeButtonClassName
@@ -109,10 +111,10 @@ function makeReactive(gameStore, {
 function getCollectionInfoElements(infoBoxEle) {
   return {
     combosEle: infoBoxEle.querySelector('.collection-combos'),
-    possibilityEles: infoBoxEle
-      .querySelectorAll('.filter-possibility'),
-    andModeButton: infoBoxEle.querySelector('#filter_and'),
-    notModeButton: infoBoxEle.querySelector('#filter_not'),
-    orModeButton: infoBoxEle.querySelector('#filter_or'),
+    filterEle: infoBoxEle.querySelector('.collection-filter'),
+    possibilityEles: infoBoxEle.querySelectorAll('.filter-possibility'),
+    andModeButton: infoBoxEle.querySelector('#filter-and'),
+    notModeButton: infoBoxEle.querySelector('#filter-not'),
+    orModeButton: infoBoxEle.querySelector('#filter-or'),
   }
 }

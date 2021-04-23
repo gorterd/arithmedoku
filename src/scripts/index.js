@@ -13,7 +13,6 @@ import initialMount from './setup/initial_mount'
 import { getTemplateById } from './shared/dom_util'
 
 document.addEventListener('DOMContentLoaded', () => {
-  initialMount()
   const env = {
     snapshots: {},
     history: [],
@@ -27,6 +26,8 @@ document.addEventListener('DOMContentLoaded', () => {
       combo: getTemplateById('combo-template')
     }
   }
+
+  initialMount(env.globals)
 
   const gameStore = Game.create({}, env)
   gameStore.initialize(puzzle_01)

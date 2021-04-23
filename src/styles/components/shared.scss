@@ -1,0 +1,14 @@
+.keyboard {
+  border: 1px solid $grey-ocean-2;
+  border-radius: 3px;
+  background: $grey-ocean-1;
+  font-weight: bold;
+  font-size: 0.8em;
+  padding: 0 0.35em;
+  margin: 0 0.1em;
+}
+
+.keyboard--cream {
+  border-color: $cream-5;
+  background: $cream-2;
+}

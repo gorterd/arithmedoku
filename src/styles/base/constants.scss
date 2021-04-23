@@ -11,6 +11,17 @@ $h-info: calc(#{$sz-puzzle} * 0.95);
 $sz-info-square-poss: calc(#{$w-info} / 13);
 $sz-info-square-chosen: calc(#{$sz-info-square-poss} * 1.2);
 
+$sz-info-poss: calc(#{$w-info} / 11);
+
+$w-info-tab: calc(#{$w-info} * 0.3);
+
+$fnt-sz-info-poss-icon: calc(#{$sz-info-poss} * 0.9);
+$fnt-sz-info-poss-icon--lrg: calc(#{$fnt-sz-info-poss-icon} * 1.05);
+$fnt-sz-info-poss-icon--small: calc(#{$fnt-sz-info-poss-icon} * 0.95);
+$fnt-sz-info-poss-val: 2.3vw; // * 1.08 for chosen
+$fnt-sz-info-poss-btn: 2.6vw; 
+
+
 // old size
 
 $lg-pz-size: 42vw;

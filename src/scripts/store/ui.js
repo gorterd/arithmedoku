@@ -164,6 +164,7 @@
 import { types } from 'mobx-state-tree'
 import { ICONS } from '../shared/constants'
 import { baseIcons, filterPossibilityClassName } from '../shared/dom_partials'
+import { generateClassName } from '../shared/general_util'
 import { GameBase } from './base'
 import { Cage, Group } from './collections'
 import Square from './square'
@@ -200,20 +201,23 @@ const UI = GameBase
       get curCagePossibleCombos() {
         return self.curCage?.possibleCombos || []
       },
+      get filterClassName() {
+        return generateClassName('collection-filter', [self.filterMode])
+      },
       get andModeButtonClassName() {
-        return self.filterMode === 'and'
-          ? 'filter_mode-btn filter_mode-btn--selected'
-          : 'filter_mode-btn'
+        return generateClassName('filter_mode-btn', [
+          [self.filterMode === 'and', 'selected']
+        ])
       },
       get notModeButtonClassName() {
-        return self.filterMode === 'not'
-          ? 'filter_mode-btn filter_mode-btn--selected'
-          : 'filter_mode-btn'
+        return generateClassName('filter_mode-btn', [
+          [self.filterMode === 'not', 'selected']
+        ])
       },
       get orModeButtonClassName() {
-        return self.filterMode === 'or'
-          ? 'filter_mode-btn filter_mode-btn--selected'
-          : 'filter_mode-btn'
+        return generateClassName('filter_mode-btn', [
+          [self.filterMode === 'or', 'selected']
+        ])
       },
       get hasStagedPossibilities() {
         return self.stagedPossibilities.length > 0
@@ -255,7 +259,7 @@ const UI = GameBase
           ? self.curCage.filter.hoverIcons(val, self.filterMode)
           : baseIcons()
       },
-      filterClassName(val) {
+      filterPossibilityClassName(val) {
         return self.curCage
           ? self.curCage.filter.className(val, self.filterMode)
           : filterPossibilityClassName('none', 'disabled')
@@ -319,6 +323,9 @@ const UI = GameBase
       },
       toggleFilterPossibility(val) {
         self.curCage.filter.toggle(val, self.filterMode)
+      },
+      clearFilterModePossibilities() {
+        console.log('TODOOOO')
       },
       setFilterMode(mode) {
         self.filterMode = mode

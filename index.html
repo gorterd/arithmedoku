@@ -52,8 +52,6 @@
               checkmark to finalize them.</li>
           </ol>
         </button>
-      </div>
-      <div class='header_right'>
         <button id='header-options' class='header_button'>
           options
           <ul class='header_dropdown header_dropdown--list options'>
@@ -118,99 +116,60 @@
             </li>
           </ul>
         </button>
-        <button id='header-undo' class='header_button'>undo</button>
-        <button id='header-redo' class='header_button'>redo</button>
+      </div>
+      <div class='header_right'>
+        <button id='header-undo' class='header_button'>
+          undo <span class='keyboard keyboard--cream'>⌘z / ⌃z </span>
+        </button>
+        <button id='header-redo' class='header_button'>
+          redo <span class='keyboard keyboard--cream'>⌘y / ⌃y </span>
+        </button>
         <button id='header-new' class='header_button'>new puzzle</button>
         <button id='header-reset' class='header_button'>reset</button>
       </div>
     </header>
 
     <section class='game'>
-      <div class='puzzle'></div>
+      <div class='puzzle'>
+        <template id='square-template'>
+          <div class='square' tabindex='-1'>
+            <span class='square_cage-top'></span>
+            <span class='square_cage-left'></span>
+            <span class='square_label'></span>
+            <span class='square_value'></span>
+            <ol class='square_possibilities'>
+              <li class='square_possibility' data-val='1'>1</li>
+              <li class='square_possibility' data-val='2'>2</li>
+              <li class='square_possibility' data-val='3'>3</li>
+              <li class='square_possibility' data-val='4'>4</li>
+              <li class='square_possibility' data-val='5'>5</li>
+              <li class='square_possibility' data-val='6'>6</li>
+              <li class='square_possibility' data-val='7'>7</li>
+              <li class='square_possibility' data-val='8'>8</li>
+              <li class='square_possibility' data-val='9'>9</li>
+            </ol>
+          </div>
+        </template>
+
+        <!-- squares cloned from template here -->
+      </div>
 
       <div class='info-box'>
         <ol class='square-info'>
-          <li class='square-info_possibility' data-val='1'>
-            <span class='possibility-icon no-hover'>
-              <i class='circle'></i>
-            </span>
-            <span class='possibility-icon hover'>
-              <i class='ban'></i>
-            </span>
-            <span class='square-info_possibility-val'>1</span>
-          </li>
-          <li class='square-info_possibility' data-val='2'>
-            <span class='possibility-icon no-hover'>
-              <i class='circle'></i>
-            </span>
-            <span class='possibility-icon hover'>
-              <i class='ban'></i>
-            </span>
-            <span class='square-info_possibility-val'>2</span>
-          </li>
-          <li class='square-info_possibility' data-val='3'>
-            <span class='possibility-icon no-hover'>
-              <i class='circle'></i>
-            </span>
-            <span class='possibility-icon hover'>
-              <i class='ban'></i>
-            </span>
-            <span class='square-info_possibility-val'>3</span>
-          </li>
-          <li class='square-info_possibility' data-val='4'>
-            <span class='possibility-icon no-hover'>
-              <i class='circle'></i>
-            </span>
-            <span class='possibility-icon hover'>
-              <i class='ban'></i>
-            </span>
-            <span class='square-info_possibility-val'>4</span>
-          </li>
-          <li class='square-info_possibility' data-val='5'>
-            <span class='possibility-icon no-hover'>
-              <i class='circle'></i>
-            </span>
-            <span class='possibility-icon hover'>
-              <i class='ban'></i>
-            </span>
-            <span class='square-info_possibility-val'>5</span>
-          </li>
-          <li class='square-info_possibility' data-val='6'>
-            <span class='possibility-icon no-hover'>
-              <i class='circle'></i>
-            </span>
-            <span class='possibility-icon hover'>
-              <i class='ban'></i>
-            </span>
-            <span class='square-info_possibility-val'>6</span>
-          </li>
-          <li class='square-info_possibility' data-val='7'>
-            <span class='possibility-icon no-hover'>
-              <i class='circle'></i>
-            </span>
-            <span class='possibility-icon hover'>
-              <i class='ban'></i>
-            </span>
-            <span class='square-info_possibility-val'>7</span>
-          </li>
-          <li class='square-info_possibility' data-val='8'>
-            <span class='possibility-icon no-hover'>
-              <i class='circle'></i>
-            </span>
-            <span class='possibility-icon hover'>
-              <i class='ban'></i>
-            </span>
-            <span class='square-info_possibility-val'>8</span>
-          </li>
-          <li class='square-info_possibility' data-val='9'>
-            <span class='possibility-icon no-hover'>
-              <i class='circle'></i>
-            </span>
-            <span class='possibility-icon hover'>
-              <i class='ban'></i>
-            </span>
-            <span class='square-info_possibility-val'>9</span>
-          </li>
+          <template id='square-info_possibility-template'>
+            <li class='square-info_possibility' data-val=''>
+              <span class='possibility-icon no-hover'>
+                <i class='circle'></i>
+              </span>
+              <span class='possibility-icon hover'>
+                <i class='ban'></i>
+              </span>
+              <span class='square-info_possibility-val'></span>
+            </li>
+          </template>
+
+          <!-- possibilities cloned from template here -->
+
           <button id='square-info_select-only' class='square-info_btn'>
             <i class='select'></i>
           </button>
@@ -220,9 +179,43 @@
         </ol>
 
         <ul class='collection-combos'>
+          <template id='combo-template'>
+            <li class='combo' tabindex='-1'>
+            </li>
+          </template>
 
+          <!-- combos cloned from template here -->
         </ul>
+
         <div class='collection-filter'>
+          <ul class='filter-tabs'>
+            <button id='filter-and' class='filter_mode-btn'>
+              Require All <span class='keyboard'>a</span>
+            </button>
+            <button id='filter-not' class='filter_mode-btn'>
+              Eliminate <span class='keyboard'>e</span>
+            </button>
+            <button id='filter-or' class='filter_mode-btn'>
+              Require One <span class='keyboard'>o</span>
+            </button>
+            <span id='filter-tab-underline'></span>
+          </ul>
+
+          <ol class='filter-possibilities'>
+            <template id='filter-possibility-template'>
+              <li class='filter-possibility' data-val=''>
+                <div class='possibility-icons possibility-icons--no-hover'></div>
+                <div class='possibility-icons possibility-icons--hover'></div>
+                <span class='filter-possibility_val'></span>
+              </li>
+            </template>
+
+            <!-- possibilities cloned from template here -->
+
+            <button id='filter_clear' class='filter_btn'>
+              <i class='reset'></i>
+            </button>
+          </ol>
         </div>
       </div>
     </section>
@@ -231,57 +224,6 @@
       puzzles by Jim Bumgardner, aka Krazydad
     </a>
   </main>
-
-  <template id='square-template'>
-    <div class='square' tabindex='-1'>
-      <span class='square_cage-top'></span>
-      <span class='square_cage-left'></span>
-      <span class='square_label'></span>
-      <span class='square_value'></span>
-      <ol class='square_possibilities'>
-        <li class='square_possibility' data-val='1'>1</li>
-        <li class='square_possibility' data-val='2'>2</li>
-        <li class='square_possibility' data-val='3'>3</li>
-        <li class='square_possibility' data-val='4'>4</li>
-        <li class='square_possibility' data-val='5'>5</li>
-        <li class='square_possibility' data-val='6'>6</li>
-        <li class='square_possibility' data-val='7'>7</li>
-        <li class='square_possibility' data-val='8'>8</li>
-        <li class='square_possibility' data-val='9'>9</li>
-      </ol>
-    </div>
-  </template>
-
-  <template id='combo-template'>
-    <li class='combo' tabindex='-1'>
-    </li>
-  </template>
-
-  <template id='filter-template'>
-    <ol class='filter'>
-      <!-- filter possibilities here -->
-      <button id='filter_and' class='filter_btn'>
-        AND
-      </button>
-      <button id='filter_not' class='filter_btn'>
-        NOT
-      </button>
-      <button id='filter_or' class='filter_btn'>
-        OR
-      </button>
-      <button id='filter_clear' class='filter_btn'>
-        <i class='clear'></i>
-      </button>
-    </ol>
-  </template>
-
-  <template id='filter-possibility-template'>
-    <li class='filter-possibility'>
-      <div class='possibility-icons possibility-icons--no-hover'></div>
-      <div class='possibility-icons possibility-icons--hover'></div>
-      <span class='filter-possibility_val'></span>
-    </li>
-  </template>
 
   <button id='toggle-palette'>Toggle Palette</button>
   <section id='color-palette' class='hidden'>
@@ -336,6 +278,16 @@
 
       palette.appendChild(colorDiv)
     })
+
+    let testDiv = document.createElement('div')
+    testDiv.className = `color-div brick-1`
+
+    let colorLabel = document.createElement('span')
+    colorLabel.className = `color-label`
+    colorLabel.innerText = 'testDiv'
+    testDiv.appendChild(colorLabel)
+    palette.appendChild(testDiv)
+    testDiv.onclick = () => testDiv.classList.toggle('test-color-div')
 
     document.getElementById('toggle-palette').addEventListener('click', () => {
       palette.classList.toggle('hidden')

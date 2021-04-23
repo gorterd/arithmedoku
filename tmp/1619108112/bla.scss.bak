@@ -9,14 +9,13 @@ $light-brick-7: hsl(6, 100%, 73%);
 $brick-1: hsl(6, 75%, 40%);
 $brick-2: hsl(6, 75%, 25%);
 
-$violet-1: hsl(274, 25%, 95%);
-$violet-2: hsl(274, 25%, 80%);
-$violet-3: hsl(274, 25%, 60%);
-$violet-4: hsl(274, 25%, 50%);
+$violet-1: hsl(274, 25%, 90%);
+$violet-5: hsl(274, 25%, 80%);
+$violet-6: hsl(274, 25%, 60%);
+$violet-7: hsl(274, 25%, 50%);
 
 $light-ocean-1: hsl(186, 100%, 98%);
 $light-ocean-2: hsl(186, 100%, 93%);
-$light-ocean-2-transparent: rgba(219, 251, 255, 0);
 $light-ocean-3: hsl(186, 100%, 88%);
 $light-ocean-4: hsl(186, 100%, 83%);
 $light-ocean-5: hsl(186, 100%, 78%);
@@ -24,16 +23,14 @@ $light-ocean-5: hsl(186, 100%, 78%);
 $ocean-1: hsl(186, 100%, 28%);
 $ocean-2: hsl(186, 100%, 23%);
 
-$grey-ocean-1: hsl(186, 30%, 96%);
-$grey-ocean-2: hsl(186, 20%, 80%);
-$grey-ocean-3: hsl(186, 20%, 75%);
-$grey-ocean-4: hsl(186, 20%, 40%);
-$grey-ocean-5: hsl(186, 20%, 20%);
+$grey-ocean-1: hsl(186, 15%, 90%);
+$grey-ocean-2: hsl(186, 15%, 75%);
 
 $green-1: hsl(140, 55%, 92%);
-$green-2: hsl(130, 100%, 45%);
-$green-3: hsl(135, 100%, 40%);
-$green-4: hsl(140, 55%, 25%);
+$green-2: hsl(140, 70%, 40%);
+$green-3: hsl(140, 55%, 25%);
+$green-2: hsl(140, 70%, 40%);
+$green-3: hsl(140, 55%, 25%);
 
 $cream-1: hsl(36, 100%, 98%);
 $cream-2: hsl(36, 100%, 94%);
@@ -97,20 +94,6 @@ $colors: (
   height: 100px;
   position: relative;
   margin: 30px 20px;
-}
-
-.test-color-div {
-  @keyframes animate-color {
-    from {
-      background-color: $brick-1;
-    }
-
-    to {
-      background-color: $violet-4;
-    }
-  }
-
-  animation: animate-color 2s;
 }
 
 .color-label {

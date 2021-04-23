@@ -1,15 +1,12 @@
 .info-box {
   width: $w-info;
   height: $h-info;
+  border: 4px solid black;
   border-radius: 10px;
-  background: $light-ocean-1;
+  background: $light-ocean-2;
   border: 2px solid $ocean-1;
   display: grid;
-  grid-template-rows: 
-    #{'min(calc(#{$h-info} * 0.25), 270px)'} 
-    1fr 
-    #{'min(calc(#{$h-info} * 0.28), 270px)'};
-  justify-items: center;
+  grid-template-rows: 1fr 2fr 1.5fr;
   overflow: hidden;
 }
 
@@ -26,7 +23,8 @@
 
 @mixin possibilities {
   display: flex;
-  width: 100%;
+  width: 95%;
+  margin: 3% auto;
   justify-content: space-between;
   align-items: center;
 }
@@ -51,7 +49,6 @@
   justify-content: center;
   align-items: center;
   cursor: pointer; 
-  z-index: 1;
 
   &--disabled { 
     cursor: not-allowed;
@@ -94,17 +91,6 @@
 .square-info {
   @include possibilities();
   grid-row: 1;
-  position: relative;
-
-  &::after {
-    display: block;
-    content: '';
-    height: calc(#{$h-info} / 8);
-    width: 100%;
-    position: absolute;
-    bottom: 0;
-    background: linear-gradient(0deg, $light-ocean-2, $light-ocean-1);
-  }
 }
 
 .square-info_possibility {
@@ -114,7 +100,7 @@
   color: $ocean-2;
 
   &--chosen {
-    color: $green-3;
+    color: $green-2;
     // font-size: 2.5vw;
     font-size: 1.08em;
     font-weight: 600;
@@ -173,85 +159,25 @@
 
 .collection-combos {
   grid-row: 2;
-  overflow-y: scroll;
-  margin-bottom: 20px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: $light-ocean-2;
-  position: relative;
-
-  &::after {
-    display: block;
-    content: '';
-    height: calc(#{$h-info} / 8);
-    width: 100%;
-    position: absolute;
-    bottom: 0;
-    background: linear-gradient(0deg, $light-ocean-2, $light-ocean-2-transparent);
-  }
 }
 
 .combo {
-  background-color: $grey-ocean-1;
-  border: 1.5px solid $grey-ocean-2;
-  box-shadow: inset 0.5px 0.5px 3px 1px $grey-ocean-3;
-  border-radius: 30px;
-  font-size: 2vw;
-  padding: 10px 10px 10px 25px;
-  margin-bottom: 6px;
-  letter-spacing: 15px;
-  display: flex;
-  justify-content: center;
-  color: $grey-ocean-4;
-  cursor: pointer;
-  outline: none;
-  user-select: none;
-  width: fit-content;
-  position: relative;
-  z-index: 1;
-
-  &--eliminated,
-  &:not(&--eliminated):hover {
-
-    &::after {
-      height: 8%;
-      width: 90%;
-      position: absolute;
-      left: 5%;
-      top: 46%;
-      border-radius: 5px;
-      background-color: $brick-1;
-      opacity: 0.4;
-      content: '';
-    }
-  }
-
   &--eliminated {
     color: $brick-1;
-    background-color: $light-brick-2;
-    opacity: 0.5;
-
-    &::after {
-      opacity: 0.8;
-    }
   }
+}
+
+.combo--eliminated {
 }
 
 .collection-filter {
   grid-row: 3;
   position: relative;
-  padding-top: 20px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 
   &::before {
     display: block;
     content: '';
-    height: calc(#{$h-info} / 8);
+    height: 50px;
     width: 100%;
     position: absolute;
     bottom: 100%;
@@ -272,9 +198,9 @@
   }
   
   &--or {
-    background-color: $violet-1;
+    background-color: $cream-2;
     &::before {
-      background: linear-gradient(0deg, $violet-1, $light-ocean-2);
+      background: linear-gradient(0deg, $cream-2, $light-ocean-2);
     }
   }
 }
@@ -300,9 +226,8 @@
 
   &--required,
   &--hover-required:hover:not(.prevent-hover) {
-    color: $green-3;
-    font-weight: 600;
-    font-size: 2.6vw;
+    color: $green-2;
+    font-weight: 400;
   }
 
   &--eliminated,
@@ -318,25 +243,15 @@
     color: $ocean-2;
   }
 
-  &--alternative,
-  &--hover-alternative:hover:not(.prevent-hover) {
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: -6%;
-      background: $violet-3;
-      height: 10%;
-      width: 70%;
-      border-radius: 10px;
-    }
-  }
+  // &--alternative,
+  // &--hover-alternative:hover:not(.prevent-hover) {
+  //   border: #{'min(2.5px, .25vw)'} dotted $green-2;
+  //   // border: 3px dotted $cream-8;
+  //   border-radius: .4vw;
+  // }
 
   &--not-allowed {
     cursor: not-allowed;
-  }
-
-  &--disabled {
-    opacity: 0.2;
   }
 }
 
@@ -351,23 +266,13 @@
 }
 
 .possibility-icon--small {
-  font-size: 105%;
+  font-size: 90%;
   opacity: 0.9;
 }
 
-.possibility-icon--required,
-.possibility-icon--eliminated {
-  font-size: $fnt-sz-info-poss-icon--lrg;
-}
-
 .possibility-icon--alternative {
-  // font-size: $fnt-sz-info-poss-icon--lrg;
-  // color: $green-2;
-}
-
-.possibility-icon--alternative-inner {
-  // font-size: $fnt-sz-info-poss-icon--small;
-  // color: $ocean-1;
+  font-size: $fnt-sz-info-poss-icon--lrg;
+  color: $green-2;
 }
 
 .filter_btn {
@@ -383,61 +288,40 @@
 
 .filter-tabs {
   display: grid;
-  grid-template-columns: repeat(3, $w-info-tab);
+  grid-template-columns: 1fr 1fr 1fr;
   justify-items: center;
-  margin: 20px 0 10px 0;
+  // width: 90%;
 }
 
 .filter_mode-btn {
   padding-bottom: 5px;
   outline: none;
-  color: $grey-ocean-4;
-  font-weight: bold;
+  border-bottom-width: 3px;
+  border-bottom-style: solid;
 
   &--selected {
-    color: $grey-ocean-5;
+    font-weight: bold;
+    border-bottom-width: 7px;
+
   }
+
 }
 
-#filter-tab-underline {
-  height: 8px;
-  width: calc(#{$w-info} / 7);
-  grid-column: 1;
-
-  .collection-filter--and & {
-    background-color: $green-3;
-    transform: translateX(0);
-    transition: transform 300ms;
-  }
-  
-  .collection-filter--not & {
-    background-color: $brick-1;
-    transform: translateX(#{$w-info-tab});
-    transition: transform 300ms;
-  }
-  
-  .collection-filter--or & {
-    background-color: $violet-4;
-    transform: translateX(calc(#{$w-info-tab} * 2));
-    transition: transform 300ms;
-  }
-}
-
-#filter-and {
-  // color: $green-4;
-  border-color: $green-4;
+#filter_and {
+  // color: $green-3;
+  border-color: $green-3;
   grid-column: 1;
 }
 
-#filter-not {
+#filter_not {
   // color: $brick-2;
-  border-color: $brick-1;
+  border-color: $brick-2;
   grid-column: 2;
 }
 
-#filter-or {
+#filter_or {
   // color: $cappuccino-1;
-  border-color: $violet-4;
+  border-color: $cappuccino-1;
   grid-column: 3;
 }
 

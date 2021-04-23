@@ -63,6 +63,15 @@ const Game = GameBase
       clearFocusedSquare() {
         self.setFocusedSquare(null)
       },
+      toggleCurCageCombo(combo) {
+        self.ui.curCage.toggleCombo(combo)
+      },
+      toggleFilterPossibility(val) {
+        self.ui.toggleFilterPossibility(val)
+      },
+      clearFilterModePossibilities() {
+        self.ui.clearFilterModePossibilities()
+      },
       enterIf() {
         const mainSnapshotId = takePuzzleSnapshot()
         self.meta.enterIf(mainSnapshotId)

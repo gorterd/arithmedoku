@@ -2,9 +2,10 @@ import { ICONS } from "../shared/constants"
 import { getTemplateById } from "../shared/dom_util"
 import { kebabToCamel } from "../shared/general_util"
 
-export default function initialMount() {
-  setupFilter()
-  setupIcons()
+export default function initialMount(globals) {
+  setupSquarePossibilities(globals)
+  setupFilterPossibilities(globals)
+  setupIcons(globals)
 }
 
 function setupIcons() {
@@ -13,32 +14,32 @@ function setupIcons() {
   })
 }
 
-function setupSquarePossibilities() {
-
-}
-
-function setupFilter() {
-  const filterTemplate = getTemplateById('filter-template')
-  const filterNumTemplate = getTemplateById('filter-possibility-template')
-
-  const filterEle = createFilter(filterTemplate, filterNumTemplate)
-  filterEle.classList.add('filter')
-
-  document.querySelector('.collection-filter')
-    .append(filterEle)
-}
-
-function createFilter(filterTemplate, numTemplate, size = 9) {
-  const filter = filterTemplate.cloneNode(true)
-  const nums = new DocumentFragment()
+function setupSquarePossibilities({ size }) {
+  const template = getTemplateById('square-info_possibility-template')
+  const squarePossibilities = new DocumentFragment()
 
   for (let i = 1; i <= size; i++) {
-    const num = numTemplate.cloneNode(true)
-    num.dataset.val = i
-    num.querySelector('.filter-possibility_val').innerText = i
-    nums.appendChild(num)
+    const possibility = template.cloneNode(true)
+    possibility.dataset.val = i
+    possibility.querySelector('.square-info_possibility-val').innerText = i
+    squarePossibilities.appendChild(possibility)
   }
 
-  filter.prepend(nums)
-  return filter
+  document.querySelector('.square-info')
+    .prepend(squarePossibilities)
+}
+
+function setupFilterPossibilities({ size }) {
+  const template = getTemplateById('filter-possibility-template')
+  const filterPossibilities = new DocumentFragment()
+
+  for (let i = 1; i <= size; i++) {
+    const possibility = template.cloneNode(true)
+    possibility.dataset.val = i
+    possibility.querySelector('.filter-possibility_val').innerText = i
+    filterPossibilities.appendChild(possibility)
+  }
+
+  document.querySelector('.filter-possibilities')
+    .prepend(filterPossibilities)
 }

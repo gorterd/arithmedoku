@@ -16,7 +16,6 @@ $violet-4: hsl(274, 25%, 50%);
 
 $light-ocean-1: hsl(186, 100%, 98%);
 $light-ocean-2: hsl(186, 100%, 93%);
-$light-ocean-2-transparent: rgba(219, 251, 255, 0);
 $light-ocean-3: hsl(186, 100%, 88%);
 $light-ocean-4: hsl(186, 100%, 83%);
 $light-ocean-5: hsl(186, 100%, 78%);
@@ -26,9 +25,8 @@ $ocean-2: hsl(186, 100%, 23%);
 
 $grey-ocean-1: hsl(186, 30%, 96%);
 $grey-ocean-2: hsl(186, 20%, 80%);
-$grey-ocean-3: hsl(186, 20%, 75%);
-$grey-ocean-4: hsl(186, 20%, 40%);
-$grey-ocean-5: hsl(186, 20%, 20%);
+$grey-ocean-3: hsl(186, 20%, 35%);
+$grey-ocean-4: hsl(186, 20%, 20%);
 
 $green-1: hsl(140, 55%, 92%);
 $green-2: hsl(130, 100%, 45%);
