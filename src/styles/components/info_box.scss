@@ -9,7 +9,6 @@
     #{'min(calc(#{$h-info} * 0.25), 270px)'} 
     1fr 
     #{'min(calc(#{$h-info} * 0.28), 270px)'};
-  justify-items: center;
   overflow: hidden;
 }
 
@@ -17,7 +16,6 @@
   height: 100%;
   width: 100%;
   position: absolute;
-  // font-size: $sz-info-square-poss;
   font-size: $fnt-sz-info-poss-icon;
   display: flex;
   align-items: center;
@@ -26,7 +24,6 @@
 
 @mixin possibilities {
   display: flex;
-  width: 100%;
   justify-content: space-between;
   align-items: center;
 }
@@ -43,8 +40,6 @@
 @mixin possibilities_child {
   position: relative;
   user-select: none;
-  width: $sz-info-square-poss;
-  height: $sz-info-square-poss;
   width: $sz-info-poss;
   height: $sz-info-poss;
   display: flex;
@@ -87,14 +82,15 @@
 @mixin possibilities_btn {
   @include possibilities_child();
 
-  // font-size: 2.6vw;
   font-size: $fnt-sz-info-poss-btn;
 }
 
 .square-info {
   @include possibilities();
+  width: $w-info;
   grid-row: 1;
   position: relative;
+  padding: 0 10px;
 
   &::after {
     display: block;
@@ -103,6 +99,7 @@
     width: 100%;
     position: absolute;
     bottom: 0;
+    left: 0;
     background: linear-gradient(0deg, $light-ocean-2, $light-ocean-1);
   }
 }
@@ -169,28 +166,48 @@
   &--disabled {
     opacity: 0.2;
   }
+
+  &:hover:not(&--disabled) {
+    color: darken($ocean-2, 3);
+    text-shadow: 0.3px 0.3px 1px darken($ocean-2, 5);
+  }
 }
 
 .collection-combos {
   grid-row: 2;
-  overflow-y: scroll;
-  margin-bottom: 20px;
-  width: 100%;
+  width: $w-info;
+  display: flex;
+  background-color: $light-ocean-2;
+  position: relative;
+  overflow: hidden;
+  padding-bottom: 1.5vw;
+
+  // &::after {
+  //   display: block;
+  //   content: '';
+  //   height: calc(#{$h-info} / 8);
+  //   width: 100%;
+  //   position: absolute;
+  //   bottom: 0;
+  //   background: linear-gradient(0deg, $light-ocean-2, $light-ocean-2-transparent);
+  // }
+}
+
+.combos_list {
+  overflow-y: auto;
+  flex-basis: 75%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: $light-ocean-2;
   position: relative;
+  // z-index: 1;
+  margin: 0 2vw;
+  box-shadow: inset 0px -20px 5px -20px rgba(223, 246, 231, 1);
+  padding-bottom: calc(#{$h-info} / 10);
+}
 
-  &::after {
-    display: block;
-    content: '';
-    height: calc(#{$h-info} / 8);
-    width: 100%;
-    position: absolute;
-    bottom: 0;
-    background: linear-gradient(0deg, $light-ocean-2, $light-ocean-2-transparent);
-  }
+.combos_buttons {
+  flex-basis: 25%;
 }
 
 .combo {
@@ -199,9 +216,9 @@
   box-shadow: inset 0.5px 0.5px 3px 1px $grey-ocean-3;
   border-radius: 30px;
   font-size: 2vw;
-  padding: 10px 10px 10px 25px;
+  padding: 0.5vw 1.5vw 0.5vw 2.3vw;
   margin-bottom: 6px;
-  letter-spacing: 15px;
+  letter-spacing: 0.8vw;
   display: flex;
   justify-content: center;
   color: $grey-ocean-4;
@@ -210,17 +227,16 @@
   user-select: none;
   width: fit-content;
   position: relative;
-  z-index: 1;
 
   &--eliminated,
   &:not(&--eliminated):hover {
 
     &::after {
-      height: 8%;
+      height: 12%;
       width: 90%;
       position: absolute;
       left: 5%;
-      top: 46%;
+      top: 44%;
       border-radius: 5px;
       background-color: $brick-1;
       opacity: 0.4;
@@ -242,8 +258,8 @@
 .collection-filter {
   grid-row: 3;
   position: relative;
-  padding-top: 20px;
-  width: 100%;
+  padding: 10px 15px;
+  width: $w-info;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -251,30 +267,31 @@
   &::before {
     display: block;
     content: '';
-    height: calc(#{$h-info} / 8);
+    height: calc(#{$h-info} / 10);
     width: 100%;
     position: absolute;
     bottom: 100%;
+    pointer-events: none;
   }
 
   &--and {
     background-color: $green-1;
     &::before {
-      background: linear-gradient(0deg, $green-1, $light-ocean-2);
+      background: linear-gradient(0deg, $green-1 0%,  $light-ocean-2 80%, $light-ocean-2-transparent 100%);
     }
   }
   
   &--not {
     background-color: $light-brick-2;
     &::before {
-      background: linear-gradient(0deg, $light-brick-2, $light-ocean-2);
+      background: linear-gradient(0deg, $light-brick-2 0%,  $light-ocean-2 80%, $light-ocean-2-transparent 100%);
     }
   }
   
   &--or {
     background-color: $violet-1;
     &::before {
-      background: linear-gradient(0deg, $violet-1, $light-ocean-2);
+      background: linear-gradient(0deg, $violet-1 0%,  $light-ocean-2 80%, $light-ocean-2-transparent 100%);
     }
   }
 }
@@ -374,11 +391,15 @@
 .filter_btn {
   @include possibilities_btn();
 
-  // color: $violet-4;
   color: $ocean-2;
 
   &--disabled {
     opacity: 0.2;
+  }
+
+  &:hover:not(&--disabled) {
+    color: darken($ocean-2, 3);
+    text-shadow: 0.3px 0.3px 1px darken($ocean-2, 5);
   }
 }
 
@@ -386,14 +407,17 @@
   display: grid;
   grid-template-columns: repeat(3, $w-info-tab);
   justify-items: center;
-  margin: 20px 0 10px 0;
+  margin: 0 0 20px 0;
 }
 
 .filter_mode-btn {
-  padding-bottom: 5px;
+  padding-bottom: 0.3vw;
   outline: none;
   color: $grey-ocean-4;
   font-weight: bold;
+  font-size: #{'min(20px, 1.3vw)'};
+  position: relative;
+  // left: 0.2vw;
 
   &--selected {
     color: $grey-ocean-5;
@@ -401,8 +425,8 @@
 }
 
 #filter-tab-underline {
-  height: 8px;
-  width: calc(#{$w-info} / 7);
+  height: calc(#{$h-info} / 100);
+  width: calc(#{$w-info} / 8);
   grid-column: 1;
 
   .collection-filter--and & {

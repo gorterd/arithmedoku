@@ -33,7 +33,7 @@ const FilterPossibility = GameBase
     const hoverFlag = mode => {
       if (self.status === 'none') {
         return `hover-${modeStatusMap[mode]}`
-      } else if (modeStatusMap[mode] !== self.status) {
+      } else if (!self.matchesMode(mode)) {
         return 'not-allowed'
       }
     }
@@ -48,6 +48,9 @@ const FilterPossibility = GameBase
     return {
       get noHoverIcons() {
         return getStatusIcon(self.status)
+      },
+      matchesMode(mode) {
+        return self.status === modeStatusMap[mode]
       },
       hoverIcons(mode) {
         return self.status === 'none'
@@ -162,6 +165,13 @@ const Filter = GameBase
           _case('or', () => 'alternative')
         })
         self.getPossibilityByValue(val).toggle(status)
+      },
+      clearMode(mode) {
+        self.possibilities.forEach(possibility => {
+          if (possibility.matchesMode(mode)) {
+            possibility.status = 'none'
+          }
+        })
       },
     }
   })

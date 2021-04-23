@@ -4,9 +4,6 @@ import { genStepper, nextId } from "./general_util"
 export const extractPosFromSquare = square =>
   square?.dataset.pos.split(',')
 
-export const extractPosFromEvent = e =>
-  extractPosFromSquare(e.target.closest('.square'))
-
 export const mountDropdown = (button, dropdown, showClass) => {
   document.addEventListener('click', e => {
     const outsideDropdown = !dropdown.contains(e.target)

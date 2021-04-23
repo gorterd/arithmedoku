@@ -1,5 +1,5 @@
-import { ARROW_REGEX, NUM_REGEX } from '../shared/constants'
-import { extractPosFromEvent } from '../shared/dom_util'
+import { ARROW_REGEX, NUM_REGEX, LEFT_OR_RIGHT_REGEX } from '../shared/constants'
+import { extractPosFromSquare } from '../shared/dom_util'
 import { getDirFromCode, getNumFromCode, stringSwitch } from '../shared/general_util'
 
 
@@ -11,7 +11,10 @@ export default ({ gameStore, puzzleEle, infoBoxEle }) => {
   })
 
   puzzleEle.addEventListener('click', e => {
-    gameStore.selectSquareByPos(extractPosFromEvent(e))
+    const square = e.target.closest('.square')
+    if (square) {
+      gameStore.selectSquareByPos(extractPosFromSquare(square))
+    }
   })
 
   document.addEventListener('keydown', e => {
@@ -28,12 +31,12 @@ export default ({ gameStore, puzzleEle, infoBoxEle }) => {
         gameStore.setFocusedSquare(getNumFromCode(e.code)))
       _case(e.altKey, NUM_REGEX, () =>
         gameStore.toggleStagedPossibility(getNumFromCode(e.code)))
-      _case(!e.altKey, ARROW_REGEX, () =>
+      _case(!e.altKey, !e.shiftKey, ARROW_REGEX, () =>
         gameStore.selectSquareByDir(getDirFromCode(e.code)))
       _case(e.ctrlKey, ['Delete', 'Backspace'], () =>
         gameStore.resetFocusedSquarePossibilities())
       _case(e.shiftKey, ['Delete', 'Backspace'], () =>
-        gameStore.clearFilterModePossibilities())
+        gameStore.clearFilter())
       _case(!e.altKey, ['Delete', 'Backspace'], () =>
         gameStore.clearFocusedSquare())
       _case(e.altKey, ['Delete', 'Backspace'], () =>
@@ -52,6 +55,8 @@ export default ({ gameStore, puzzleEle, infoBoxEle }) => {
       _case([e.metaKey, e.ctrlKey], 'KeyY', () => {
         gameStore.redo()
       })
+      _case(!e.altKey, e.shiftKey, LEFT_OR_RIGHT_REGEX, () =>
+        gameStore.ui.changeFilterModeByDir(getDirFromCode(e.code)))
       _case('KeyA', () => gameStore.ui.setFilterMode('and'))
       _case('KeyE', () => gameStore.ui.setFilterMode('not'))
       _case('KeyO', () => gameStore.ui.setFilterMode('or'))

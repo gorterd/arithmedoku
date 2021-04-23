@@ -50,3 +50,4 @@ function setupLocalizations() {
   document.querySelector('#header-undo .keyboard').innerText = `${metaKey}z`
   document.querySelector('#header-redo .keyboard').innerText = `${metaKey}y`
 }
+

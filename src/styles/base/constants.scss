@@ -5,13 +5,13 @@ $fnt-sz-square-val: calc(#{$sz-puzzle} / 9 * 0.5);
 $fnt-sz-square-label: calc(#{$sz-puzzle} / 9 * 0.24);
 $fnt-sz-square-poss: calc(#{$sz-puzzle} / 9 * 0.22);
 
-$w-info: calc(min(40vw, (95vw - #{$sz-puzzle})));
+$w-info: calc(min(42vw, (97vw - #{$sz-puzzle})));
 $h-info: calc(#{$sz-puzzle} * 0.95);
 
 $sz-info-square-poss: calc(#{$w-info} / 13);
 $sz-info-square-chosen: calc(#{$sz-info-square-poss} * 1.2);
 
-$sz-info-poss: calc(#{$w-info} / 11);
+$sz-info-poss: calc(#{$w-info} / 11.5);
 
 $w-info-tab: calc(#{$w-info} * 0.3);
 

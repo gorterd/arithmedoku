@@ -5,3 +5,28 @@ body {
 .hidden {
   display: none;
 }
+
+::-webkit-scrollbar {
+  width: 0.8vw;
+}
+
+::-webkit-scrollbar-track {
+  background-color: $ocean-2-semi-translucent;
+  border-radius: 1vw;
+  box-shadow: inset 0 0 1px rgba(0,0,0,0.3)
+}
+ 
+::-webkit-scrollbar-thumb {
+  background-color: $grey-ocean-4;
+  border-radius: 1vw;
+}
+
+// Valerie
+// Justin
+// -Cathy
+// -Raz
+
+// Paloma
+// Ara
+// Daniel
+// -

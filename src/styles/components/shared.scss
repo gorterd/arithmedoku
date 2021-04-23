@@ -6,10 +6,15 @@
   font-size: 0.8em;
   padding: 0 0.35em;
   margin: 0 0.1em;
+  position: absolute;
+  opacity: 0.6;
+  transform: translateX(5px);
 }
 
 .keyboard--cream {
   border-color: $cream-5;
   background: $cream-2;
   padding: 0.2em 0.35em;
+  position: relative;
 }
+

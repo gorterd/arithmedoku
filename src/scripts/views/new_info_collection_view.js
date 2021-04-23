@@ -13,6 +13,8 @@ function setupListeners(gameStore, {
   andModeButton,
   notModeButton,
   orModeButton,
+  clearModeButton,
+  clearAllButton,
 }) {
   combosEle.addEventListener('click', e => {
     if (!gameStore.ui.curCage) return
@@ -48,6 +50,12 @@ function setupListeners(gameStore, {
     () => gameStore.ui.setFilterMode('not'))
   orModeButton.addEventListener('click',
     () => gameStore.ui.setFilterMode('or'))
+  clearModeButton.addEventListener('click', () => {
+    if (gameStore.ui.curCage) gameStore.clearFilterMode()
+  })
+  clearAllButton.addEventListener('click', () => {
+    if (gameStore.ui.curCage) gameStore.clearFilter()
+  })
 }
 
 function makeReactive(gameStore, {
@@ -57,6 +65,8 @@ function makeReactive(gameStore, {
   andModeButton,
   notModeButton,
   orModeButton,
+  clearModeButton,
+  clearAllButton,
 }) {
   const possibilityReactions = Array.from(possibilityEles).map(possibilityEle => {
     const val = parseInt(possibilityEle.dataset.val)
@@ -99,6 +109,14 @@ function makeReactive(gameStore, {
       notModeButton.className = gameStore.ui.notModeButtonClassName
       orModeButton.className = gameStore.ui.orModeButtonClassName
     },
+    function renderClearButtons() {
+      const className = gameStore.ui.curCage
+        ? 'filter_btn'
+        : 'filter_btn filter_btn--disabled'
+
+      clearModeButton.className = className
+      clearAllButton.className = className
+    },
     ...possibilityReactions
   ]
 
@@ -108,11 +126,13 @@ function makeReactive(gameStore, {
 
 function getCollectionInfoElements(infoBoxEle) {
   return {
-    combosEle: infoBoxEle.querySelector('.collection-combos'),
+    combosEle: infoBoxEle.querySelector('.combos_list'),
     filterEle: infoBoxEle.querySelector('.collection-filter'),
     possibilityEles: infoBoxEle.querySelectorAll('.filter-possibility'),
     andModeButton: infoBoxEle.querySelector('#filter-and'),
     notModeButton: infoBoxEle.querySelector('#filter-not'),
     orModeButton: infoBoxEle.querySelector('#filter-or'),
+    clearModeButton: infoBoxEle.querySelector('#filter-clear-mode'),
+    clearAllButton: infoBoxEle.querySelector('#filter-clear-all'),
   }
 }

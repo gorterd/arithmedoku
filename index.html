@@ -178,14 +178,25 @@
           </button>
         </ol>
 
-        <ul class='collection-combos'>
-          <template id='combo-template'>
-            <li class='combo' tabindex='-1'>
-            </li>
-          </template>
+        <div class='collection-combos'>
+          <ul class='combos_list'>
+            <template id='combo-template'>
+              <li class='combo' tabindex='-1'>
+              </li>
+            </template>
 
-          <!-- combos cloned from template here -->
-        </ul>
+            <!-- combos cloned from template here -->
+
+          </ul>
+          <ul class='combos_buttons'>
+            <button id='combos-clear' class='combos_btn'>
+              <i class='clear'></i>
+            </button>
+            <button id='combos-toggle-math' class='combos_text-btn'>
+              Eliminate Mathematical Impossibilities
+            </button>
+          </ul>
+        </div>
 
         <div class='collection-filter'>
           <ul class='filter-tabs'>
@@ -212,8 +223,11 @@
 
             <!-- possibilities cloned from template here -->
 
-            <button id='filter_clear' class='filter_btn'>
+            <button id='filter-clear-mode' class='filter_btn'>
               <i class='reset'></i>
+            </button>
+            <button id='filter-clear-all' class='filter_btn'>
+              <i class='clear'></i>
             </button>
           </ol>
         </div>

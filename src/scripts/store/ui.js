@@ -324,12 +324,26 @@ const UI = GameBase
       toggleFilterPossibility(val) {
         self.curCage.filter.toggle(val, self.filterMode)
       },
-      clearFilterModePossibilities() {
-        console.log('TODOOOO')
+      clearFilterMode() {
+        if (self.curCage) {
+          self.curCage.filter.clearMode(self.filterMode)
+        }
+      },
+      clearFilter() {
+        if (self.curCage) {
+          self.curCage.filter.initialize(self.env.globals.size)
+        }
       },
       setFilterMode(mode) {
         self.filterMode = mode
-      }
+      },
+      changeFilterModeByDir(dir) {
+        const modes = ['and', 'not', 'or']
+        console.log('a', dir)
+        const idxDiff = dir === 'Left' ? -1 : 1
+        const newIdx = (modes.indexOf(self.filterMode) + idxDiff + 3) % 3
+        self.filterMode = modes[newIdx]
+      },
     }
   })
 

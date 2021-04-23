@@ -69,8 +69,11 @@ const Game = GameBase
       toggleFilterPossibility(val) {
         self.ui.toggleFilterPossibility(val)
       },
-      clearFilterModePossibilities() {
-        self.ui.clearFilterModePossibilities()
+      clearFilterMode() {
+        self.ui.clearFilterMode()
+      },
+      clearFilter() {
+        self.ui.clearFilter()
       },
       enterIf() {
         const mainSnapshotId = takePuzzleSnapshot()
