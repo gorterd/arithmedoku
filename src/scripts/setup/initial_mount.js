@@ -6,6 +6,7 @@ export default function initialMount(globals) {
   setupSquarePossibilities(globals)
   setupFilterPossibilities(globals)
   setupIcons(globals)
+  setupLocalizations(globals)
 }
 
 function setupIcons() {
@@ -42,4 +43,10 @@ function setupFilterPossibilities({ size }) {
 
   document.querySelector('.filter-possibilities')
     .prepend(filterPossibilities)
+}
+
+function setupLocalizations() {
+  const metaKey = window.navigator.platform.startsWith('Win') ? '⌃' : '⌘'
+  document.querySelector('#header-undo .keyboard').innerText = `${metaKey}z`
+  document.querySelector('#header-redo .keyboard').innerText = `${metaKey}y`
 }

@@ -1,13 +1,11 @@
 # Current Goals
 
   ## Cur Todo
-  - underline style tabs: "Require All, Require One, Eliminate"
-  - purplish background to the collection info
   - purple outline to cage in game
   - reset button; that's all for filter
   - upper left badge: square / cage
   - header: combinations, filter
-  - keyboard shortcut to switch between tabs
+  - keyboard shortcut to switch between tabs with arrows
   - very slight opacity to not-allowed numbers
   - if possible, select only combinations (when you hit enter, start new combination, esc ends without change, button locks it in)
   - fix menus etc

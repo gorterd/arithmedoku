@@ -89,10 +89,8 @@ function makeReactive(gameStore, {
           gameStore.ui.curCage.comboEles,
           gameStore.ui.curCage.compareComboEles
         )
-
-        combosEle.hidden = false
       } else {
-        combosEle.hidden = true
+        combosEle.replaceChildren()
       }
     },
     function renderFilterModeClassNames() {
