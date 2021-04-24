@@ -1,5 +1,10 @@
 # Current Goals
 
+  ## Cur Cur Todo
+  - fix combo top fading pseudo element z indez above options dropdown
+  - tiny chosen square
+  - deactivate erase when square chosen
+
   ## Cur Todo
   - purple outline to cage in game
   - reset button; that's all for filter

@@ -1,0 +1,87 @@
+.square-info {
+  @include possibilities();
+  width: $w-info;
+  grid-row: 1;
+  position: relative;
+  padding: 0 10px;
+
+  &::after {
+    display: block;
+    content: '';
+    height: calc(#{$h-info} / 8);
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background: linear-gradient(0deg, $light-ocean-2, $light-ocean-1);
+  }
+}
+
+.square-info_possibility {
+  $hover-selector: ':hover:not(&--disabled):not(&--chosen):not(.prevent-hover)';
+  
+  @include possibilities_num($hover-selector);
+  color: $ocean-2;
+
+  &--chosen {
+    color: $green-3;
+    // font-size: 2.5vw;
+    font-size: 1.08em;
+    font-weight: 600;
+  }
+
+  &--unchosen {
+    visibility: hidden;
+  }
+
+  &--square-eliminated,
+  &--staged-eliminated {
+    color: $brick-1;
+  }
+  
+  &--auto-eliminated,
+  &--collection-eliminated,
+  &--disabled  {
+    & > span {
+      opacity: 0.2;
+    }
+  }
+  
+  &--mistake {
+    &::before {
+      content: '';
+      position: absolute;
+      bottom: -6%;
+      background: $cream-5;
+      height: 12%;
+  
+      animation: wipe-in-out 800ms forwards;
+    }
+  
+    & > span {
+      animation: lift 800ms forwards;
+    }
+  }
+
+  &--staged-eliminated#{$hover-selector} {
+    color: $ocean-2;
+  }
+
+  &:not(&--square-eliminated):not(&--staged-eliminated)#{$hover-selector} {
+    color: $brick-1;
+  }
+}
+
+.square-info_btn {
+  @include possibilities_btn();
+  color: $ocean-2;
+
+  &--disabled {
+    opacity: 0.2;
+  }
+
+  &:hover:not(&--disabled) {
+    color: darken($ocean-2, 3);
+    text-shadow: 0.3px 0.3px 1px darken($ocean-2, 5);
+  }
+}
