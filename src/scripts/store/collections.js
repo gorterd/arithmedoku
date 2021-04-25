@@ -225,6 +225,7 @@ import {
   includesDistinct,
   maxPossibleRepeats,
   stringSwitch,
+  togglePresenceInArray,
 } from '../shared/general_util'
 import { Id, GameBase } from './base'
 import Filter from './filter'
@@ -330,26 +331,8 @@ const Collection = GameBase
         self.squares.push(square.id)
       },
       toggleCombo(combo) {
-        const comboIndex = indexOfArray(self.eliminatedCombos, combo)
-
-        if (comboIndex >= 0) {
-          self.eliminatedCombos.splice(comboIndex, 1)
-        } else {
-          self.eliminatedCombos.push(combo)
-        }
+        togglePresenceInArray(self.eliminatedCombos, combo, indexOfArray)
       },
-      // eliminateCombo(combo) {
-      //   if (!includesArray(self.eliminatedCombos, combo)) {
-      //     self.eliminatedCombos.push(combo)
-      //   }
-      // },
-      // uneliminateCombo(combo) {
-      //   const comboIndex = indexOfArray(self.eliminatedCombos, combo)
-
-      //   if (comboIndex >= 0) {
-      //     self.eliminatedCombos.splice(comboIndex, 1)
-      //   }
-      // },
       setCombos(combos) {
         const sortedCombos = combos.map(combo => combo.sort())
 

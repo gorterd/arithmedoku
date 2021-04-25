@@ -63,6 +63,9 @@ const Game = GameBase
       clearFocusedSquare() {
         self.setFocusedSquare(null)
       },
+      toggleSelectionPossibility(val) {
+        self.ui.toggleSelectionPossibility(val)
+      },
       toggleCurCageCombo(combo) {
         self.ui.curCage.toggleCombo(combo)
       },

@@ -320,3 +320,68 @@ function _parseMatcher(matcher) {
       throw new Error(`Matcher arguments to case function must be a string, regular expression, boolean, or array of such. Instead, received ${matcherType}`)
   }
 }
+
+export const throttle = (func, ms = 16) => {
+  let lastFired = Date.now()
+
+  return (...args) => {
+    const now = Date.now()
+
+    if (now - lastFired >= ms) {
+      lastFired = now
+      func(...args)
+    }
+  }
+}
+
+export const togglePresenceInArray = (
+  array,
+  ele,
+  indexOfFunc = (array, ele) => array.indexOf(ele)
+) => {
+  const idx = indexOfFunc(array, ele)
+
+  if (idx >= 0) {
+    array.splice(idx, 1)
+  } else {
+    array.push(ele)
+  }
+}
+
+export const pushIfNotIncluded = (
+  array,
+  ele,
+  includesFunc = (array, ele) => array.includes(ele)
+) => {
+  if (!includesFunc(array, ele)) array.push(ele)
+}
+
+export const removeIfIncluded = (
+  array,
+  ele,
+  indexOfFunc = (array, ele) => array.indexOf(ele)
+) => {
+  const idx = indexOfFunc(array, ele)
+
+  if (idx >= 0) {
+    array.splice(idx, 1)
+  }
+}
+
+export const getInterveningPositions = ([startX, startY], [endX, endY]) => {
+  const xRange = getRange(startX, endX)
+  const yRange = getRange(startY, endY)
+
+  return xRange.reduce((positions, x) => {
+    const newPositions = yRange.map(y => [x, y])
+    return positions.concat(newPositions)
+  }, [])
+}
+
+function getRange(a, b) {
+  const mapper = a < b
+    ? (_, idx) => idx + a
+    : (_, idx) => a - idx
+
+  return Array.from({ length: Math.abs(a - b) + 1 }).map(mapper)
+}

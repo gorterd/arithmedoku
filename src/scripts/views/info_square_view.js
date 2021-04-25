@@ -26,6 +26,8 @@ function setupListeners(gameStore, {
 
       if (gameStore.ui.isStaging) {
         gameStore.toggleStagedPossibility(val)
+      } else if (gameStore.ui.hasSelection) {
+        gameStore.toggleSelectionPossibility(val)
       } else {
         gameStore.toggleFocusedSquarePossibility(val)
       }

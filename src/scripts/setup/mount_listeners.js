@@ -1,6 +1,6 @@
 import { ARROW_REGEX, NUM_REGEX, LEFT_OR_RIGHT_REGEX } from '../shared/constants'
 import { extractPosFromSquare } from '../shared/dom_util'
-import { getDirFromCode, getNumFromCode, stringSwitch } from '../shared/general_util'
+import { getDirFromCode, getNumFromCode, includesArray, stringSwitch, throttle, togglePresenceInArray } from '../shared/general_util'
 
 
 export default ({ gameStore, puzzleEle, infoBoxEle }) => {
@@ -10,11 +10,38 @@ export default ({ gameStore, puzzleEle, infoBoxEle }) => {
     }
   })
 
+  // let selectedSquareIds = []
+
+  // const throttledMouseMoveHandler = throttle(e => {
+  //   const squareId = e.target.closest('.square')?.dataset?.id
+  //   if (squareId && !selectedSquareIds.includes(squareId)) {
+  //     selectedSquareIds.push(squareId)
+  //   }
+  // }, 16)
+
+  // puzzleEle.addEventListener('mousedown', e => {
+  //   puzzleEle.addEventListener('mousemove', throttledMouseMoveHandler)
+  // })
+
+  // puzzleEle.addEventListener('mouseup', e => {
+  //   puzzleEle.removeEventListener('mousemove', throttledMouseMoveHandler)
+  //   console.log(selectedSquareIds)
+  //   selectedSquareIds = []
+  // })
+
   puzzleEle.addEventListener('click', e => {
     const square = e.target.closest('.square')
-    if (square) {
+    if (!square) return
+
+    const squareId = square.dataset.id
+    if (e.shiftKey) {
+      gameStore.ui.selectThroughSquare(squareId)
+    } else if (e.metaKey) {
+      gameStore.ui.toggleSelectedSquare(squareId)
+    } else {
       gameStore.selectSquareByPos(extractPosFromSquare(square))
     }
+    console.log(gameStore.ui.selectedSquares.map(s => s.position.toJSON().join(',')))
   })
 
   document.addEventListener('keydown', e => {

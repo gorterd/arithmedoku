@@ -17,6 +17,7 @@ function setupSquare(square, {
   cageLeft,
 }) {
   squareEle.dataset.pos = square.dataPos
+  squareEle.dataset.id = square.id
   label.innerText = square.label
 
   if (!square.isCageTop) {

@@ -164,7 +164,7 @@
 import { types } from 'mobx-state-tree'
 import { ICONS } from '../shared/constants'
 import { baseIcons, filterPossibilityClassName } from '../shared/dom_partials'
-import { generateClassName } from '../shared/general_util'
+import { areEqualArrays, generateClassName, getInterveningPositions, togglePresenceInArray } from '../shared/general_util'
 import { GameBase } from './base'
 import { Cage, Group } from './collections'
 import Square from './square'
@@ -185,6 +185,10 @@ const UI = GameBase
     filterMode: types.optional(
       types.enumeration('FilterMode', ['and', 'not', 'or']),
       () => 'and'
+    ),
+    selectedSquares: types.optional(
+      types.array(types.reference(Square)),
+      () => []
     )
   })
   .views(self => {
@@ -249,6 +253,26 @@ const UI = GameBase
           ? ICONS.reset
           : ICONS.clear
       },
+      get lastSelectedSquare() {
+        return self.selectedSquares[self.selectedSquares.length - 1]
+      },
+      get hasSelection() {
+        return self.selectedSquares.length > 1
+      },
+      isSelectionEliminatedValue(val) {
+        return self.selectedSquares.every(square =>
+          square.isSquareEliminatedValue(val))
+      },
+      selectionPossibilityStatuses(val) {
+        const firstStatuses = self.selectedSquares[0].possibilityStatuses(val)
+
+        return self.selectedSquares.every((square, idx) =>
+          idx === 0
+          || areEqualArrays(square.possibilityStatuses(val), firstStatuses)
+        )
+          ? firstStatuses
+          : ['possible']
+      },
       filterNoHoverIcons(val) {
         return self.curCage
           ? self.curCage.filter.noHoverIcons(val)
@@ -265,14 +289,27 @@ const UI = GameBase
           : filterPossibilityClassName('none', 'disabled')
       },
       squareInfoPossibilityClassName(val) {
-        return self.curSquare
-          ? self.curSquare.infoPossibilityClassName(val)
-          : 'square-info_possibility square-info_possibility--disabled'
+        if (self.hasSelection) {
+          return generateClassName(
+            'square-info_possibility',
+            self.selectionPossibilityStatuses(val)
+          )
+        } else {
+          return self.curSquare
+            ? self.curSquare.infoPossibilityClassName(val)
+            : 'square-info_possibility square-info_possibility--disabled'
+        }
       },
       squareInfoPossibilityIconClassNames(val) {
-        return self.curSquare
-          ? self.curSquare.infoPossibilityIconClassNames(val)
-          : { hover: ICONS.circle, noHover: ICONS.circle }
+        if (self.hasSelection) {
+          return self.isSelectionEliminatedValue(val)
+            ? { hover: ICONS.ban, noHover: ICONS.ban }
+            : { hover: ICONS.ban, noHover: ICONS.circle }
+        } else {
+          return self.curSquare
+            ? self.curSquare.infoPossibilityIconClassNames(val)
+            : { hover: ICONS.circle, noHover: ICONS.circle }
+        }
       },
     }
   })
@@ -305,9 +342,31 @@ const UI = GameBase
       },
       selectSquareByPos(pos) {
         const newSquare = self.rootPuzzle.getSquareByPos(pos)
-        if (newSquare) {
-          self.curSquare = newSquare
+        self.selectSquare(newSquare)
+      },
+      selectSquare(square) {
+        self.curSquare = square
+        self.selectedSquares = [square]
+      },
+      selectThroughSquare(squareId) {
+        if (self.selectedSquares.length > 0) {
+          const nextSquarePos = self.rootPuzzle.squares.get(squareId).position
+          const prevSquarePos = self.lastSelectedSquare.position
+
+          self.selectedSquares.push(
+            ...getInterveningPositions(prevSquarePos, nextSquarePos)
+              .map(pos => self.rootPuzzle.getSquareByPos(pos))
+              .filter(square => !self.selectedSquares.includes(square))
+          )
         }
+      },
+      toggleSelectedSquare(squareId) {
+        togglePresenceInArray(
+          self.selectedSquares,
+          squareId,
+          () => self.selectedSquares.findIndex(s => s.id === squareId)
+        )
+        if (self.curSquare.id === squareId) self.curSquare = null
       },
       clearStagedPossibilities() {
         self.stagedPossibilities = []
@@ -319,6 +378,15 @@ const UI = GameBase
           self.stagedPossibilities.splice(valIndex, 1)
         } else {
           self.stagedPossibilities.push(val)
+        }
+      },
+      toggleSelectionPossibility(val) {
+        if (self.isSelectionEliminatedValue(val)) {
+          self.selectedSquares.forEach(square =>
+            square.uneliminatePossibility(val))
+        } else {
+          self.selectedSquares.forEach(square =>
+            square.eliminatePossibility(val))
         }
       },
       toggleFilterPossibility(val) {
