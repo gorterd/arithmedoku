@@ -3,7 +3,7 @@ import { extractPosFromSquare } from '../shared/dom_util'
 import {
   getDirFromCode,
   getNumFromCode,
-  stringSwitch
+  stringSwitch,
 } from '../shared/general_util'
 
 

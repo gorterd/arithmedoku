@@ -5,7 +5,7 @@ import mountListeners from './setup/mount_listeners'
 import mountViews from './setup/mount_views'
 import LRUCache from './shared/lru_cache'
 import initialMount from './setup/initial_mount'
-import { getTemplateById } from './shared/dom_util'
+import { generateHighlightFuncs, getTemplateById, highlightEle } from './shared/dom_util'
 import { onAction } from 'mobx-state-tree'
 import dev from './dev'
 
@@ -47,5 +47,10 @@ document.addEventListener('DOMContentLoaded', () => {
   mountViews(game)
 
   // DEV
+  window.p = game.puzzleEle
+  window.s = document.querySelectorAll('.square')[20]
+  window.i = game.infoBoxEle
+  window.ci = game.infoBoxEle.querySelector('.collection-info')
+  window.si = game.infoBoxEle.querySelector('.square-info')
   dev(game)
 })

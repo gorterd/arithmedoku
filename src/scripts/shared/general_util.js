@@ -207,57 +207,83 @@ export const quotient = ([a, b]) => {
   return larger / smaller
 }
 
-export const stringSwitch = (
-  input,
-  casesFn,
-  {
-    fallthrough = false,
-    multipleMatches = false
-  } = {}
-) => {
-  if (typeof input !== 'string') {
-    throw new Error('First argument to stringSwitch must be a string')
-  } else if (typeof casesFn !== 'function') {
-    throw new Error('Second argument to stringSwitch must be a function')
-  }
-  let matched = false
-  let result
+// export const stringSwitch = (
+//   input,
+//   casesFn,
+//   {
+//     fallthrough = false,
+//     multipleMatches = false
+//   } = {}
+// ) => {
+//   if (typeof input !== 'string') {
+//     throw new Error('First argument to stringSwitch must be a string')
+//   } else if (typeof casesFn !== 'function') {
+//     throw new Error('Second argument to stringSwitch must be a function')
+//   }
+//   let matched = false
+//   let result
 
-  function _case(...args) {
-    const { exec, isMatch } = _parseCaseArgs(args)
+//   function _case(...args) {
+//     const { exec, isMatch } = _parseCaseArgs(args)
 
-    const shouldExecByMatch = isMatch(input) && (!matched || multipleMatches)
-    const shouldExecByFallthrough = matched && fallthrough
+//     const shouldExecByMatch = isMatch(input) && (!matched || multipleMatches)
+//     const shouldExecByFallthrough = matched && fallthrough
 
-    if (shouldExecByMatch || shouldExecByFallthrough) {
-      matched = true
-      result = exec(input)
-    }
-  }
+//     if (shouldExecByMatch || shouldExecByFallthrough) {
+//       matched = true
+//       result = exec(input)
+//     }
+//   }
 
-  function _default(exec) {
-    if (typeof exec !== 'function') {
-      throw new Error('Argument to default function must be a function')
-    }
+//   function _default(exec) {
+//     if (typeof exec !== 'function') {
+//       throw new Error('Argument to default function must be a function')
+//     }
 
-    if (!matched || fallthrough) {
-      result = exec(input)
-    }
-  }
+//     if (!matched || fallthrough) {
+//       result = exec(input)
+//     }
+//   }
 
-  function _ensure(exec) {
-    if (typeof exec !== 'function') {
-      throw new Error('Argument to ensure function must be a function')
-    }
+//   function _ensure(exec) {
+//     if (typeof exec !== 'function') {
+//       throw new Error('Argument to ensure function must be a function')
+//     }
 
-    if (matched) {
-      exec(input)
-    }
-  }
+//     if (matched) {
+//       exec(input)
+//     }
+//   }
 
-  casesFn({ _case, _default, _ensure })
-  return result
-}
+//   casesFn({ _case, _default, _ensure })
+//   return result
+// }
+
+// function _parseCaseArgs(args) {
+//   const exec = args.pop()
+//   if (typeof exec !== 'function') {
+//     throw new Error('Last argument to case function must be a callback to execute if the case matches')
+//   }
+
+//   const isMatch = input => args.every(matcher => _parseMatcher(matcher)(input))
+//   return { exec, isMatch }
+// }
+// function _parseMatcher(matcher) {
+//   const matcherType = matcher.constructor.name
+//   switch (matcherType) {
+//     case 'BabelRegExp':
+//     case 'RegExp':
+//       return input => matcher.test(input)
+//     case 'String':
+//       return input => matcher === input
+//     case 'Boolean':
+//       return () => matcher
+//     case 'Array':
+//       return input => matcher.some(sub => _parseMatcher(sub)(input))
+//     default:
+//       throw new Error(`Matcher arguments to case function must be a string, regular expression, boolean, or array of such. Instead, received ${matcherType}`)
+//   }
+// }
 
 export const getNumFromCode = code => parseInt(NUM_REGEX.exec(code)?.groups.num)
 
@@ -295,31 +321,6 @@ function deepClone(obj) {
   }
 }
 
-function _parseCaseArgs(args) {
-  const exec = args.pop()
-  if (typeof exec !== 'function') {
-    throw new Error('Last argument to case function must be a callback to execute if the case matches')
-  }
-
-  const isMatch = input => args.every(matcher => _parseMatcher(matcher)(input))
-  return { exec, isMatch }
-}
-function _parseMatcher(matcher) {
-  const matcherType = matcher.constructor.name
-  switch (matcherType) {
-    case 'BabelRegExp':
-    case 'RegExp':
-      return input => matcher.test(input)
-    case 'String':
-      return input => matcher === input
-    case 'Boolean':
-      return () => matcher
-    case 'Array':
-      return input => matcher.some(sub => _parseMatcher(sub)(input))
-    default:
-      throw new Error(`Matcher arguments to case function must be a string, regular expression, boolean, or array of such. Instead, received ${matcherType}`)
-  }
-}
 
 export const throttle = (func, ms = 16) => {
   let lastFired = Date.now()
@@ -384,4 +385,123 @@ function getRange(a, b) {
     : (_, idx) => a - idx
 
   return Array.from({ length: Math.abs(a - b) + 1 }).map(mapper)
+}
+
+export const stringSwitch = (input, casesFn, options) => {
+  validateStringSwitchArgs({ input, casesFn })
+
+  const caseArgParser = (args) => stringSwitchCaseArgParser(input, args)
+  return baseSwitch(caseArgParser, casesFn, options)
+}
+
+export const funcSwitch = (input, comparator, casesFn, options) => {
+  validateFuncSwitchArgs({ comparator, casesFn })
+  const caseArgParser = (args) => funcSwitchCaseArgParser(input, comparator, args)
+  return baseSwitch(caseArgParser, casesFn, options)
+}
+
+function baseSwitch(
+  caseArgParser,
+  casesFn,
+  {
+    fallthrough = false,
+    multipleMatches = false
+  } = {}
+) {
+  let matched = false
+  let result
+
+  function _case(...args) {
+    const { exec, isMatch } = caseArgParser(args)
+
+    const shouldExecByMatch = isMatch() && (!matched || multipleMatches)
+    const shouldExecByFallthrough = matched && fallthrough
+
+    if (shouldExecByMatch || shouldExecByFallthrough) {
+      matched = true
+      result = exec()
+    }
+  }
+
+  function _default(exec) {
+    if (typeof exec !== 'function') {
+      throw new Error('Argument to default function must be a function')
+    }
+
+    if (!matched || fallthrough) {
+      result = exec()
+    }
+  }
+
+  function _ensure(exec) {
+    if (typeof exec !== 'function') {
+      throw new Error('Argument to ensure function must be a function')
+    }
+
+    if (matched) {
+      exec()
+    }
+  }
+
+  casesFn({ _case, _default, _ensure })
+  return result
+}
+
+function validateStringSwitchArgs({ input, casesFn }) {
+  if (typeof input !== 'string') {
+    throw new Error('First argument to stringSwitch must be a string')
+  } else if (typeof casesFn !== 'function') {
+    throw new Error('Second argument to stringSwitch must be a function')
+  }
+}
+
+function validateFuncSwitchArgs({ comparator, casesFn }) {
+  if (typeof comparator !== 'function') {
+    throw new Error('Second argument to funcSwitch must be a comparator function')
+  } else if (typeof casesFn !== 'function') {
+    throw new Error('Third argument to funcSwitch must be a function that defines your case statements')
+  }
+}
+
+function stringSwitchCaseArgParser(input, args) {
+  const exec = args.pop()
+  if (typeof exec !== 'function') {
+    throw new Error('Last argument to case function must be a callback to execute if the case matches')
+  }
+
+  const isMatch = () => args.every(matcher => parseMatcher(matcher)(input))
+  return { exec, isMatch }
+}
+
+function funcSwitchCaseArgParser(input, comparator, args) {
+  const exec = args.pop()
+  if (typeof exec !== 'function') {
+    throw new Error('Last argument to case function must be a callback to execute if the case matches')
+  }
+
+  const isMatch = () => {
+    return (
+      comparator(input, ...args[0])
+      && args.slice(1).every(matcher => parseMatcher(matcher)(input))
+    )
+  }
+
+  return { exec, isMatch }
+}
+
+function parseMatcher(matcher) {
+  const matcherType = matcher.constructor.name
+  switch (matcherType) {
+    case 'BabelRegExp':
+    case 'RegExp':
+      return input => matcher.test(input)
+    case 'String':
+      return input => matcher === input
+    case 'Boolean':
+      return () => matcher
+    case 'Array':
+      return input => matcher.some(sub => parseMatcher(sub)(input))
+    default:
+      throw new Error(`Matcher arguments to case function must be a string, regular expression, boolean, or array of such. Instead, received ${matcherType}`)
+  }
 }
