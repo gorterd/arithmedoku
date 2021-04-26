@@ -21,7 +21,6 @@ export const mountDropdown = (button, dropdown, showClass) => {
 export const getTemplateById = (id, {
   firstChild = true,
 } = {}) => {
-  console.log(id)
   const template = document.getElementById(id).content
   return firstChild ? template.firstElementChild : template
 }

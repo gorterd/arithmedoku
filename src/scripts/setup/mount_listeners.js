@@ -54,6 +54,11 @@ export default ({ gameStore, puzzleEle, infoBoxEle }) => {
         gameStore.clearFocusedSquare())
       _case(e.altKey, ['Delete', 'Backspace'], () =>
         gameStore.clearStagedPossibilities())
+      _case(!e.altKey, e.shiftKey, LEFT_OR_RIGHT_REGEX, () =>
+        gameStore.ui.changeFilterModeByDir(getDirFromCode(e.code)))
+      _case('KeyA', () => gameStore.ui.setFilterMode('and'))
+      _case('KeyE', () => gameStore.ui.setFilterMode('not'))
+      _case('KeyO', () => gameStore.ui.setFilterMode('or'))
       _ensure(() => {
         e.preventDefault()
       })
@@ -68,11 +73,6 @@ export default ({ gameStore, puzzleEle, infoBoxEle }) => {
       _case([e.metaKey, e.ctrlKey], 'KeyY', () => {
         gameStore.redo()
       })
-      _case(!e.altKey, e.shiftKey, LEFT_OR_RIGHT_REGEX, () =>
-        gameStore.ui.changeFilterModeByDir(getDirFromCode(e.code)))
-      _case('KeyA', () => gameStore.ui.setFilterMode('and'))
-      _case('KeyE', () => gameStore.ui.setFilterMode('not'))
-      _case('KeyO', () => gameStore.ui.setFilterMode('or'))
       _ensure(() => {
         e.preventDefault()
       })

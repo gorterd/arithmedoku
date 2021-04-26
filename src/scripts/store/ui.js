@@ -47,46 +47,17 @@ const UI = GameBase
       get curCagePossibleCombos() {
         return self.curCage?.possibleCombos || []
       },
-      get filterClassName() {
-        return generateClassName('collection-filter', [
-          [self.shouldShowCollection, self.filterMode]
-        ])
-      },
-      get andModeButtonClassName() {
-        return generateClassName('filter_mode-btn', [
-          [self.shouldShowCollection && self.filterMode === 'and', 'selected']
-        ])
-      },
-      get notModeButtonClassName() {
-        return generateClassName('filter_mode-btn', [
-          [self.shouldShowCollection && self.filterMode === 'not', 'selected']
-        ])
-      },
-      get orModeButtonClassName() {
-        return generateClassName('filter_mode-btn', [
-          [self.shouldShowCollection && self.filterMode === 'or', 'selected']
-        ])
-      },
       get hasStagedPossibilities() {
         return self.stagedPossibilities.length > 0
       },
-      get hasCurSquareValue() {
-        return self.curSquare.hasValue
-      },
-      get squareInfoSelectIsDisabled() {
-        return !self.curSquare || self.curSquare.hasValue
-      },
-      get squareInfoClearIsDisabled() {
-        return !self.curSquare
-      },
       get squareInfoSelectClassName() {
         return generateClassName('square-info_btn', [
-          [self.squareInfoSelectIsDisabled, 'disabled']
+          [!self.curSquare || self.curSquare.hasValue, 'disabled']
         ])
       },
       get squareInfoClearClassName() {
         return generateClassName('square-info_btn', [
-          [self.squareInfoClearIsDisabled, 'disabled']
+          [!self.curSquare, 'disabled']
         ])
       },
       get squareInfoSelectIconClassName() {
@@ -106,7 +77,7 @@ const UI = GameBase
       },
       get collectionClassName() {
         return generateClassName('collection-info', [
-          [self.shouldShowCollection, self.filterMode]
+          [self.shouldShowCollection, self.filterMode, 'none']
         ])
       },
       isValidPos(pos) {

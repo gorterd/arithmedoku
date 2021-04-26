@@ -45,30 +45,30 @@ function setupListeners(gameStore, {
     })
   })
 
-  andModeButton.addEventListener('click',
-    () => gameStore.ui.setFilterMode('and'))
-  notModeButton.addEventListener('click',
-    () => gameStore.ui.setFilterMode('not'))
-  orModeButton.addEventListener('click',
-    () => gameStore.ui.setFilterMode('or'))
+  const addFilterBtnListener = (btn, mode) => {
+    btn.addEventListener('click', () => {
+      if (gameStore.ui.shouldShowCollection) {
+        gameStore.ui.setFilterMode(mode)
+      }
+    })
+  }
+
+  addFilterBtnListener(andModeButton, 'and')
+  addFilterBtnListener(notModeButton, 'not')
+  addFilterBtnListener(orModeButton, 'or')
+
   clearModeButton.addEventListener('click', () => {
-    if (gameStore.ui.curCage) gameStore.clearFilterMode()
+    if (gameStore.ui.shouldShowCollection) gameStore.clearFilterMode()
   })
   clearAllButton.addEventListener('click', () => {
-    if (gameStore.ui.curCage) gameStore.clearFilter()
+    if (gameStore.ui.shouldShowCollection) gameStore.clearFilter()
   })
 }
 
 function makeReactive(gameStore, {
   collectionEle,
   comboListEle,
-  filterEle,
   possibilityEles,
-  andModeButton,
-  notModeButton,
-  orModeButton,
-  clearModeButton,
-  clearAllButton,
 }) {
   const possibilityReactions = Array.from(possibilityEles).map(possibilityEle => {
     const val = parseInt(possibilityEle.dataset.val)
@@ -101,24 +101,10 @@ function makeReactive(gameStore, {
           gameStore.ui.curCage.comboEles,
           gameStore.ui.curCage.compareComboEles
         )
-      } else {
-        comboListEle.replaceChildren()
       }
     },
-    function renderFilterModeClassNames() {
-      filterEle.className = gameStore.ui.filterClassName
-      andModeButton.className = gameStore.ui.andModeButtonClassName
-      notModeButton.className = gameStore.ui.notModeButtonClassName
-      orModeButton.className = gameStore.ui.orModeButtonClassName
+    function renderFilterModeClassName() {
       collectionEle.className = gameStore.ui.collectionClassName
-    },
-    function renderClearButtons() {
-      const className = generateClassName('filter_btn', [
-        [!gameStore.ui.shouldShowCollection, 'disabled']
-      ])
-
-      clearModeButton.className = className
-      clearAllButton.className = className
     },
     ...possibilityReactions
   ]
