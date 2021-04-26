@@ -1,9 +1,19 @@
 # Current Goals
 
+  ## Cur Cur Cur Todo
+  - customize info labels for selection
+  - don't allow switching filter modes when no cage selected
+  - tooltips
+  - svg label -- make more dynamic
+
+  - dynamic header size
+  - fix toggle
+
   ## Cur Cur Todo
   - fix combo top fading pseudo element z indez above options dropdown
   - tiny chosen square
   - deactivate erase when square chosen
+  - can't arrow off the puzzle
 
   ## Cur Todo
   - purple outline to cage in game

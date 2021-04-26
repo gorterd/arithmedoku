@@ -4,8 +4,8 @@ import {
   baseIcons,
   requiredIcons,
   eliminatedIcons
-} from '../shared/dom_partials'
-import { stringSwitch } from '../shared/general_util'
+} from '../../src/scripts/shared/dom_partials'
+import { stringSwitch } from '../../src/scripts/shared/general_util'
 import { GameBase } from './base'
 
 const FilterPossibility = GameBase

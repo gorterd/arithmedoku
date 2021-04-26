@@ -1,3 +1,4 @@
+import { generateClassName } from '../shared/general_util'
 import { GameBase } from './base'
 
 const Options = GameBase
@@ -9,19 +10,21 @@ const Options = GameBase
     maxDisplayedPossibilities: 9,
   })
   .views(self => {
-    const toggleClassName = isActive => isActive
-      ? 'toggle toggle--on'
-      : 'toggle'
-
     return {
       get autoBlockClassName() {
-        return toggleClassName(self.autoBlock)
+        return generateClassName('toggle', [
+          [self.autoBlock, 'on']
+        ])
       },
       get autoElimClassName() {
-        return toggleClassName(self.autoEliminate)
+        return generateClassName('toggle', [
+          [self.autoEliminate, 'on']
+        ])
       },
       get autoElimMathImpossibilitiesClassName() {
-        return toggleClassName(self.autoElimMathImpossibilities)
+        return generateClassName('toggle', [
+          [self.autoElimMathImpossibilities, 'on']
+        ])
       },
     }
   })

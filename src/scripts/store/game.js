@@ -135,6 +135,9 @@ const Game = GameBase
       selectSquareByPos(pos) {
         self.ui.selectSquareByPos(pos)
       },
+      selectSquareById(id) {
+        self.ui.selectSquareById(id)
+      },
       clearFocus() {
         self.ui.curSquare = null
       },

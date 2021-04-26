@@ -12,7 +12,6 @@
 
 <body>
   <main class='app'>
-
     <header class='header'>
       <div class='header_left'>
         <button id='header-about' class='header_button'>
@@ -153,83 +152,123 @@
 
         <!-- squares cloned from template here -->
       </div>
-
-      <div class='info-box'>
-        <ol class='square-info'>
-          <template id='square-info_possibility-template'>
-            <li class='square-info_possibility' data-val=''>
-              <span class='possibility-icon no-hover'>
-                <i class='circle'></i>
-              </span>
-              <span class='possibility-icon hover'>
-                <i class='ban'></i>
-              </span>
-              <span class='square-info_possibility-val'></span>
-            </li>
-          </template>
-
-          <!-- possibilities cloned from template here -->
-
-          <button id='square-info_select-only' class='square-info_btn'>
-            <i class='select'></i>
-          </button>
-          <button id='square-info_clear' class='square-info_btn'>
-            <i class='clear'></i>
-          </button>
-        </ol>
-
-        <div class='collection-combos'>
-          <ul class='combos_list'>
-            <template id='combo-template'>
-              <li class='combo' tabindex='-1'>
-              </li>
-            </template>
-
-            <!-- combos cloned from template here -->
-
-          </ul>
-          <ul class='combos_buttons'>
-            <button id='combos-clear' class='combos_btn'>
-              <i class='clear'></i>
-            </button>
-            <button id='combos-toggle-math' class='combos_text-btn'>
-              Eliminate Mathematical Impossibilities
-            </button>
-          </ul>
-        </div>
-
-        <div class='collection-filter'>
-          <ul class='filter-tabs'>
-            <button id='filter-and' class='filter_mode-btn'>
-              Require All <span class='keyboard'>a</span>
-            </button>
-            <button id='filter-not' class='filter_mode-btn'>
-              Eliminate <span class='keyboard'>e</span>
-            </button>
-            <button id='filter-or' class='filter_mode-btn'>
-              Require One <span class='keyboard'>o</span>
-            </button>
-            <span id='filter-tab-underline'></span>
-          </ul>
-
-          <ol class='filter-possibilities'>
-            <template id='filter-possibility-template'>
-              <li class='filter-possibility' data-val=''>
-                <div class='possibility-icons possibility-icons--no-hover'></div>
-                <div class='possibility-icons possibility-icons--hover'></div>
-                <span class='filter-possibility_val'></span>
+      <div class='info-wrapper'>
+        <div class='info-box'>
+          <svg id="square-label" class="info_label" viewBox="0 0 100 28">
+            <path d="
+              M 0,0
+              h 100
+              l -12,12
+              l 12,12
+              h -100
+              z
+            " />
+            <polygon points="
+              0,24
+              7,24
+              7,28
+            " />
+            <text x="15" y="45%" dominant-baseline="middle">
+              Square
+            </text>
+          </svg>
+          <svg id="cage-label" class="info_label" viewBox="0 0 100 28">
+            <path d="
+              M 0,0
+              h 100
+              l -12,12
+              l 12,12
+              h -100
+              z
+            " />
+            <polygon points="
+              0,24
+              7,24
+              7,28
+            " />
+            <text x="15" y="45%" dominant-baseline="middle">
+              Cage
+            </text>
+          </svg>
+          <ol class='square-info'>
+            <template id='square-info_possibility-template'>
+              <li class='square-info_possibility' data-val=''>
+                <span class='possibility-icon no-hover'>
+                  <i class='circle'></i>
+                </span>
+                <span class='possibility-icon hover'>
+                  <i class='ban'></i>
+                </span>
+                <span class='square-info_possibility-val'></span>
               </li>
             </template>
 
             <!-- possibilities cloned from template here -->
 
-            <button id='filter-clear-mode' class='filter_btn'>
-              <i class='reset'></i>
+            <button id='square-info_select-only' class='square-info_btn'>
+              <i class='select'></i>
             </button>
-            <button id='filter-clear-all' class='filter_btn'>
+            <button id='square-info_clear' class='square-info_btn'>
               <i class='clear'></i>
             </button>
           </ol>
+
+          <div class='collection-info'>
+            <div class='collection-combos'>
+              <ul class='combos_list'>
+                <template id='combo-template'>
+                  <li class='combo' tabindex='-1'>
+                  </li>
+                </template>
+
+                <!-- combos cloned from template here -->
+
+              </ul>
+              <!-- <ul class='combos_buttons'>
+                <button id='combos-clear' class='combos_btn'>
+                  <i class='clear'></i>
+                </button>
+                <button id='combos-toggle-math' class='combos_text-btn'>
+                  Eliminate Mathematical Impossibilities
+                </button>
+              </ul> -->
+            </div>
+
+            <div class='collection-filter'>
+              <ul class='filter-tabs'>
+                <button id='filter-and' class='filter_mode-btn'>
+                  Require All <span class='keyboard'>a</span>
+                </button>
+                <button id='filter-not' class='filter_mode-btn'>
+                  Eliminate <span class='keyboard'>e</span>
+                </button>
+                <button id='filter-or' class='filter_mode-btn'>
+                  Require One <span class='keyboard'>o</span>
+                </button>
+                <span id='filter-tab-underline'></span>
+              </ul>
+
+              <ol class='filter-possibilities'>
+                <template id='filter-possibility-template'>
+                  <li class='filter-possibility' data-val=''>
+                    <div class='possibility-icons possibility-icons--no-hover'></div>
+                    <div class='possibility-icons possibility-icons--hover'></div>
+                    <span class='filter-possibility_val'></span>
+                  </li>
+                </template>
+
+                <!-- possibilities cloned from template here -->
+
+                <button id='filter-clear-mode' class='filter_btn'>
+                  <i class='reset'></i>
+                </button>
+                <button id='filter-clear-all' class='filter_btn'>
+                  <i class='clear'></i>
+                </button>
+              </ol>
+            </div>
+          </div>
+
         </div>
       </div>
     </section>
@@ -239,74 +278,24 @@
     </a>
   </main>
 
-  <button id='toggle-palette'>Toggle Palette</button>
-  <section id='color-palette' class='hidden'>
-  </section>
-
-  <script>
-    COLORS = [
-      'light-brick-1',
-      'light-brick-2',
-      'light-brick-3',
-      'light-brick-4',
-      'light-brick-5',
-      'light-brick-6',
-
-      'brick-1',
-      'brick-2',
-
-      'light-ocean-1',
-      'light-ocean-2',
-      'light-ocean-3',
-      'light-ocean-4',
-      'light-ocean-5',
-
-      'ocean-1',
-      'ocean-2',
-
-      'green',
-
-      'cream-1',
-      'cream-2',
-      'cream-3',
-      'cream-4',
-      'cream-5',
-      'cream-6',
-      'cream-7',
-
-      'cappuccino-1',
-      'cappuccino-2',
-      'cappuccino-3',
-    ]
-
-    let palette = document.getElementById('color-palette')
-
-    COLORS.forEach(color => {
-      let colorDiv = document.createElement('div')
-      colorDiv.className = `color-div ${color}`
-
-      let colorLabel = document.createElement('span')
-      colorLabel.className = `color-label`
-      colorLabel.innerText = color
-      colorDiv.appendChild(colorLabel)
-
-      palette.appendChild(colorDiv)
-    })
-
-    let testDiv = document.createElement('div')
-    testDiv.className = `color-div brick-1`
-
-    let colorLabel = document.createElement('span')
-    colorLabel.className = `color-label`
-    colorLabel.innerText = 'testDiv'
-    testDiv.appendChild(colorLabel)
-    palette.appendChild(testDiv)
-    testDiv.onclick = () => testDiv.classList.toggle('test-color-div')
-
-    document.getElementById('toggle-palette').addEventListener('click', () => {
-      palette.classList.toggle('hidden')
-    })
-  </script>
+  <template id='info-label-template'>
+    <svg class="info_label" viewBox="0 0 100 28">
+      <path d="
+        M 0,0
+        h 100
+        l -12,12
+        l 12,12
+        h -100
+        z
+      " />
+      <polygon points="
+        0,24
+        7,24
+        7,28
+      " />
+      <text x="15" y="45%" dominant-baseline="middle"></text>
+    </svg>
+  </template>
 </body>
 
 </html>

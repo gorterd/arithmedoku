@@ -1,5 +1,6 @@
 $light-brick-1: hsl(6, 100%, 98%);
 $light-brick-2: hsl(6, 100%, 97%);
+$light-brick-2-transparent: rgba(255, 241, 240, 0);
 $light-brick-3: hsl(6, 100%, 93%);
 $light-brick-4: hsl(6, 100%, 88%);
 $light-brick-5: hsl(6, 100%, 83%);
@@ -10,6 +11,7 @@ $brick-1: hsl(6, 75%, 40%);
 $brick-2: hsl(6, 75%, 25%);
 
 $violet-1: hsl(274, 25%, 95%);
+$violet-1-transparent: rgba(243, 239, 245, 0);
 $violet-2: hsl(274, 25%, 80%);
 $violet-3: hsl(274, 25%, 60%);
 $violet-4: hsl(274, 25%, 50%);
@@ -17,7 +19,6 @@ $violet-4: hsl(274, 25%, 50%);
 $light-ocean-1: hsl(186, 100%, 98%);
 $light-ocean-2: hsl(186, 100%, 93%);
 $light-ocean-2-transparent: rgba(219, 251, 255, 0);
-$light-ocean-2-semi-transparent: rgba(219, 251, 255, 0.5);
 $light-ocean-3: hsl(186, 100%, 88%);
 $light-ocean-4: hsl(186, 100%, 83%);
 $light-ocean-5: hsl(186, 100%, 78%);
@@ -39,12 +40,6 @@ $green-2: hsl(140, 80%, 45%);
 $green-3: hsl(140, 80%, 40%);
 $green-4: hsl(140, 80%, 25%);
 
-// $green-1: hsl(140, 55%, 92%);
-// $green-1-transparent: rgba(223, 246, 231, 0);
-// $green-2: hsl(140, 100%, 45%);
-// $green-3: hsl(140, 80%, 40%);
-// $green-4: hsl(140, 55%, 25%);
-
 $cream-1: hsl(36, 100%, 98%);
 $cream-2: hsl(36, 100%, 94%);
 $cream-3: hsl(36, 100%, 88%);
@@ -62,20 +57,38 @@ $cappuccino-3: hsl(36, 100%, 18%);
 
 $colors: (
   'light-brick-1': $light-brick-1,
-  'light-brick-2': $light-brick-3,
-  'light-brick-3': $light-brick-4,
-  'light-brick-4': $light-brick-5,
-  'light-brick-5': $light-brick-6,
-  'light-brick-6': $light-brick-7,
+  'light-brick-2': $light-brick-2,
+  'light-brick-3': $light-brick-3,
+  'light-brick-4': $light-brick-4,
+  'light-brick-5': $light-brick-5,
+  'light-brick-6': $light-brick-6,
+  'light-brick-7': $light-brick-7,
   'brick-1': $brick-1,
   'brick-2': $brick-2,
+  'violet-1': $violet-1,
+  'violet-2': $violet-2,
+  'violet-3': $violet-3,
+  'violet-4': $violet-4,
   'light-ocean-1': $light-ocean-1,
   'light-ocean-2': $light-ocean-2,
+  'light-ocean-2-transparent': $light-ocean-2-transparent,
   'light-ocean-3': $light-ocean-3,
   'light-ocean-4': $light-ocean-4,
   'light-ocean-5': $light-ocean-5,
   'ocean-1': $ocean-1,
   'ocean-2': $ocean-2,
+  'ocean-2-semi-translucent': $ocean-2-semi-translucent,
+  'grey-ocean-1': $grey-ocean-1,
+  'grey-ocean-2': $grey-ocean-2,
+  'grey-ocean-3': $grey-ocean-3,
+  'grey-ocean-4': $grey-ocean-4,
+  'grey-ocean-5': $grey-ocean-5,
+  'grey-ocean-6': $grey-ocean-6,
+  'green-1': $green-1,
+  'green-1-transparent': $green-1-transparent,
+  'green-2': $green-2,
+  'green-3': $green-3,
+  'green-4': $green-4,
   'cream-1': $cream-1,
   'cream-2': $cream-2,
   'cream-3': $cream-3,
@@ -83,6 +96,7 @@ $colors: (
   'cream-5': $cream-5,
   'cream-6': $cream-6,
   'cream-7': $cream-7,
+  'cream-8': $cream-8,
   'cappuccino-1': $cappuccino-1,
   'cappuccino-2': $cappuccino-2,
   'cappuccino-3': $cappuccino-3,

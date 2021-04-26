@@ -5,16 +5,16 @@
   position: relative;
   padding: 0 10px;
 
-  &::after {
-    display: block;
-    content: '';
-    height: calc(#{$h-info} / 8);
-    width: 100%;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    background: linear-gradient(0deg, $light-ocean-2, $light-ocean-1);
-  }
+  // &::after {
+  //   display: block;
+  //   content: '';
+  //   height: calc(#{$h-info} / 8);
+  //   width: 100%;
+  //   position: absolute;
+  //   bottom: 0;
+  //   left: 0;
+  //   background: linear-gradient(0deg, $light-ocean-2, $light-ocean-1);
+  // }
 }
 
 .square-info_possibility {

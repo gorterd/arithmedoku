@@ -4,7 +4,6 @@ import {
   baseIcons,
   requiredIcons,
   eliminatedIcons,
-  filterPossibilityClassName
 } from '../shared/dom_partials'
 import { generateClassName, stringSwitch } from '../shared/general_util'
 import { GameBase } from './base'
@@ -58,13 +57,10 @@ const FilterPossibility = GameBase
           : getStatusIcon(self.status)
       },
       className(mode) {
-        return generateClassName({
-          base: 'filter-possibility',
-          flags: [
-            self.status,
-            hoverFlag(mode),
-          ]
-        })
+        return generateClassName('filter-possibility', [
+          self.status,
+          hoverFlag(mode),
+        ])
       },
     }
   })

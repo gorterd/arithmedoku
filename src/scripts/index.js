@@ -4,13 +4,10 @@ import Game from './store/game'
 import mountListeners from './setup/mount_listeners'
 import mountViews from './setup/mount_views'
 import LRUCache from './shared/lru_cache'
-// DEV
-import remotedev from 'remotedev'
-import { unprotect, onAction, applySnapshot, getSnapshot } from 'mobx-state-tree'
-import { connectReduxDevtools } from 'mst-middlewares'
-import { ICONS } from './shared/constants'
 import initialMount from './setup/initial_mount'
 import { getTemplateById } from './shared/dom_util'
+import { onAction } from 'mobx-state-tree'
+import dev from './dev'
 
 document.addEventListener('DOMContentLoaded', () => {
   const env = {
@@ -50,12 +47,5 @@ document.addEventListener('DOMContentLoaded', () => {
   mountViews(game)
 
   // DEV
-  connectReduxDevtools(remotedev, gameStore)
-  unprotect(gameStore)
-
-  window.gs = gameStore
-  window.lru = LRUCache
-  window.getSnap = getSnapshot
-  window.applySnap = applySnapshot
-  window.icons = ICONS
+  dev(game)
 })

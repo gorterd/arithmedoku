@@ -1,5 +1,5 @@
 import { types, getRoot, getEnv } from 'mobx-state-tree'
-import { nextId } from '../shared/general_util'
+import { nextId } from '../../src/scripts/shared/general_util'
 
 export const Id = types.optional(types.identifier, nextId)
 

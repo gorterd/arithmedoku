@@ -1,5 +1,4 @@
-import { ICONS } from "./constants"
-import { genStepper, nextId } from "./general_util"
+import { genStepper } from "./general_util"
 
 export const extractPosFromSquare = square =>
   square?.dataset.pos.split(',')
@@ -27,30 +26,9 @@ export const getTemplateById = (id, {
   return firstChild ? template.firstElementChild : template
 }
 
-const createBasicIcon = (iconName) => {
-  const icon = document.createElement('i')
-  icon.className = ICONS[iconName]
-  return icon
-}
-
-export const createIcon = (iconName, ...spanClasses) => {
-  const iconSpan = document.createElement('span')
-  const baseClass = 'possibility-icon'
-
-  iconSpan.classList.add(baseClass, ...spanClasses.map(sc => baseClass + sc))
-  iconSpan.appendChild(createBasicIcon(iconName))
-
-  return iconSpan
-}
-
-export const addClasses = (eles, classNames, base = '') => {
-  const fullClassNames = classNames.map(name => base + name)
-  eles.forEach(ele => ele.classList.add(...fullClassNames))
-}
-
 export function isEquivalentNode(nodeA, nodeB, options = {}) {
   return (
-    haveSameNodeName(nodeA, nodeB, options)
+    nodeA.nodeName === nodeB.nodeName
     && haveEquivalentAttributes(nodeA, nodeB, options)
     && haveEquivalentChildren(nodeA, nodeB, options)
   )
@@ -66,7 +44,7 @@ export function haveEquivalentChildren(nodeOrListA, nodeOrListB, options = {}) {
 
   if (childrenA.length !== childrenB.length) {
     return false
-  } else if (childrenA.length === 0 && childrenB.length === 0) {
+  } else if (childrenA.length === 0) {
     return true
   } else {
     for (let i = 0; i < childrenA.length; i++) {
@@ -80,10 +58,6 @@ export function haveEquivalentChildren(nodeOrListA, nodeOrListB, options = {}) {
 
     return true
   }
-}
-
-function haveSameNodeName(nodeA, nodeB, options = {}) {
-  return nodeA.nodeName === nodeB.nodeName
 }
 
 function haveEquivalentAttributes(nodeA, nodeB, options = {}) {
@@ -127,7 +101,7 @@ export function updateChildrenToMatch(nodeA, nodeOrListB, comparator) {
           childA = getNextAChild()
           break
         case 0:
-          childA.className = childB.className
+          updateAttributesToMatch(childA, childB)
           childA = getNextAChild()
           childB = getNextBChild()
           break
@@ -138,4 +112,11 @@ export function updateChildrenToMatch(nodeA, nodeOrListB, comparator) {
       }
     }
   }
+}
+
+function updateAttributesToMatch(nodeA, nodeB) {
+  nodeA.getAttributeNames().forEach(attr => {
+    const [valA, valB] = [nodeA, nodeB].map(node => node.getAttribute(attr))
+    if (valA !== valB) nodeA.setAttribute(attr, valB)
+  })
 }

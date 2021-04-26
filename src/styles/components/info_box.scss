@@ -2,13 +2,12 @@
   width: $w-info;
   height: $h-info;
   border-radius: 10px;
-  background: $light-ocean-1;
+  background: $light-ocean-2;
   border: 2px solid $ocean-1;
   display: grid;
   grid-template-rows: 
     #{'min(calc(#{$h-info} * 0.25), 270px)'} 
-    1fr 
-    #{'min(calc(#{$h-info} * 0.28), 270px)'};
+    1fr;
   overflow: hidden;
 }
 
@@ -95,4 +94,36 @@
   font-size: $fnt-sz-info-poss-icon--lrg;
 }
 
+.info_label {
+  width: calc(#{$w-info} * 0.22);
+  position: absolute;
+  left: calc(#{$w-info} * 0.22 * -0.063);
+  z-index: 3;
+  filter: drop-shadow(1px 1px 1.5px rgba(100,100,100,0.3));
+  
+  path {
+    fill: $cream-3;
+  }
 
+  polygon {
+    fill: $cream-8;
+  }
+
+  text {
+    fill: $cappuccino-1;
+    font-size: 85%;
+    font-weight: bold;
+  }
+}
+
+.info-wrapper {
+  position: relative;
+}
+
+#square-label {
+  top: calc(#{$h-info} * 0.025);
+}
+
+#cage-label {
+  top: calc(#{'min(calc(#{$h-info} * 0.25), 270px)'} - 20px);
+}

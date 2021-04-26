@@ -1,7 +1,7 @@
 import { autorun } from 'mobx'
 
-export default function setupSquareInfo(gameStore, squareInfoEle) {
-  const squareInfoElements = getSquareInfoElements(squareInfoEle)
+export default function setupSquareInfo(gameStore, infoBoxEle) {
+  const squareInfoElements = getSquareInfoElements(infoBoxEle)
   setupListeners(gameStore, squareInfoElements)
   makeReactive(gameStore, squareInfoElements)
 }
@@ -65,6 +65,7 @@ function setupListeners(gameStore, {
 }
 
 function makeReactive(gameStore, {
+  squareLabelText,
   possibilityEles,
   selectIcon,
   clearIcon,
@@ -105,6 +106,13 @@ function makeReactive(gameStore, {
         clear.disabled = false
       }
     },
+    function renderLabelText() {
+      if (gameStore.ui.hasSelection) {
+        squareLabelText.innerHTML = 'Selection'
+      } else {
+        squareLabelText.innerHTML = 'Square'
+      }
+    },
     ...possibilityReactions
   ]
 
@@ -112,13 +120,14 @@ function makeReactive(gameStore, {
   return disposers
 }
 
-function getSquareInfoElements(squareInfoEle) {
+function getSquareInfoElements(infoBoxEle) {
   return {
-    possibilityEles: squareInfoEle.querySelectorAll('.square-info_possibility'),
-    select: squareInfoEle.querySelector('#square-info_select-only'),
-    selectIcon: squareInfoEle.querySelector('#square-info_select-only i'),
-    clear: squareInfoEle.querySelector('#square-info_clear'),
-    clearIcon: squareInfoEle.querySelector('#square-info_clear i'),
+    squareLabelText: infoBoxEle.querySelector('#square-label text'),
+    possibilityEles: infoBoxEle.querySelectorAll('.square-info_possibility'),
+    select: infoBoxEle.querySelector('#square-info_select-only'),
+    selectIcon: infoBoxEle.querySelector('#square-info_select-only i'),
+    clear: infoBoxEle.querySelector('#square-info_clear'),
+    clearIcon: infoBoxEle.querySelector('#square-info_clear i'),
   }
 }
 

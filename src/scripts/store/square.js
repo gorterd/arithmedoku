@@ -84,6 +84,12 @@ const Square = GameBase
         get isFocused() {
           return self.rootUi.curSquare === self
         },
+        get isSelected() {
+          return (
+            !self.isFocused
+            && self.rootUi.selectedSquares.includes(self)
+          )
+        },
         get isStaging() {
           return self.isFocused && self.rootUi.isStaging
         },
@@ -107,20 +113,11 @@ const Square = GameBase
             : self.possibilities
         },
         get className() {
-          return classes(
-            'square',
-            [self.status === 'mistake', 'square--mistake'],
-            [self.status === 'conflict', 'square--conflict'],
-            [self.isFocused, 'square--focused'],
-          )
-          // return gcn({
-          //   base: 'square',
-          //   flags: [
-          //     [self.status === 'mistake', 'mistake'],
-          //     [self.status === 'conflict', 'conflict'],
-          //     [self.isFocused, 'focused']
-          //   ]
-          // })
+          return generateClassName('square', [
+            [self.status !== 'none', self.status],
+            [self.isFocused, 'focused'],
+            [self.isSelected, 'selected']
+          ])
         },
         get shouldShowPossibilities() {
           return (
@@ -187,55 +184,24 @@ const Square = GameBase
         isStagedPossibility(val) {
           return self.rootUi.stagedPossibilities.includes(val)
         },
-        possibilityClassName(val) {
+        isVisiblePossibility(val) {
           return (
             self.shouldShowPossibilities
             && self.displayedPossibilities.includes(val)
           )
-            ? 'square_possibility square_possibility--show'
-            : 'square_possibility'
+        },
+        possibilityClassName(val) {
+          return generateClassName('square_possibility', [
+            [self.isVisiblePossibility(val), 'show']
+          ])
         },
         infoPossibilityStagingClassName(val) {
           return self.isStagedPossibility(val)
             ? 'possible'
             : 'staged-eliminated'
-          return self.isStagedPossibility(val)
-            ? 'square-info_possibility--possible'
-            : 'square-info_possibility--staged-eliminated'
         },
         infoPossibilityClassName(val) {
-          // const classesArgs = ['square-info_possibility']
-
-          // if (self.hasValue) {
-          //   classesArgs.push(self.value === val
-          //     ? 'square-info_possibility--chosen'
-          //     : 'square-info_possibility--unchosen'
-          //   )
-          // } else {
-          //   classesArgs.push(
-          //     [self.isCollectionEliminatedValue(val),
-          //       'square-info_possibility--collection-eliminated'],
-          //     [self.isAutoEliminatedValue(val),
-          //       'square-info_possibility--auto-eliminated']
-          //   )
-
-          //   if (self.isStaging) {
-          //     classesArgs.push(self.infoPossibilityStagingClassName(val))
-          //   } else {
-          //     classesArgs.push(
-          //       [self.isPossibleValue(val),
-          //         'square-info_possibility--possible'],
-          //       [self.isActiveMistake(val),
-          //         'square-info_possibility--mistake'],
-          //       [self.isSquareEliminatedValue(val),
-          //         'square-info_possibility--square-eliminated'],
-          //     )
-          //   }
-          // }
-
-          // return classes(...classesArgs)
-          return generateClassName(
-            'square-info_possibility',
+          return generateClassName('square-info_possibility',
             self.isStaging
               ? [self.infoPossibilityStagingClassName(val)]
               : [

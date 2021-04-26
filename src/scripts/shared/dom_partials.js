@@ -1,25 +1,5 @@
-// export const baseIcons = (...classNames) => ([
-//   createIcon('square', ...classNames),
-// ])
-
 import { ICONS } from "./constants"
-
-// export const eliminatedIcons = (...classNames) => ([
-//   createIcon('square', '--eliminated', ...classNames),
-//   createIcon('slash', '--eliminated', '--small', ...classNames),
-// ])
-
-// export const alternativeIcons = (...classNames) => ([
-//   createIcon('square', ...classNames),
-//   createIcon('square', '--alternative', ...classNames),
-// ])
-
-// export const requiredIcons = (...classNames) => ([
-//   createIcon('square', '--required', ...classNames),
-// ])
-
-const BASE_ICON_CLASS = 'possibility-icon'
-
+import { generateClassName } from "./general_util"
 
 const createBasicIcon = (iconName) => {
   const icon = document.createElement('i')
@@ -27,14 +7,10 @@ const createBasicIcon = (iconName) => {
   return icon
 }
 
-const createIcon = (iconName, ...spanClasses) => {
+const createIcon = (iconName, ...flags) => {
   const iconSpan = document.createElement('span')
-
   iconSpan.appendChild(createBasicIcon(iconName))
-  iconSpan.classList.add(
-    BASE_ICON_CLASS,
-    ...spanClasses.map(className => BASE_ICON_CLASS + className)
-  )
+  iconSpan.className = generateClassName('possibility-icon', flags)
 
   return iconSpan
 }
@@ -44,22 +20,15 @@ export const baseIcons = () => ([
 ])
 
 export const eliminatedIcons = () => ([
-  createIcon('square', '--eliminated'),
-  createIcon('slash', '--small'),
+  createIcon('square', 'eliminated'),
+  createIcon('slash', 'small'),
 ])
 
 export const alternativeIcons = () => ([
-  createIcon('square', '--alternative'),
-  createIcon('square', '--alternative-inner'),
+  createIcon('square', 'alternative'),
+  createIcon('square', 'alternative-inner'),
 ])
 
 export const requiredIcons = () => ([
-  createIcon('square', '--required'),
+  createIcon('square', 'required'),
 ])
-
-export const filterPossibilityClassName = (...flags) => {
-  const baseName = 'filter-possibility'
-  return [baseName]
-    .concat(flags.map(flag => `${baseName}--${flag}`))
-    .join(' ')
-}
