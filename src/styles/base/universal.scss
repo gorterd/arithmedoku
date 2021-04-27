@@ -10,6 +10,13 @@ body {
   position: absolute;
   z-index: 5;
   background-color: rgba(0,0,0,0.4);
+
+  &--full {
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+  }
 }
 
 .caption {
@@ -25,8 +32,16 @@ body {
   }
 }
 
-.highlight-shadow {
+.highlight-wrapper {
   position: absolute;
   z-index: 6;
-  box-shadow: inset 0 0 3px 3px rgba(0,0,0,0.4);
+  background: white;
+  
+  &--fuzzy {
+    box-shadow: inset 0 0 3px 3px rgba(0,0,0,0.4);
+  }
+}
+
+.highlight-outer-wrapper {
+  position: absolute;
 }
