@@ -495,18 +495,20 @@ function mergeProp(defaultProp, argProp) {
   }
 }
 
+export const createSVGElement = tag =>
+  document.createElementNS('http://www.w3.org/2000/svg', tag)
 
-// window.cap = document.createElement('div')
-// window.cap.style.width = '200px'
-// window.cap.style.height = '200px'
-// window.cap.style.background = 'red'
-// window.cap.style.position = 'absolute'
-// window.cap.style.zIndex = 100
-// window.opts = { captionTemplate: cap, captionAnchor: 'bottom' }
-// window.ghf = generateHighlightFuncs
-// window.hh = highlightEles
-// window.sa = () => [
-//   document.querySelector('.square[data-id="71"]'),
-//   document.querySelector('.square[data-id="72"]'),
-//   document.querySelector('.square[data-id="73"]'),
-// ]
+window.cap = document.createElement('div')
+window.cap.style.width = '200px'
+window.cap.style.height = '200px'
+window.cap.style.background = 'red'
+window.cap.style.position = 'absolute'
+window.cap.style.zIndex = 100
+window.opts = { captionTemplate: cap, captionAnchor: 'bottom' }
+window.ghf = generateHighlightFuncs
+window.hh = highlightEles
+window.sa = () => [
+  document.querySelector('.square[data-id="71"]'),
+  document.querySelector('.square[data-id="72"]'),
+  document.querySelector('.square[data-id="73"]'),
+]

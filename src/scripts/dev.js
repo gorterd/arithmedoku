@@ -6,6 +6,7 @@ import {
 } from 'mobx-state-tree'
 import { connectReduxDevtools } from 'mst-middlewares'
 import LRUCache from './shared/lru_cache'
+import './shared/ele_tracer'
 
 export default ({
   gameStore,

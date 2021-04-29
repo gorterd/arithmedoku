@@ -45,3 +45,14 @@ body {
 .highlight-outer-wrapper {
   position: absolute;
 }
+
+.dim-svg {
+  position: fixed;
+  z-index: 10;
+  top: 0;
+  left: 0;
+
+  path {
+    fill: rgba(0,0,0,0.4);
+  }
+}
