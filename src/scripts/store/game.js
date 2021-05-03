@@ -10,6 +10,7 @@ const Game = GameBase
   .named('Game')
   .props({
     puzzle: types.optional(Puzzle, () => Puzzle.create()),
+    curPuzzleIdx: types.optional(types.integer, 0),
     meta: types.optional(Meta, () => Meta.create()),
     options: types.optional(Options, () => Options.create()),
     ui: types.optional(UI, () => UI.create()),
@@ -31,6 +32,14 @@ const Game = GameBase
         self.env.puzzleCache.set(id, Game.create({ puzzle }, self.env))
         return puzzle
       }
+    }
+
+    const getNewPuzzleIdx = () => {
+      const puzzles = self.env.puzzles
+      const randomIdx = Math.floor(Math.random() * puzzles.length)
+      return randomIdx === self.curPuzzleIdx
+        ? getNewPuzzleIdx()
+        : randomIdx
     }
 
     const recordedActions = {
@@ -98,6 +107,16 @@ const Game = GameBase
     }
 
     const silentActions = {
+      newPuzzle() {
+        const newIdx = getNewPuzzleIdx()
+        self.curPuzzleIdx = newIdx
+        self.resetPuzzle()
+      },
+      resetPuzzle() {
+        self.ui.reset()
+        self.puzzle = Puzzle.create()
+        self.initialize(self.env.puzzles[self.curPuzzleIdx])
+      },
       initialize({ cages, solution }) {
         cages.forEach(({ operation, result, squares }) => {
           const cage = self.puzzle.cages.put({ operation, result })

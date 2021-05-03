@@ -2,10 +2,10 @@ import { autorun } from 'mobx'
 import { UP_OR_DOWN_REGEX, NUM_REGEX } from "../shared/constants"
 import { getDirFromCode, getNumFromCode, stringSwitch } from '../shared/general_util'
 
-export function setupOptions(options, optionsEle) {
-  const optionsElements = getOptionsElements(optionsEle)
-  setupListeners(options, optionsElements)
-  makeOptionsReactive(options, optionsElements)
+export function setupOptions({ gameStore, env }) {
+  const optionsElements = getOptionsElements(env.elements.options)
+  setupListeners(gameStore.options, optionsElements)
+  makeOptionsReactive(gameStore.options, optionsElements)
 }
 
 function setupListeners(options, {

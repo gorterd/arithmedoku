@@ -1,29 +1,34 @@
-import { mountDropdown } from "../shared/dom_util"
+import { newPuzzle, resetPuzzle } from "../setup/setup_puzzle"
+import { addNoFocusClickListener, mountDropdown } from "../shared/dom_util"
 
-export function setupHeaderListeners(gameStore) {
+export function setupHeader({ gameStore, env }) {
   const {
     aboutButton,
     aboutDropdown,
+
     instructionsButton,
     instructionsDropdown,
+
     optionsButton,
     optionsDropdown,
+
     undoButton,
     redoButton,
     newButton,
     resetButton,
-  } = getHeaderElements()
+  } = getHeaderElements(env.elements.header)
 
   mountDropdown(aboutButton, aboutDropdown, 'show')
   mountDropdown(instructionsButton, instructionsDropdown, 'show')
   mountDropdown(optionsButton, optionsDropdown, 'show')
-  undoButton.addEventListener('click', () => gameStore.undo())
-  redoButton.addEventListener('click', () => gameStore.redo())
+
+  addNoFocusClickListener(undoButton, gameStore.undo)
+  addNoFocusClickListener(redoButton, gameStore.redo)
+  addNoFocusClickListener(newButton, () => newPuzzle({ gameStore, env }))
+  addNoFocusClickListener(resetButton, () => resetPuzzle({ gameStore, env }))
 }
 
-function getHeaderElements() {
-  const headerEle = document.querySelector('.header')
-
+function getHeaderElements(headerEle) {
   return {
     aboutButton: headerEle.querySelector('#header-about'),
     aboutDropdown: headerEle.querySelector('#header-about .header_dropdown'),

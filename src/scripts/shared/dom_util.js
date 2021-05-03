@@ -18,12 +18,17 @@ export const mountDropdown = (button, dropdown, showClass) => {
   })
 }
 
-export const getTemplateById = (id, {
-  firstChild = true,
-} = {}) => {
-  const template = document.getElementById(id).content
-  return firstChild ? template.firstElementChild : template
-}
+export const addNoFocusClickListener = (element, listener) =>
+  element.addEventListener('mousedown', e => {
+    e.preventDefault()
+    listener(e)
+  })
+
+export const getTemplateNode = (template, firstChild = true) =>
+  firstChild ? template.content.firstElementChild : template.content
+
+export const getTemplateById = (id, firstChild = true) =>
+  getTemplateNode(document.getElementById(id), firstChild)
 
 export function isEquivalentNode(nodeA, nodeB, options = {}) {
   return (
@@ -497,6 +502,11 @@ function mergeProp(defaultProp, argProp) {
 
 export const createSVGElement = tag =>
   document.createElementNS('http://www.w3.org/2000/svg', tag)
+
+export const applyStyle = (ele, style, clear = false) => {
+  if (clear) ele.style = null
+  Object.entries(style).forEach(([attr, val]) => ele.style[attr] = val)
+}
 
 window.cap = document.createElement('div')
 window.cap.style.width = '200px'

@@ -1,10 +1,10 @@
-import { ARROW_REGEX, NUM_REGEX, LEFT_OR_RIGHT_REGEX } from '../shared/constants'
-import { extractPosFromSquare } from '../shared/dom_util'
+import { ARROW_REGEX, NUM_REGEX, LEFT_OR_RIGHT_REGEX } from '../src/scripts/shared/constants'
+import { extractPosFromSquare } from '../src/scripts/shared/dom_util'
 import {
   getDirFromCode,
   getNumFromCode,
   stringSwitch,
-} from '../shared/general_util'
+} from '../src/scripts/shared/general_util'
 
 
 export default ({ gameStore, puzzleEle, infoBoxEle }) => {

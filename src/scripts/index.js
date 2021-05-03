@@ -1,33 +1,26 @@
 import '../styles/index.scss'
-import puzzle_01 from './data/puzzle_01'
-import Game from './store/game'
-import mountListeners from './setup/mount_listeners'
-import mountViews from './setup/mount_views'
-import LRUCache from './shared/lru_cache'
-import initialMount from './setup/initial_mount'
-import { generateHighlightFuncs, getTemplateById, highlightEle } from './shared/dom_util'
 import { onAction } from 'mobx-state-tree'
+import Game from './store/game'
+import { getNewEnv } from './setup/setup_env'
+import setupDOM from './setup/setup_dom'
+import setupGame from './setup/setup_game'
+import { resetPuzzle } from './setup/setup_puzzle'
 import dev from './dev'
 
-document.addEventListener('DOMContentLoaded', () => {
-  const env = {
-    snapshots: {},
-    history: [],
-    future: [],
-    puzzleCache: new LRUCache(50, 10 * 60 * 1000),
-    globals: {
-      size: 9,
-      mistakeTimeoutMs: 600,
-    },
-    templates: {
-      combo: getTemplateById('combo-template')
-    }
-  }
+document.addEventListener('DOMContentLoaded', async () => {
+  const env = await getNewEnv()
+  setupDOM(env)
 
-  initialMount(env.globals)
+  const game = createGame(env)
+  await setupGame(game)
 
+  // DEV
+  window.env = env
+  dev(game)
+})
+
+function createGame(env) {
   const gameStore = Game.create({}, env)
-  gameStore.initialize(puzzle_01)
 
   onAction(gameStore, (action) => {
     if (gameStore.shouldRecordAction(action)) {
@@ -36,21 +29,5 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   })
 
-  const game = {
-    gameStore,
-    puzzleEle: document.querySelector('.puzzle'),
-    optionsEle: document.querySelector('.options'),
-    infoBoxEle: document.querySelector('.info-box'),
-  }
-
-  mountListeners(game)
-  mountViews(game)
-
-  // DEV
-  window.p = game.puzzleEle
-  window.s = document.querySelectorAll('.square')[20]
-  window.i = game.infoBoxEle
-  window.ci = game.infoBoxEle.querySelector('.collection-info')
-  window.si = game.infoBoxEle.querySelector('.square-info')
-  dev(game)
-})
+  return { gameStore, env }
+}

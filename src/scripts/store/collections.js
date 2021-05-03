@@ -213,7 +213,6 @@
 //   .named('Group')
 
 import { types } from 'mobx-state-tree'
-import { createIcon, getTemplateById } from '../shared/dom_util'
 import {
   combos,
   includesArray,

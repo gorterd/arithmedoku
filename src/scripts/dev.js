@@ -6,16 +6,15 @@ import {
 } from 'mobx-state-tree'
 import { connectReduxDevtools } from 'mst-middlewares'
 import LRUCache from './shared/lru_cache'
-import './shared/ele_tracer'
+import './shared/spotlight'
+import Spotlight from './shared/spotlight'
 
-export default ({
-  gameStore,
-}) => {
-  connectReduxDevtools(remotedev, gameStore)
-  unprotect(gameStore)
+export default (game) => {
+  connectReduxDevtools(remotedev, game.gameStore)
+  unprotect(game.gameStore)
   setupPalette()
 
-  window.gs = gameStore
+  window.gs = game.gameStore
   window.lru = LRUCache
   window.getSnap = getSnapshot
   window.applySnap = applySnapshot

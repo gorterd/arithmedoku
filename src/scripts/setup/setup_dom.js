@@ -1,12 +1,11 @@
 import { ICONS } from "../shared/constants"
-import { getTemplateById } from "../shared/dom_util"
 import { kebabToCamel } from "../shared/general_util"
 
-export default function initialMount(globals) {
-  setupSquarePossibilities(globals)
-  setupFilterPossibilities(globals)
-  setupIcons(globals)
-  setupLocalizations(globals)
+export default function setupDOM(env) {
+  setupSquarePossibilities(env)
+  setupFilterPossibilities(env)
+  setupIcons(env)
+  setupLocalizations(env)
 }
 
 function setupIcons() {
@@ -15,12 +14,11 @@ function setupIcons() {
   })
 }
 
-function setupSquarePossibilities({ size }) {
-  const template = getTemplateById('square-info_possibility-template')
+function setupSquarePossibilities({ globals, templates }) {
   const squarePossibilities = new DocumentFragment()
 
-  for (let i = 1; i <= size; i++) {
-    const possibility = template.cloneNode(true)
+  for (let i = 1; i <= globals.size; i++) {
+    const possibility = templates.squareInfoPossibility.cloneNode(true)
     possibility.dataset.val = i
     possibility.querySelector('.square-info_possibility-val').innerText = i
     squarePossibilities.appendChild(possibility)
@@ -30,12 +28,11 @@ function setupSquarePossibilities({ size }) {
     .prepend(squarePossibilities)
 }
 
-function setupFilterPossibilities({ size }) {
-  const template = getTemplateById('filter-possibility-template')
+function setupFilterPossibilities({ globals, templates }) {
   const filterPossibilities = new DocumentFragment()
 
-  for (let i = 1; i <= size; i++) {
-    const possibility = template.cloneNode(true)
+  for (let i = 1; i <= globals.size; i++) {
+    const possibility = templates.filterPossibility.cloneNode(true)
     possibility.dataset.val = i
     possibility.querySelector('.filter-possibility_val').innerText = i
     filterPossibilities.appendChild(possibility)

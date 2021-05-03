@@ -1,13 +1,20 @@
 import { autorun } from 'mobx'
 
-export default function createSquare(square, template) {
-  const squareEle = template.cloneNode(true)
-  const squareElements = getSquareElements(squareEle)
+export function setupSquares(gameStore, { elements, templates }) {
+  const squareEles = new DocumentFragment()
 
-  setupSquare(square, squareElements)
-  makeSquareReactive(square, squareElements)
+  const disposers = gameStore.puzzle.squaresArray.map(square => {
+    const squareEle = templates.square.cloneNode(true)
+    const squareElements = getSquareElements(squareEle)
 
-  return squareEle
+    setupSquare(square, squareElements)
+    squareEles.appendChild(squareEle)
+
+    return makeSquareReactive(square, squareElements)
+  })
+
+  elements.puzzle.replaceChildren(squareEles)
+  return () => disposers.forEach(disposer => disposer())
 }
 
 function setupSquare(square, {
@@ -51,7 +58,7 @@ function makeSquareReactive(square, {
   ]
 
   const disposers = reactions.map(fn => autorun(fn))
-  return disposers
+  return () => disposers.forEach(disposer => disposer())
 }
 
 function getSquareElements(squareEle) {

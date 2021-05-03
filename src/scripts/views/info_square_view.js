@@ -1,7 +1,7 @@
 import { autorun } from 'mobx'
 
-export default function setupSquareInfo(gameStore, infoBoxEle) {
-  const squareInfoElements = getSquareInfoElements(infoBoxEle)
+export function setupSquareInfo({ gameStore, env }) {
+  const squareInfoElements = getSquareInfoElements(env.elements.infoBox)
   setupListeners(gameStore, squareInfoElements)
   makeReactive(gameStore, squareInfoElements)
 }

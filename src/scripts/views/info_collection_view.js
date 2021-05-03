@@ -2,8 +2,8 @@ import { autorun } from 'mobx'
 import { haveEquivalentChildren, updateChildrenToMatch, isEquivalentNode } from '../shared/dom_util'
 import { generateClassName } from '../shared/general_util'
 
-export default function setupCollectionInfo(gameStore, infoBoxEle) {
-  const collectionInfoElements = getCollectionInfoElements(infoBoxEle)
+export function setupCollectionInfo({ gameStore, env }) {
+  const collectionInfoElements = getCollectionInfoElements(env.elements.infoBox)
   setupListeners(gameStore, collectionInfoElements)
   makeReactive(gameStore, collectionInfoElements)
 }

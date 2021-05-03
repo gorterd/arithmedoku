@@ -1,5 +1,8 @@
 # Current Goals
 
+  ## Cur Cur Cur Cur Todo
+  - padding, anchor for ele tracer
+
   ## Cur Cur Cur Todo
   - customize info labels for selection
   - don't allow switching filter modes when no cage selected

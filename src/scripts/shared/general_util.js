@@ -322,10 +322,11 @@ function deepClone(obj) {
 }
 
 
-export const throttle = (func, ms = 16) => {
+export const throttle = (func, ms = 200) => {
   let lastFired = Date.now()
 
   return (...args) => {
+    console.log('yoooo')
     const now = Date.now()
 
     if (now - lastFired >= ms) {

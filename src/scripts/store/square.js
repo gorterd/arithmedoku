@@ -128,8 +128,7 @@ const Square = GameBase
           )
         },
         get initialHtml() {
-          const template = document.getElementById('square-template')
-          const ele = template.content.firstElementChild.cloneNode(true)
+          const ele = self.env.templates.square.cloneNode(true)
           ele.dataset.pos = self.dataPos
           return ele
         },

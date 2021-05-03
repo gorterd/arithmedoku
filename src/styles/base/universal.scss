@@ -6,32 +6,6 @@ body {
   display: none;
 }
 
-.dim {
-  position: absolute;
-  z-index: 5;
-  background-color: rgba(0,0,0,0.4);
-
-  &--full {
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-  }
-}
-
-.caption {
-  position: absolute;
-  z-index: 7;
-
-  &[data-shift="left"] {
-    transform: translateX(-50%);
-  }
-
-  &[data-shift="up"] {
-    transform: translateY(-50%);
-  }
-}
-
 .highlight-wrapper {
   position: absolute;
   z-index: 6;
@@ -46,7 +20,7 @@ body {
   position: absolute;
 }
 
-.dim-svg {
+.spotlight-frame {
   position: fixed;
   z-index: 10;
   top: 0;
@@ -55,4 +29,22 @@ body {
   path {
     fill: rgba(0,0,0,0.4);
   }
+}
+
+.spotlight-caption {
+  z-index: 11;
+  position: absolute;
+  width: 200px;
+  height: 200px;
+
+  color: $cappuccino-1;
+  background: $cream-3;
+  border-radius: 15px;
+  font-weight: 700;
+  border: 1px solid $cream-4;
+
+  padding: 5px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
 }

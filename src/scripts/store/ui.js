@@ -141,6 +141,14 @@ const UI = GameBase
   })
   .actions(self => {
     return {
+      reset() {
+        self.curSquare = null
+        self.curCollection = null
+        self.isStaging = false
+        self.stagedPossibilities = []
+        self.filterMode = 'and'
+        self.selectedSquares = []
+      },
       selectSquareByDir(dir) {
         const [curRow, curCol] = self.curPosition
         const newPos = stringSwitch(dir, ({ _case }) => {

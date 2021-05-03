@@ -1,51 +1,6 @@
-import { areEqualArrays, indexOfArray, nextId, stringSwitch } from "./general_util"
+import { applyStyle, createSVGElement, getTemplateById } from "./dom_util"
+import { areEqualArrays, stringSwitch } from "./general_util"
 
-function spotlightEles(...args) {
-  const options = args.pop()
-  const eles = args
-
-}
-
-function spotlightEle() {
-
-}
-
-bounds = [
-  {
-    top: 100,
-    bottom: 200,
-    left: 100,
-    right: 200,
-  },
-  {
-    top: 150,
-    bottom: 250,
-    left: 150,
-    right: 250,
-  },
-]
-
-// visitedIndices = {
-
-// }
-
-// start = [100, 100]
-
-// no intercept -- same sign
-// intercept -- opposition sign
-// vertices = []
-
-// curPos = start
-// curShapeIdx = 0
-// vertical = true
-// dir = [0, 1]
-
-// const clockwiseOrder = [
-//   [1, 0],
-//   [0, 1],
-//   [-1, 0],
-//   [0, -1]
-// ]
 const clockwiseOrder = [
   'top',
   'right',
@@ -60,50 +15,88 @@ const sideSigns = {
   left: -1,
 }
 
-class EleTracer {
-  constructor(bounds) {
-    this.bounds = bounds
-    this.subPaths = []
-    this.visited = {}
-    this.curBoundIdx = null
-    this.curBoundSide = null
-    this.clockwise = null
+class Spotlight {
+  static fromEles(eles, options) {
+    return new Spotlight({ eles, ...options })
   }
 
-  generateSubPaths() {
-    while (!this.isComplete) {
-      this.addNextSubPath()
+  static fromEle(ele, options) {
+    return new Spotlight({ eles: [ele], ...options })
+  }
+
+  constructor({
+    eles,
+    padding = 0,
+    captionPosition,
+    captionOffset = {},
+  } = {}) {
+    this.eles = eles
+    this.padding = padding
+    this.captionPosition = captionPosition || 'right'
+    this.captionOffset = { x: 0, y: 0, ...captionOffset }
+    this.generate()
+  }
+
+  generate() {
+    this.bounds = this.eles.map(ele => getPaddedBoundingRect(ele, this.padding))
+    this.subPaths = []
+    this.visited = {}
+    this._anchorBounds = null
+
+    let i = 0
+    while (!this.isComplete && i < 5) {
+      this._addNextSubPath()
+      i++
     }
   }
 
-  addNextSubPath() {
+  _addNextSubPath() {
     const subPath = []
-    this.beginSubPath(subPath)
+    this._beginSubPath(subPath)
 
-    while (!this.isCompleteSubPath(subPath)) {
-      this.addNextPoint(subPath)
+    let i = 0
+    while (!this._isCompleteSubPath(subPath) && i < 100) {
+      this._addNextPoint(subPath)
+      i++
     }
 
     this.subPaths.push(subPath)
   }
 
-  addNextPoint(subPath) {
-    const curDim = this.getDim(this.curBoundIdx, this.curBoundSide)
-    const nextCurBoundSide = getNextSide(curBoundSide, this.clockwise)
-    let closestDim = this.getDim(this.curBoundIdx, nextCurBoundSide)
+  _addNextPoint(subPath) {
+    const [staticIdx, changingIdx] =
+      stringSwitch(this.curBoundSide, ({ _case }) => {
+        _case(['left', 'right'], () => [0, 1])
+        _case(['top', 'bottom'], () => [1, 0])
+      })
 
-    if (curDim === closestDim) {
+    const curPoint = this._getLastPoint(subPath)
+    const curStaticDim = curPoint[staticIdx]
+    const curChangingDim = curPoint[changingIdx]
+
+    const nextCurBoundSide = getNextSide(this.curBoundSide)
+    let closestDim = this._getDim(this.curBoundIdx, nextCurBoundSide)
+
+    if (curChangingDim === closestDim) {
       this.curBoundSide = nextCurBoundSide
       return
     }
 
     let closestBoundIdx = this.curBoundIdx
     const interceptSide = getOpposideSide(nextCurBoundSide)
+
     this.boundsIndices.forEach(idx => {
-      const interceptDim = this.getDim(idx, interceptSide)
+      const [staticDimLower, staticDimUpper] =
+        this._getOtherDimRange(idx, interceptSide)
+
+      if (curStaticDim < staticDimLower || curStaticDim > staticDimUpper) {
+        return
+      }
+
+      const interceptDim = this._getDim(idx, interceptSide)
 
       if (
-        Math.sign(interceptDim - curDim) === sideSigns[nextCurBoundSide]
+        Math.sign(interceptDim - curChangingDim) === sideSigns[nextCurBoundSide]
         && Math.sign(closestDim - interceptDim) === sideSigns[nextCurBoundSide]
       ) {
         closestDim = interceptDim
@@ -111,56 +104,171 @@ class EleTracer {
       }
     })
 
-    const isNewBound = closestBoundIdx !== this.curBoundIdx
-    const [prevX, prevY] = this.getLastPoint(subPath)
-    const nextSide = isNewBound ? nextCurBoundSide : interceptSide
-    const nextPoint = stringSwitch(nextSide, ({ _case }) => {
-      _case(['left', 'right'], () => [closestDim, prevY])
-      _case(['top', 'bottom'], () => [prevX, closestDim])
-    })
+    const nextPoint = [null, null]
+    nextPoint[staticIdx] = curStaticDim
+    nextPoint[changingIdx] = closestDim
 
     // side effects
     subPath.push(nextPoint)
     this.visited[closestBoundIdx] = true
     this.curBoundIdx = closestBoundIdx
-    this.curBoundSide = nextSide
-    this.clockwise = isNewBound ? !this.clockwise : this.clockwise
+    this.curBoundSide = closestBoundIdx !== this.curBoundIdx
+      ? interceptSide
+      : nextCurBoundSide
   }
 
-  getDim(boundOrIdx, side) {
+  _getDim(boundOrIdx, side) {
     return typeof boundOrIdx === 'number'
       ? this.bounds[boundOrIdx][side]
       : boundOrIdx[side]
   }
 
-  getNextBoundIdx() {
+  _getNextBoundIdx() {
     return this.boundsIndices.find(idx => !this.visited[idx])
   }
 
-  beginSubPath(subPath) {
-    this.curBoundIdx = this.getNextBoundIdx()
+  _beginSubPath(subPath) {
+    this.curBoundIdx = this._getNextBoundIdx()
     this.visited[this.curBoundIdx] = true
 
-    this.clockwise = true
-    this.curBoundSide = 'right'
+    this.curBoundSide = 'top'
 
     const { left, top } = this.curBound
     subPath.push([left, top])
   }
 
-  getFirstPoint(subPath) {
+  _getFirstPoint(subPath) {
     return subPath[0]
   }
 
-  getLastPoint(subPath) {
+  _getLastPoint(subPath) {
     return subPath[subPath.length - 1]
   }
 
-  isCompleteSubPath(subPath) {
+  _getOtherDimRange(boundIdx, side) {
+    const bound = this.bounds[boundIdx]
+
+    return stringSwitch(side, ({ _case }) => {
+      _case(['left', 'right'], () => [bound.top, bound.bottom])
+      _case(['top', 'bottom'], () => [bound.left, bound.right])
+    })
+  }
+
+  _isCompleteSubPath(subPath) {
     return subPath.length > 1 && areEqualArrays(
-      this.getFirstPoint(subPath),
-      this.getLastPoint(subPath)
+      this._getFirstPoint(subPath),
+      this._getLastPoint(subPath)
     )
+  }
+
+  _getSubPathD(subPath) {
+    const m = `M ${subPath[0].join()}`
+    const l = `L ${subPath.slice(1).map(p => p.join()).join(' ')}`
+    return `${m} ${l}`
+  }
+
+  getD(vw, vh) {
+    const outerPath = `M 0,0 L ${vw},0 ${vw},${vh} 0,${vh} 0,0`
+    const innerPaths = this.subPaths.map(this._getSubPathD).join(' ')
+    return `${outerPath} ${innerPaths} z`
+  }
+
+  updateSVG({
+    element: svg,
+    regenerate = true,
+  } = {}) {
+    if (!svg) return
+    if (regenerate) this.generate()
+
+    const vw = window.innerWidth
+    const vh = window.innerHeight
+
+    svg.setAttribute('viewBox', `0 0 ${vw} ${vh}`)
+    svg.querySelector('path').setAttribute('d', this.getD(vw, vh))
+    return svg
+  }
+
+  updateCaption({
+    element: caption,
+    regenerate = true,
+  } = {}) {
+    if (!caption) return
+    if (regenerate) this.generate()
+
+    applyStyle(caption, this.captionStyle, true)
+
+    return caption
+  }
+
+  get anchorBounds() {
+    if (!this._anchorBounds) {
+      if (this.bounds.length > 1 && typeof this.anchorEle === 'number') {
+        this._anchorBounds = this.bounds[this.anchorEle]
+      } else if (this.bounds.length > 1) {
+        this._anchorBounds = this.bounds.reduce((anchorBounds, bound) => ({
+          top: Math.min(anchorBounds.top, bound.top),
+          left: Math.min(anchorBounds.left, bound.left),
+          right: Math.max(anchorBounds.right, bound.right),
+          bottom: Math.max(anchorBounds.bottom, bound.bottom),
+        }))
+      } else {
+        this._anchorBounds = this.bounds[0]
+      }
+    }
+
+    return this._anchorBounds
+  }
+
+  get positionStyles() {
+    const {
+      top: boundsTop,
+      right: boundsRight,
+      left: boundsLeft,
+      bottom: boundsBottom,
+    } = this.anchorBounds
+
+    const upperTop = toPixels(boundsTop)
+    const midTop = toPixels((boundsTop + boundsBottom) / 2)
+    const lowerTop = toPixels(boundsBottom)
+    const startLeft = toPixels(boundsLeft)
+    const midLeft = toPixels((boundsLeft + boundsRight) / 2)
+    const endLeft = toPixels(boundsRight)
+
+    return {
+      top: { top: upperTop, left: midLeft },
+      topRight: { top: upperTop, left: endLeft },
+      right: { top: midTop, left: endLeft },
+      bottomRight: { top: lowerTop, left: endLeft },
+      bottom: { top: lowerTop, left: midLeft },
+      bottomLeft: { top: lowerTop, left: startLeft },
+      left: { top: midTop, left: startLeft },
+      topLeft: { top: upperTop, left: startLeft },
+    }
+  }
+
+  get captionStyle() {
+    const positionStyle = this.positionStyles[this.captionPosition]
+
+    const xShift = stringSwitch(this.captionPosition, ({ _case, _default }) => {
+      _case(/(L|l)eft/, () => '-100%')
+      _case(['top', 'bottom'], () => '-50%')
+      _default(() => '0')
+    })
+
+    const yShift = stringSwitch(this.captionPosition, ({ _case, _default }) => {
+      _case(/top/, () => '-100%')
+      _case(['left', 'right'], () => '-50%')
+      _default(() => '0')
+    })
+
+    const { x: offsetX, y: offsetY } = this.captionOffset
+    const translateX = offsetX ? `calc(${xShift} + ${offsetX})` : xShift
+    const translateY = offsetY ? `calc(${yShift} + ${offsetY})` : yShift
+
+    return {
+      ...positionStyle,
+      transform: `translateX(${translateX}) translateY(${translateY})`
+    }
   }
 
   get curBound() {
@@ -168,7 +276,7 @@ class EleTracer {
   }
 
   get isComplete() {
-    return this.getNextBoundIdx() !== undefined
+    return this._getNextBoundIdx() === undefined
   }
 
   get boundsIndices() {
@@ -176,10 +284,9 @@ class EleTracer {
   }
 }
 
-function getNextSide(curSide, clockwise) {
+function getNextSide(curSide) {
   const idx = clockwiseOrder.indexOf(curSide)
-  const diff = clockwise ? 1 : -1
-  const nextSideIdx = (idx + diff + 4) % 4
+  const nextSideIdx = (idx + 1 + 4) % 4
   return clockwiseOrder[nextSideIdx]
 }
 
@@ -189,272 +296,18 @@ function getOpposideSide(side) {
   return clockwiseOrder[oppositeIdx]
 }
 
-function getNextPointAndDir(points, visited, curBoundIdx, curBoundSide, clockwise) {
-  // const interceptSide = getInterceptSide(curBoundSide)
-  // const nextCurBoundSide = getNextCurBoundSide(curBoundSide, clockwise)
-
-  // const interceptDim = bounds.filter(bound => {
-  //   const interceptDim = bound[interceptSide]
-  //   return (
-  //     Math.sign(interceptDim - curDim) === sideSigns[nextId]
-  //     && Math.sign(nextCurBoundDim - interceptDim) === sideSigns[nextId]
-  //   )
-  // }).sort((boundA, boundB) => {
-  //   return sideSigns[nextId] * Math.sign(boundA - boundB)
-  // })[0]?.[interceptSide]
-
-  const { interceptSide, nextCurBoundSide } = getNextSides(curBoundSide, clockwise)
-  const curDim = bounds[curBoundIdx][curBoundSide]
-
-  let closestDim = bounds[curBoundIdx][nextCurBoundSide]
-  let closestBoundIdx = curBoundIdx
-  bounds.forEach((bound, idx) => {
-    const interceptDim = bound[interceptSide]
-
-    if (
-      Math.sign(interceptDim - curDim) === sideSigns[nextId]
-      && Math.sign(closestDim - interceptDim) === sideSigns[nextId]
-    ) {
-      closestDim = interceptDim
-      closestBoundIdx = idx
-    }
-  })
-
-  const [prevX, prevY] = points[points.length - 1]
-  const nextSide = closestBoundIdx === curBoundIdx
-    ? nextCurBoundSide
-    : interceptSide
-
-  const nextPoint = stringSwitch(nextSide, ({ _case }) => {
-    _case(['left', 'right'], () => [closestDim, prevY])
-    _case(['top', 'bottom'], () => [prevX, closestDim])
-  })
-
-  // side effects
-  points.push(nextPoint)
-  visited[closestBoundIdx]
+function toPixels(num) {
+  return `${num}px`
 }
 
-function getNextSides(curBoundSide, clockwise) {
-  const idx = clockwiseOrder.indexOf(curBoundSide)
-  const diff = clockwise ? 1 : -1
-  const nextCurBoundSideIdx = (idx + diff + 4) % 4
-  const interceptSideIdx = (nextCurBoundSideIdx + 2) % 4
+function getPaddedBoundingRect(ele, padding) {
+  const bound = ele.getBoundingClientRect()
   return {
-    nextCurBoundSide: clockwiseOrder[nextCurBoundSideIdx],
-    interceptSide: clockwiseOrder[interceptSideIdx]
+    top: bound.top - padding,
+    left: bound.left - padding,
+    right: bound.right + padding,
+    bottom: bound.bottom + padding,
   }
 }
 
-
-
-// find oY such that Math.sign(oY - cY) === dir
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-function highlightEle(ele) {
-
-  return () => {
-
-  }
-}
-
-function highlightEles(...args) {
-  // parse args
-  const lastArg = args[args.length - 1]
-  const eles = lastArg instanceof Node ? args : args.slice(0, -1)
-  const {
-    padding = 0,
-    paddingTop, paddingRight, paddingBottom, paddingLeft,
-    captionTemplate = null,
-    captionPos = 'right',
-    ...captionAttrs
-  } = lastArg instanceof Node ? {} : lastArg
-
-  // create highlight wrappers to frame highlighted eles
-  const [wrapperStyles, outerWrapperStyle] = getPositionStyles(eles, {
-    paddingTop: paddingTop || padding,
-    paddingRight: paddingRight || padding,
-    paddingBottom: paddingBottom || padding,
-    paddingLeft: paddingLeft || padding,
-  })
-
-  const wrappers = wrapperStyles.map(style => {
-    const wrapper = generateDivWithStyle(style)
-    wrapper.className = generateClassName('highlight-wrapper', [
-      [eles.length === 1, 'fuzzy']
-    ])
-    document.body.append(wrapper)
-    return wrapper
-  })
-
-  // if multiple highlight elements, create outer wrapper to anchor caption to
-  let outerWrapper = wrappers[0]
-  if (wrappers.length > 1) {
-    outerWrapper = generateDivWithStyle(outerWrapperStyle)
-    outerWrapper.className = 'highlight-outer-wrapper'
-    document.body.append(outerWrapper)
-  }
-
-  // create background dimming element
-  const dimEle = document.createElement('div')
-  dimEle.className = 'dim dim--full'
-  document.body.append(dimEle)
-
-  // lift highlighted eles above highlight wrappers
-  eles.forEach(ele => {
-    ele.style.zIndex = 8
-    const elePosition = getComputedStyle(ele).getPropertyValue('position')
-    if (elePosition === 'static') ele.style.position = 'relative'
-  })
-
-  // cleanup all DOM mutations
-  const cleanup = () => {
-    wrappers.forEach(wrapper => wrapper.remove())
-    dimEle.remove()
-    outerWrapper.remove()
-
-    eles.forEach(ele => {
-      ele.style.zIndex = null
-      ele.style.position = null
-    })
-  }
-
-  // if caption provided, prepare and attach
-  if (captionTemplate && captionAnchor) {
-    try {
-      const [style, shift] = prepareCaptionEle({ captionAnchor, ...attrs })
-      const captionEle = captionTemplate.cloneNode(true)
-
-      Object.entries(style).forEach(([prop, val]) => {
-        if (val !== undefined) captionEle.style[prop] = val
-      })
-
-      if (centerCaption && shift) captionEle.dataset.shift = shift
-      captionEle.classList.add('caption')
-
-      outerWrapper.append(captionEle)
-    } catch (e) {
-      cleanup()
-      throw e
-    }
-  }
-
-  return cleanup
-}
-
-function prepareCaptionEle({
-  captionAnchor,
-  top,
-  right,
-  bottom,
-  left,
-}) {
-  const {
-    top: defaultTop,
-    right: defaultRight,
-    bottom: defaultBottom,
-    left: defaultLeft,
-    shift
-  } = stringSwitch(captionAnchor, ({ _case }) => {
-    _case('top', () => ({ bottom: '100%', left: '50%', shift: 'left' }))
-    _case('topRight', () => ({ bottom: '100%', left: '100%' }))
-    _case('right', () => ({ top: '50%', left: '100%', shift: 'up' }))
-    _case('bottomRight', () => ({ top: '100%', left: '100%' }))
-    _case('bottom', () => ({ top: '100%', left: '50%', shift: 'left' }))
-    _case('bottomLeft', () => ({ top: '100%', right: '100%' }))
-    _case('left', () => ({ top: '50%', right: '100%', shift: 'up' }))
-    _case('topLeft', () => ({ bottom: '100%', right: '100%' }))
-    _default(() => { throw new Error('Invalid captionAnchor ') })
-  })
-
-  return [{
-    top: mergeProp(defaultTop, top),
-    right: mergeProp(defaultRight, right),
-    bottom: mergeProp(defaultBottom, bottom),
-    left: mergeProp(defaultLeft, left),
-  }, shift]
-}
-
-function generateDivWithStyle(style) {
-  const div = document.createElement('div')
-
-  Object.entries(style).forEach(([prop, val]) => {
-    if (val !== undefined) div.style[prop] = val
-  })
-
-  return div
-}
-
-function getPositionStyles(eles, {
-  paddingTop = 0,
-  paddingRight = 0,
-  paddingBottom = 0,
-  paddingLeft = 0,
-} = {}) {
-  const toPx = num => `${num}px`
-
-  let outerTop, outerRight, outerBottom, outerLeft
-  const attributes = eles.map(ele => {
-    const { top, right, bottom, left } = ele.getBoundingClientRect()
-
-    if (outerTop === undefined || top < outerTop) outerTop = top
-    if (outerRight === undefined || right > outerRight) outerRight = right
-    if (outerBottom === undefined || bottom > outerBottom) outerBottom = bottom
-    if (outerLeft === undefined || left < outerLeft) outerLeft = left
-
-    return {
-      top: toPx(top - paddingTop),
-      left: toPx(left - paddingLeft),
-      height: toPx(bottom - top + paddingTop + paddingBottom),
-      width: toPx(right - left + paddingRight + paddingLeft),
-    }
-  })
-
-  return [attributes, {
-    top: toPx(outerTop - paddingTop),
-    left: toPx(outerLeft - paddingLeft),
-    height: toPx(outerBottom - outerTop + paddingTop + paddingBottom),
-    width: toPx(outerRight - outerLeft + paddingRight + paddingLeft),
-  }]
-}
-
-function mergeProp(defaultProp, argProp) {
-  if (defaultProp === undefined) {
-    return argProp
-  } else {
-    return argProp ? `calc(${defaultProp} + ${argProp})` : defaultProp
-  }
-}
-
-
-// window.cap = document.createElement('div')
-// window.cap.style.width = '200px'
-// window.cap.style.height = '200px'
-// window.cap.style.background = 'red'
-// window.cap.style.position = 'absolute'
-// window.cap.style.zIndex = 100
-// window.opts = { captionTemplate: cap, captionAnchor: 'bottom' }
-// window.ghf = generateHighlightFuncs
-// window.hh = highlightEles
-// window.sa = () => [
-//   document.querySelector('.square[data-id="71"]'),
-//   document.querySelector('.square[data-id="72"]'),
-//   document.querySelector('.square[data-id="73"]'),
-// ]
+export default Spotlight
