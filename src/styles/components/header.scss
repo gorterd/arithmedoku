@@ -60,7 +60,7 @@
   right: -420%;
   padding-top: 25px;
   font-weight: 400;
-  width: #{'min(55vw, 400px)'};
+  // width: #{'min(55vw, 400px)'};
   box-shadow: 0 2px 5px 0 hsl(36,30,50);
 
   &--info {
@@ -119,10 +119,14 @@
   }
 }
 
-
+#header-instructions .header_dropdown,
+#header-about .header_dropdown {
+  width: #{'min(55vw, 600px)'};
+}
 
 #header-options .header_dropdown {
   font-weight: 600;
+  width: #{'min(55vw, 400px)'};
 
   li {
     display: flex;
@@ -135,18 +139,16 @@
   position: relative;
   width: 75%;
 
-  // > span {
-  //   margin-left: 10px;
-  // }
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
 
 .option_hover {
   margin-left: 10px;
   display: flex;
   align-items: center;
-  position: relative;
+  // position: relative;
 }
 
 .option_info-text {
@@ -157,8 +159,8 @@
   display: none;
   position: absolute;
   z-index: 3;
-  top: 100%;
-  right: 0;
+  top: 50%;
+  right: 5%;
   max-width: 150%;
   min-width: 100%;
   padding: 15px;

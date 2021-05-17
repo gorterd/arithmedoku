@@ -189,14 +189,7 @@ function appendIfRemoved(...eles) {
 function getSpotlights({
   gameStore,
   env: {
-    templates: {
-      puzzleCaptionContent,
-      infoCaptionContent,
-      squareInfoCaptionContent,
-      collectionInfoCaptionContent,
-      instructionsCaptionContent,
-      optionsCaptionContent,
-    }
+    templates
   },
   elements: {
     puzzleEle,
@@ -220,7 +213,7 @@ function getSpotlights({
   const puzzleSpotlight = Spotlight.fromEle(puzzleEle, {
     padding: 5,
     borderRadius: 8,
-    captionContent: puzzleCaptionContent.cloneNode(true),
+    captionContent: templates.puzzleCaptionContent.cloneNode(true),
   })
 
   const infoSpotlight = Spotlight.fromEle(infoEle, {
@@ -230,7 +223,7 @@ function getSpotlights({
     captionPosition: 'left',
     captionOffsetX: '-10px',
     captionOffsetY: '50px',
-    captionContent: infoCaptionContent.cloneNode(true),
+    captionContent: templates.infoCaptionContent.cloneNode(true),
   })
 
   const squareInfoSpotlight = Spotlight.fromEles([squareEle, squareInfoEle], {
@@ -238,7 +231,7 @@ function getSpotlights({
     borderRadius: 2,
     blur: 1,
     captionPosition: 'bottom',
-    captionContent: squareInfoCaptionContent.cloneNode(true),
+    captionContent: templates.squareInfoCaptionContent.cloneNode(true),
   })
 
   const selectionSpotlight = Spotlight.fromEles([squareEle, squareEle2, squareInfoEle], {
@@ -246,7 +239,7 @@ function getSpotlights({
     borderRadius: 2,
     blur: 1,
     captionPosition: 'bottom',
-    captionContent: squareInfoCaptionContent.cloneNode(true),
+    captionContent: templates.squareInfoCaptionContent.cloneNode(true),
   })
 
   const cageSpotlight = Spotlight.fromEles([...cageSquares], {
@@ -254,7 +247,7 @@ function getSpotlights({
     borderRadius: 2,
     blur: 1,
     captionPosition: 'bottom',
-    captionContent: collectionInfoCaptionContent.cloneNode(true),
+    captionContent: templates.cageCaptionContent.cloneNode(true),
   })
 
   const cageInfoSpotlight = Spotlight.fromEles([...cageSquares, collectionInfoEle], {
@@ -268,7 +261,7 @@ function getSpotlights({
     borderRadius: 2,
     blur: 1,
     captionPosition: 'bottom',
-    captionContent: collectionInfoCaptionContent.cloneNode(true),
+    captionContent: templates.cageInfoCaptionContent.cloneNode(true),
   })
 
   const optionsSpotlight = Spotlight.fromEles([optionsButton, optionsDropdown], {
@@ -276,7 +269,7 @@ function getSpotlights({
     borderRadius: 8,
     blur: 2,
     captionPosition: 'bottom',
-    captionContent: optionsCaptionContent.cloneNode(true),
+    captionContent: templates.optionsCaptionContent.cloneNode(true),
     onShow: () => {
       optionsDropdown.classList.add('show')
       return () => optionsDropdown.classList.remove('show')
@@ -288,7 +281,7 @@ function getSpotlights({
     borderRadius: 8,
     blur: 2,
     captionPosition: 'right',
-    captionContent: instructionsCaptionContent.cloneNode(true),
+    captionContent: templates.instructionsCaptionContent.cloneNode(true),
     onShow: () => {
       instructionsDropdown.classList.add('show')
       return () => instructionsDropdown.classList.remove('show')
@@ -297,15 +290,17 @@ function getSpotlights({
 
   return [
     puzzleSpotlight,
-    infoSpotlight,
     cageSpotlight,
+    infoSpotlight,
     cageInfoSpotlight.dup({
+      captionPosition: 'top',
       onShow: () => {
         selectSquare(squareEle)
         return () => clearFocusAndFilter(gameStore)
       }
     }),
     cageInfoSpotlight.dup({
+      captionContent: templates.cageInfoAndCaptionContent.cloneNode(true),
       onShow: () => {
         selectSquare(squareEle)
         toggleAnd(gameStore)
@@ -314,6 +309,7 @@ function getSpotlights({
       }
     }),
     cageInfoSpotlight.dup({
+      captionContent: templates.cageInfoNotCaptionContent.cloneNode(true),
       onShow: () => {
         selectSquare(squareEle)
         toggleNot(gameStore)
@@ -322,6 +318,7 @@ function getSpotlights({
       }
     }),
     cageInfoSpotlight.dup({
+      captionContent: templates.cageInfoOrCaptionContent.cloneNode(true),
       onShow: () => {
         selectSquare(squareEle)
         toggleOr(gameStore)

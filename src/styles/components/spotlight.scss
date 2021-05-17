@@ -1,0 +1,79 @@
+
+.spotlight-frame {
+  $overflow-px: 20px;
+  position: fixed;
+  z-index: 10;
+  top: calc(#{$overflow-px} / -2);
+  left: calc(#{$overflow-px} / -2);
+  width: calc(100vw + #{$overflow-px});
+  height: calc(100vh + #{$overflow-px});
+
+  path {
+    fill: rgba(0,0,0,0.4);
+  }
+}
+
+.spotlight-caption {
+  z-index: 11;
+  position: absolute;
+  min-width: 200px;
+  max-width: 400px;
+  min-height: 150px;
+
+  color: $cappuccino-1;
+  background: $cream-3;
+  border-radius: 15px;
+  font-size: 1.2em;
+  border: 1px solid $cream-4;
+
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+}
+
+.caption-content {
+  margin-bottom: 20px;
+
+  p, li {
+    margin-bottom: 10px;
+  }
+
+  strong {
+    font-weight: bold;
+  }
+
+  ol {
+    // list-style: decimal inside;
+    counter-reset: num;
+    padding-left: 20px;
+
+    > li {
+      counter-increment: num;
+
+      &:before {
+        font-weight: bold;
+        content: counter(num) '.';
+        position: absolute;
+        left: 10px;
+      }
+    }
+  }
+
+  &--cage-info-and,
+  &--cage-info-not,
+  &--cage-info-or {
+    li:not(:last-of-type) {
+      font-size: 0.9em;
+      opacity: 0.9;
+    }
+  }
+}
+
+.caption-controls {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-weight: 700;
+}

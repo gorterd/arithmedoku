@@ -334,37 +334,118 @@
   <template id='spotlight-caption-template'>
     <div class='spotlight-caption'>
       <div class='caption-controls'>
-        <button id='spotlight-next'>Next</button>
         <button id='spotlight-previous'>Previous</button>
         <button id='spotlight-finish'>Finish</button>
+        <button id='spotlight-next'>Next</button>
       </div>
     </div>
   </template>
 
   <template id='caption-content-puzzle-template'>
     <div class='caption-content caption-content--puzzle'>
-      This is an Arithmedoku puzzle. Your goal is to fill every square with the correct number (between 1 and 9). But
-      there are some 2 constraints on what numbers can go where. The first: every row and column must contain the
-      numbers 1 through 9, no repeats.
+      <p>
+        This is an Arithmedoku puzzle. Your goal is to fill every square with the correct number.
+      </p>
+      <p>
+        There are 2 constraints on what numbers can go where. The first: every row and column must contain the numbers 1
+        through 9, no repeats.
+      </p>
     </div>
   </template>
 
   <template id='caption-content-cage-template'>
     <div class='caption-content caption-content--cage'>
-      The highlighted region in the puzzle is a cage. Cages are outlined with bold borders. Each cage has an associated
-      mathematical operation and
-      result. The operation for this cage is *OP*, and the result is *RESULT*. This leads us to the second constraint on
-      what numbers can go where: *DESCRIPTION*.
+      <p>
+        This is a cage. Cages are outlined with bold borders. Each cage has an associated
+        mathematical operation and result. The operation for this cage is <strong>+</strong>, and the result is
+        <strong>15</strong>.
+      </p>
+      <p>
+        This leads us
+        to the second constraint on
+        what numbers can go where: performing the operation of a cage must yield the listed result. In our case, the
+        three squares must add up to 15.
+      </p>
+    </div>
+  </template>
 
-      Highlighted on the right is the area in the Info Box dedicated toward reasoning about a cage as a whole. At the
-      bottom, you have 3 tabs, where you can select numbers:
+  <template id='caption-content-cage-info-template'>
+    <div class='caption-content caption-content--cage-info'>
+      <p>
+        Highlighted on the right is the area in the Info Box dedicated toward reasoning about a cage as a whole. At the
+        center, we have a list of every possible combination of numbers that could appear in the cage.
+      </p>
+      <p>
+        This list is
+        currently filtered to only show combinations that are mathematically possible (ie numbers that add up to 15) --
+        but this is an option you can turn off.
+      </p>
+      <p>
+        At the
+        bottom, we have 3 tabs, wherein we can narrow down the combinations that we believe could appear in this cage.
+      </p>
+
+
+    </div>
+  </template>
+
+  <template id='caption-content-cage-info-and-template'>
+    <div class='caption-content caption-content--cage-info-and'>
       <ol>
-        <li>*all* of which *must* appear in the cage. (Require All)</li>
-        <li>*all* of which *cannot* appear in the cage. (Eliminate)</li>
-        <li>*at least one* of which *must* appear somewhere in the cage. (Require One)</li>
+        <li>
+          In the first tab, <strong>Require All</strong>, we can specify numbers that <strong>must</strong> appear in
+          this
+          cage. Currently, we've selected <strong>4</strong>, so our list of possible combinations now only includes
+          those
+          that contain the number 4.
+        </li>
       </ol>
+    </div>
+  </template>
 
-      To review, the current configuration
+  <template id='caption-content-cage-info-not-template'>
+    <div class='caption-content caption-content--cage-info-not'>
+      <ol>
+        <li>
+          In the first tab, <strong>Require All</strong>, we can specify numbers that <strong>must</strong> appear in
+          this
+          cage.
+        </li>
+        <li>
+          In the second tab, <strong>Eliminate</strong>, we can specify numbers that <strong>cannot</strong> appear in
+          this
+          cage. Currently, we've selected <strong>1, 6, and 8</strong>, so our list of possible combinations now
+          excludes
+          those
+          that contain 1, 6, or 8.
+        </li>
+      </ol>
+    </div>
+  </template>
+
+  <template id='caption-content-cage-info-or-template'>
+    <div class='caption-content caption-content--cage-info-or'>
+      <ol>
+        <li>
+          In the first tab, <strong>Require All</strong>, we can specify numbers that <strong>must</strong> appear in
+          this
+          cage.
+        </li>
+        <li>
+          In the second tab, <strong>Eliminate</strong>, we can specify numbers that <strong>cannot</strong> appear in
+          this
+          cage.
+        </li>
+        <li>
+          In the third tab, <strong>Require One</strong>, we can specify a set of numbers, at least <strong>one</strong>
+          of which
+          <strong>must</strong> appear in
+          this
+          cage. Currently, we've selected <strong>2 and 7</strong>, so our list of possible combinations now only
+          includes
+          that contain 2 <strong>or</strong> 7.
+        </li>
+      </ol>
     </div>
   </template>
 

@@ -1,5 +1,5 @@
 import LRUCache from '../shared/lru_cache'
-import { getTemplateById } from '../shared/dom_util'
+import { getTemplateById, getTemplateNode } from '../shared/dom_util'
 import puzzles from '../data/puzzles'
 import { getHeaderElements } from '../views/header_view'
 import { getOptionsElements } from '../views/options_view'
@@ -44,13 +44,7 @@ export function getStaticEnv() {
       infoLabel: getTemplateById('info-label-template'),
       spotlight: getTemplateById('spotlight-template'),
       spotlightCaption: getTemplateById('spotlight-caption-template'),
-      puzzleCaptionContent: getTemplateById('caption-content-puzzle-template'),
-      cageCaptionContent: getTemplateById('caption-content-cage-template'),
-      infoCaptionContent: getTemplateById('caption-content-info-template'),
-      squareInfoCaptionContent: getTemplateById('caption-content-square-info-template'),
-      collectionInfoCaptionContent: getTemplateById('caption-content-collection-info-template'),
-      optionsCaptionContent: getTemplateById('caption-content-options-template'),
-      instructionsCaptionContent: getTemplateById('caption-content-instructions-template'),
+      ...getCaptionTemplates()
     },
   }
 }
@@ -62,4 +56,25 @@ function getDefaultDynamicEnv() {
     future: [],
     puzzleCache: new LRUCache(50, 10 * 60 * 1000),
   }
+}
+
+function getCaptionTemplates() {
+  const captionTemplates = {}
+  const prefix = 'caption-content-'
+  const suffix = '-template'
+
+  document.querySelectorAll(`template[id^="${prefix}"]`).forEach(template => {
+    const eleName = template.id.slice(prefix.length, -1 * suffix.length)
+    const key = camelize(eleName) + 'CaptionContent'
+    captionTemplates[key] = getTemplateNode(template)
+  })
+
+  return captionTemplates
+}
+
+function camelize(string, separator = '-') {
+  return string
+    .split(separator)
+    .map((word, idx) => idx > 0 ? word[0].toUpperCase() + word.slice(1) : word)
+    .join('')
 }
