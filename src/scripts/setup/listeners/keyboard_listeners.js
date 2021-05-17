@@ -10,10 +10,12 @@ export default function mountKeyboardListeners({ gameStore }) {
     if (!gameStore.ui.curSquare) return
 
     stringSwitch(e.code, ({ _case, _ensure }) => {
-      _case(!e.metaKey, !e.ctrlKey, /^Alt/, () =>
+      _case(!e.metaKey, !e.ctrlKey, /^Alt/, !gameStore.ui.hasSelection, () =>
         gameStore.beginStaging())
       _case(!e.altKey, e.ctrlKey, NUM_REGEX, () =>
-        gameStore.toggleFocusedSquarePossibility(getNumFromCode(e.code)))
+        gameStore.ui.hasSelection
+          ? gameStore.toggleSelectionPossibility(getNumFromCode(e.code))
+          : gameStore.toggleFocusedSquarePossibility(getNumFromCode(e.code)))
       _case(!e.altKey, e.shiftKey, NUM_REGEX, () =>
         gameStore.toggleFilterPossibility(getNumFromCode(e.code)))
       _case(!e.altKey, NUM_REGEX, () =>
@@ -30,8 +32,10 @@ export default function mountKeyboardListeners({ gameStore }) {
         gameStore.clearFocusedSquare())
       _case(e.altKey, ['Delete', 'Backspace'], () =>
         gameStore.clearStagedPossibilities())
-      _case(!e.altKey, e.shiftKey, LEFT_OR_RIGHT_REGEX, () =>
+      _case(!e.altKey, e.shiftKey, e.metaKey, LEFT_OR_RIGHT_REGEX, () =>
         gameStore.ui.changeFilterModeByDir(getDirFromCode(e.code)))
+      _case(!e.altKey, e.shiftKey, !e.metaKey, ARROW_REGEX, () =>
+        gameStore.ui.tentativelySelectInDir(getDirFromCode(e.code)))
       _case('KeyA', () => gameStore.ui.setFilterMode('and'))
       _case('KeyE', () => gameStore.ui.setFilterMode('not'))
       _case('KeyO', () => gameStore.ui.setFilterMode('or'))
@@ -56,8 +60,10 @@ export default function mountKeyboardListeners({ gameStore }) {
   })
 
   document.addEventListener('keyup', e => {
-    if (e.key === 'Alt') {
-      gameStore.stopStaging()
-    }
+    console.log(e.code)
+    stringSwitch(e.code, ({ _case }) => {
+      _case(/Shift/, () => gameStore.ui.lockInTentativeSelections())
+      _case(/Alt/, () => gameStore.stopStaging())
+    })
   })
 }

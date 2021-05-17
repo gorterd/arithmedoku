@@ -30,10 +30,8 @@ const FilterPossibility = GameBase
     }
 
     const hoverFlag = mode => {
-      if (self.status === 'none') {
+      if (!self.matchesMode(mode)) {
         return `hover-${modeStatusMap[mode]}`
-      } else if (!self.matchesMode(mode)) {
-        return 'not-allowed'
       }
     }
 
@@ -52,9 +50,9 @@ const FilterPossibility = GameBase
         return self.status === modeStatusMap[mode]
       },
       hoverIcons(mode) {
-        return self.status === 'none'
-          ? getStatusIcon(modeStatusMap[mode])
-          : getStatusIcon(self.status)
+        return self.matchesMode(mode)
+          ? getStatusIcon(self.status)
+          : getStatusIcon(modeStatusMap[mode])
       },
       className(mode) {
         return generateClassName('filter-possibility', [
@@ -67,13 +65,9 @@ const FilterPossibility = GameBase
   .actions(self => {
     return {
       toggle(status) {
-        if (self.status === status) {
-          self.status = 'none'
-        } else if (self.status === 'none') {
-          self.status = status
-        } else {
-          console.log(`Cannot toggle from ${self.status} to ${status}`)
-        }
+        self.status = self.status === status
+          ? 'none'
+          : status
       },
     }
   })

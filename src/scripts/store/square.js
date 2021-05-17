@@ -87,7 +87,7 @@ const Square = GameBase
         get isSelected() {
           return (
             !self.isFocused
-            && self.rootUi.selectedSquares.includes(self)
+            && self.rootUi.selections.includes(self)
           )
         },
         get isStaging() {

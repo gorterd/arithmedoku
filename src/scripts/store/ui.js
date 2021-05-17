@@ -31,7 +31,11 @@ const UI = GameBase
     selectedSquares: types.optional(
       types.array(types.reference(Square)),
       () => []
-    )
+    ),
+    tentativeSelections: types.optional(
+      types.array(types.reference(Square)),
+      () => []
+    ),
   })
   .views(self => {
     return {
@@ -79,6 +83,12 @@ const UI = GameBase
         return generateClassName('collection-info', [
           [self.shouldShowCollection, self.filterMode, 'none']
         ])
+      },
+      get selections() {
+        return self.selectedSquares.concat(
+          self.tentativeSelections
+            .filter(square => !self.selectedSquares.includes(square))
+        )
       },
       isValidPos(pos) {
         return pos.every(coord => coord >= 0 && coord < self.env.globals.size)
@@ -140,6 +150,19 @@ const UI = GameBase
     }
   })
   .actions(self => {
+    const posInDir = (startingPos, dir) => {
+      const [startRow, startCol] = startingPos
+      const endPos = stringSwitch(dir, ({ _case }) => {
+        _case('Up', () => [startRow - 1, startCol])
+        _case('Right', () => [startRow, startCol + 1])
+        _case('Down', () => [startRow + 1, startCol])
+        _case('Left', () => [startRow, startCol - 1])
+      })
+      return self.isValidPos(endPos)
+        ? endPos
+        : false
+    }
+
     return {
       reset() {
         self.curSquare = null
@@ -150,15 +173,9 @@ const UI = GameBase
         self.selectedSquares = []
       },
       selectSquareByDir(dir) {
-        const [curRow, curCol] = self.curPosition
-        const newPos = stringSwitch(dir, ({ _case }) => {
-          _case('Up', () => [curRow - 1, curCol])
-          _case('Right', () => [curRow, curCol + 1])
-          _case('Down', () => [curRow + 1, curCol])
-          _case('Left', () => [curRow, curCol - 1])
-        })
+        const newPos = posInDir(self.curPosition, dir)
 
-        if (self.isValidPos(newPos)) self.selectSquareByPos(newPos)
+        if (newPos) self.selectSquareByPos(newPos)
       },
       selectSquareByPos(pos) {
         self.selectSquare(self.rootPuzzle.getSquareByPos(pos))
@@ -182,6 +199,29 @@ const UI = GameBase
               .filter(square => !self.selectedSquares.includes(square))
           )
         }
+      },
+      tentativelySelectInDir(dir) {
+        if (self.selectedSquares.length > 0) {
+          const curSquarePos = self.tentativeSelections[self.tentativeSelections.length - 1]?.position || self.lastSelectedSquare.position
+          const nextSquarePos = posInDir(curSquarePos, dir)
+
+          if (!nextSquarePos) return
+
+          const prevSelectionPos = self.lastSelectedSquare.position
+
+          self.tentativeSelections.push(
+            ...getInterveningPositions(prevSelectionPos, nextSquarePos)
+              .map(pos => self.rootPuzzle.getSquareByPos(pos))
+              .filter(square => !self.tentativeSelections.includes(square))
+          )
+        }
+      },
+      lockInTentativeSelections() {
+        self.selectedSquares.push(
+          ...self.tentativeSelections
+            .filter(square => !self.selectedSquares.includes(square))
+        )
+        self.tentativeSelections = []
       },
       toggleSelectedSquare(squareId) {
         togglePresenceInArray(
