@@ -1,21 +1,24 @@
 import { autorun } from 'mobx'
-import { haveEquivalentChildren, updateChildrenToMatch, isEquivalentNode } from '../shared/dom_util'
-import { generateClassName } from '../shared/general_util'
+import { haveEquivalentChildren, updateChildrenToMatch } from '../shared/dom_util'
 
-export function setupCollectionInfo({ gameStore, env }) {
-  const collectionInfoElements = getCollectionInfoElements(env.elements.infoBox)
-  setupListeners(gameStore, collectionInfoElements)
-  makeReactive(gameStore, collectionInfoElements)
+export function setupCollectionInfo(game) {
+  setupListeners(game)
+  makeReactive(game)
 }
 
-function setupListeners(gameStore, {
-  comboListEle,
-  possibilityEles,
-  andModeButton,
-  notModeButton,
-  orModeButton,
-  clearModeButton,
-  clearAllButton,
+function setupListeners({
+  gameStore,
+  elements: {
+    collectionInfoEles: {
+      comboListEle,
+      possibilityEles,
+      andModeButton,
+      notModeButton,
+      orModeButton,
+      clearModeButton,
+      clearAllButton,
+    }
+  }
 }) {
   comboListEle.addEventListener('click', e => {
     if (!gameStore.ui.curCage) return
@@ -65,10 +68,15 @@ function setupListeners(gameStore, {
   })
 }
 
-function makeReactive(gameStore, {
-  collectionEle,
-  comboListEle,
-  possibilityEles,
+function makeReactive({
+  gameStore,
+  elements: {
+    collectionInfoEle,
+    collectionInfoEles: {
+      comboListEle,
+      possibilityEles,
+    }
+  }
 }) {
   const possibilityReactions = Array.from(possibilityEles).map(possibilityEle => {
     const val = parseInt(possibilityEle.dataset.val)
@@ -104,7 +112,7 @@ function makeReactive(gameStore, {
       }
     },
     function renderFilterModeClassName() {
-      collectionEle.className = gameStore.ui.collectionClassName
+      collectionInfoEle.className = gameStore.ui.collectionClassName
     },
     ...possibilityReactions
   ]
@@ -113,16 +121,15 @@ function makeReactive(gameStore, {
   return disposers
 }
 
-function getCollectionInfoElements(infoBoxEle) {
+export function getCollectionInfoElements() {
   return {
-    collectionEle: infoBoxEle.querySelector('.collection-info'),
-    comboListEle: infoBoxEle.querySelector('.combos_list'),
-    filterEle: infoBoxEle.querySelector('.collection-filter'),
-    possibilityEles: infoBoxEle.querySelectorAll('.filter-possibility'),
-    andModeButton: infoBoxEle.querySelector('#filter-and'),
-    notModeButton: infoBoxEle.querySelector('#filter-not'),
-    orModeButton: infoBoxEle.querySelector('#filter-or'),
-    clearModeButton: infoBoxEle.querySelector('#filter-clear-mode'),
-    clearAllButton: infoBoxEle.querySelector('#filter-clear-all'),
+    comboListEle: document.querySelector('.combos_list'),
+    filterEle: document.querySelector('.collection-filter'),
+    possibilityEles: document.querySelectorAll('.filter-possibility'),
+    andModeButton: document.querySelector('#filter-and'),
+    notModeButton: document.querySelector('#filter-not'),
+    orModeButton: document.querySelector('#filter-or'),
+    clearModeButton: document.querySelector('#filter-clear-mode'),
+    clearAllButton: document.querySelector('#filter-clear-all'),
   }
 }

@@ -1,4 +1,4 @@
-import { flow, types } from 'mobx-state-tree'
+import { flow, setLivelinessChecking, types } from 'mobx-state-tree'
 import { ICONS } from '../shared/constants'
 import { wait, classes, arrayUnion, togglePresenceInArray, pushIfNotIncluded, removeIfIncluded, generateClassName } from '../shared/general_util'
 import { Id, Position, GameBase } from './base'
@@ -264,14 +264,14 @@ const Square = GameBase
         }
       },
       actions: {
-        setMistake: flow(function* setMistake(val) {
+        setMistake: flow(function* (val) {
           self.mistakeValue = val
           self.status = 'mistake'
           yield wait(self.env.globals.mistakeTimeoutMs)
           self.status = 'none'
           self.mistakeValue = null
         }),
-        setConflict: flow(function* setConflict() {
+        setConflict: flow(function* () {
           self.status = 'conflict'
           yield wait(self.env.globals.mistakeTimeoutMs)
           self.status = 'none'
@@ -289,6 +289,12 @@ const Square = GameBase
           self.eliminatedPossibilities = initialPossibilities
             .filter(num => !self.rootUi.stagedPossibilities.includes(num))
         },
+        reset() {
+          self.status = 'none'
+          self.value = null
+          self.mistakeValue = null
+          self.eliminatedPossibilities = []
+        }
       }
     }
   })

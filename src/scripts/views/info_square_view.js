@@ -1,15 +1,19 @@
 import { autorun } from 'mobx'
 
-export function setupSquareInfo({ gameStore, env }) {
-  const squareInfoElements = getSquareInfoElements(env.elements.infoBox)
-  setupListeners(gameStore, squareInfoElements)
-  makeReactive(gameStore, squareInfoElements)
+export function setupSquareInfo(game) {
+  setupListeners(game)
+  makeReactive(game)
 }
 
-function setupListeners(gameStore, {
-  possibilityEles,
-  select,
-  clear
+function setupListeners({
+  gameStore,
+  elements: {
+    squareInfoEles: {
+      possibilityEles,
+      select,
+      clear,
+    }
+  }
 }) {
   possibilityEles.forEach(possibilityEle => {
     const val = parseInt(possibilityEle.dataset.val)
@@ -38,7 +42,7 @@ function setupListeners(gameStore, {
   })
 
   select.addEventListener('click', () => {
-    if (!gameStore.ui.curSquare || gameStore.ui.hasFocusedSquareValue) {
+    if (!gameStore.ui.curSquare || gameStore.ui.curSquare.hasValue) {
       return
     } else if (gameStore.ui.isStaging) {
       gameStore.stopStaging()
@@ -53,24 +57,23 @@ function setupListeners(gameStore, {
     } else if (gameStore.ui.isStaging) {
       gameStore.clearStagedPossibilities()
     } else {
-      if (gameStore.ui.hasFocusedSquareValue) {
-        gameStore.clearFocusedSquare()
-      }
-
-      if (gameStore.ui.curSquare.hasEliminations) {
-        gameStore.resetFocusedSquarePossibilities()
-      }
+      gameStore.resetFocusedSquarePossibilities()
     }
   })
 }
 
-function makeReactive(gameStore, {
-  squareLabelText,
-  possibilityEles,
-  selectIcon,
-  clearIcon,
-  select,
-  clear,
+function makeReactive({
+  gameStore,
+  elements: {
+    squareInfoEles: {
+      squareLabelText,
+      possibilityEles,
+      selectIcon,
+      clearIcon,
+      select,
+      clear,
+    }
+  }
 }) {
   const possibilityReactions = Array.from(possibilityEles).map(possibilityEle => {
     const val = parseInt(possibilityEle.dataset.val)
@@ -120,14 +123,14 @@ function makeReactive(gameStore, {
   return disposers
 }
 
-function getSquareInfoElements(infoBoxEle) {
+export function getSquareInfoElements() {
   return {
-    squareLabelText: infoBoxEle.querySelector('#square-label text'),
-    possibilityEles: infoBoxEle.querySelectorAll('.square-info_possibility'),
-    select: infoBoxEle.querySelector('#square-info_select-only'),
-    selectIcon: infoBoxEle.querySelector('#square-info_select-only i'),
-    clear: infoBoxEle.querySelector('#square-info_clear'),
-    clearIcon: infoBoxEle.querySelector('#square-info_clear i'),
+    squareLabelText: document.querySelector('#square-label text'),
+    possibilityEles: document.querySelectorAll('.square-info_possibility'),
+    select: document.querySelector('#square-info_select-only'),
+    selectIcon: document.querySelector('#square-info_select-only i'),
+    clear: document.querySelector('#square-info_clear'),
+    clearIcon: document.querySelector('#square-info_clear i'),
   }
 }
 

@@ -285,6 +285,8 @@ export const quotient = ([a, b]) => {
 //   }
 // }
 
+
+
 export const getNumFromCode = code => parseInt(NUM_REGEX.exec(code)?.groups.num)
 
 export const getDirFromCode = code => ARROW_REGEX.exec(code)?.groups?.dir
@@ -326,7 +328,6 @@ export const throttle = (func, ms = 200) => {
   let lastFired = Date.now()
 
   return (...args) => {
-    console.log('yoooo')
     const now = Date.now()
 
     if (now - lastFired >= ms) {
@@ -491,18 +492,17 @@ function funcSwitchCaseArgParser(input, comparator, args) {
 }
 
 function parseMatcher(matcher) {
-  const matcherType = matcher.constructor.name
-  switch (matcherType) {
-    case 'BabelRegExp':
-    case 'RegExp':
-      return input => matcher.test(input)
-    case 'String':
-      return input => matcher === input
-    case 'Boolean':
-      return () => matcher
-    case 'Array':
-      return input => matcher.some(sub => parseMatcher(sub)(input))
-    default:
-      throw new Error(`Matcher arguments to case function must be a string, regular expression, boolean, or array of such. Instead, received ${matcherType}`)
+  const isMatcherType = (type) => matcher instanceof type
+
+  if (typeof matcher === 'string') {
+    return input => matcher === input
+  } else if (typeof matcher === 'boolean') {
+    return () => matcher
+  } else if (isMatcherType(RegExp)) {
+    return input => matcher.test(input)
+  } else if (isMatcherType(Array)) {
+    return input => matcher.some(sub => parseMatcher(sub)(input))
+  } else {
+    throw new Error(`Matcher arguments to case function must be a string, regular expression, boolean, or array of such. Instead, received ${matcher}`)
   }
 }

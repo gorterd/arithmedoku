@@ -1,14 +1,17 @@
 import { generateClassName } from '../shared/general_util'
 import { GameBase } from './base'
 
+const defaultOptions = {
+  autoBlock: true,
+  autoEliminate: true,
+  autoElimMathImpossibilities: true,
+  maxDisplayedPossibilities: 6,
+  walkthrough: true,
+}
+
 const Options = GameBase
   .named('Options')
-  .props({
-    autoBlock: true,
-    autoEliminate: true,
-    autoElimMathImpossibilities: true,
-    maxDisplayedPossibilities: 9,
-  })
+  .props(defaultOptions)
   .views(self => {
     return {
       get autoBlockClassName() {
@@ -24,6 +27,11 @@ const Options = GameBase
       get autoElimMathImpossibilitiesClassName() {
         return generateClassName('toggle', [
           [self.autoElimMathImpossibilities, 'on']
+        ])
+      },
+      get walkthroughClassName() {
+        return generateClassName('toggle', [
+          [self.walkthrough, 'on']
         ])
       },
     }
@@ -42,6 +50,9 @@ const Options = GameBase
       toggleAutoElimMathImpossibilities() {
         self.autoElimMathImpossibilities = !self.autoElimMathImpossibilities
       },
+      toggleWalkthrough() {
+        self.walkthrough = !self.walkthrough
+      },
       setMaxDisplayedPossibilities(num) {
         if (num < 2 || num > 9) {
           return false
@@ -50,6 +61,11 @@ const Options = GameBase
           return true
         }
       },
+      reset() {
+        for (let option in defaultOptions) {
+          self[option] = defaultOptions[option]
+        }
+      }
     }
   })
 

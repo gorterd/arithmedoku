@@ -1,10 +1,11 @@
-import { applySnapshot, getSnapshot, types } from 'mobx-state-tree'
+import { applySnapshot, flow, getSnapshot, onAction, onSnapshot, types } from 'mobx-state-tree'
 import { GameBase } from './base'
 import UI from './ui'
 import Options from './options'
 import Puzzle from './puzzle'
 import Meta from './meta'
 import { nextId } from '../shared/general_util'
+import { dbAdd, dbGet } from '../shared/storage_util'
 
 const Game = GameBase
   .named('Game')
@@ -15,7 +16,14 @@ const Game = GameBase
     options: types.optional(Options, () => Options.create()),
     ui: types.optional(UI, () => UI.create()),
   })
+  .volatile(self => {
+    return {
+      storedSnapshot: null
+    }
+  })
   .extend(self => {
+    let _storedSnapshot
+
     const takePuzzleSnapshot = () => {
       const snapshotId = parseInt(nextId())
       const puzzle = getSnapshot(self.puzzle)
@@ -42,6 +50,20 @@ const Game = GameBase
         : randomIdx
     }
 
+    const noHistory = () => {
+      window.setTimeout(() => {
+        self.env.history.pop()
+      }, 0)
+    }
+
+    const ifCurSquareEmpty = cb => {
+      if (self.ui.curSquare.hasValue) {
+        noHistory()
+      } else {
+        cb()
+      }
+    }
+
     const recordedActions = {
       setFocusedSquare(value) {
         if (
@@ -57,17 +79,26 @@ const Game = GameBase
           }, 0)
         } else {
           self.ui.curSquare.value = value
+          self.ui.isStaging = false
         }
       },
       toggleFocusedSquarePossibility(val) {
-        self.ui.curSquare.togglePossibility(val)
+        ifCurSquareEmpty(() => self.ui.curSquare.togglePossibility(val))
       },
       resetFocusedSquarePossibilities() {
-        self.ui.curSquare.eliminatedPossibilities = []
+        const square = self.ui.curSquare
+        if (!square.hasEliminations && !square.hasValue) {
+          noHistory()
+        } else {
+          self.ui.curSquare.eliminatedPossibilities = []
+          self.ui.curSquare.value = null
+        }
       },
       setStagedPossibilities() {
-        self.ui.curSquare.setStagedPossibilities()
-        self.ui.clearStagedPossibilities()
+        ifCurSquareEmpty(() => {
+          self.ui.curSquare.setStagedPossibilities()
+          self.ui.clearStagedPossibilities()
+        })
       },
       clearFocusedSquare() {
         self.setFocusedSquare(null)
@@ -110,14 +141,41 @@ const Game = GameBase
       newPuzzle() {
         const newIdx = getNewPuzzleIdx()
         self.curPuzzleIdx = newIdx
-        self.resetPuzzle()
+
+        self.ui.reset()
+        self.puzzle = Puzzle.create()
+        self.initialize()
       },
       resetPuzzle() {
         self.ui.reset()
-        self.puzzle = Puzzle.create()
-        self.initialize(self.env.puzzles[self.curPuzzleIdx])
+        self.puzzle.reset()
       },
-      initialize({ cages, solution }) {
+      // applyStoredSnapshot: flow(function* () {
+      //   const snapshot = yield getStoredSnapshot()
+      //   try {
+      //     applySnapshot(self, snapshot)
+      //   } catch {
+      //     console.log('Unable to apply stored snapshot')
+      //   }
+      // }),
+      applyStoredSnapshot() {
+        try {
+          applySnapshot(self, self.storedSnapshot)
+        } catch {
+          console.log('Unable to apply stored snapshot')
+        }
+      },
+      retrieveStoredSnapshot: flow(function* () {
+        if (!_storedSnapshot) {
+          _storedSnapshot = dbGet('gameStore')
+        }
+
+        self.storedSnapshot = yield _storedSnapshot
+        return _storedSnapshot
+      }),
+      initialize() {
+        const { cages, solution } = self.env.puzzles[self.curPuzzleIdx]
+
         cages.forEach(({ operation, result, squares }) => {
           const cage = self.puzzle.cages.put({ operation, result })
           cage.filter.initialize(self.env.globals.size)
@@ -132,8 +190,24 @@ const Game = GameBase
           })
         })
       },
+      attachHooks() {
+        onAction(self, action => {
+          if (self.shouldRecordAction(action)) {
+            self.env.future = []
+            self.env.history.push(self.currentState)
+          }
+        })
+
+        onSnapshot(self, snapshot => {
+          dbAdd('gameStore', snapshot)
+          const { history, snapshots, future } = self.env
+          dbAdd('env', { history, snapshots, future })
+        })
+      },
       beginStaging() {
-        self.ui.isStaging = true
+        if (!self.ui.curSquare.hasValue) {
+          self.ui.isStaging = true
+        }
       },
       stopStaging() {
         self.ui.isStaging = false

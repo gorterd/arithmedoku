@@ -15,30 +15,55 @@ const sideSigns = {
   left: -1,
 }
 
+const overflowPx = 20
+
+const defaultOptions = {
+  padding: 0,
+  blur: 2,
+  captionOffsetX: 0,
+  captionOffsetY: 0,
+  captionPosition: 'right',
+  onShow: () => () => { },
+}
+
 class Spotlight {
   static fromEles(eles, options) {
-    return new Spotlight({ eles, ...options })
+    return new Spotlight({
+      eles,
+      ...defaultOptions,
+      ...options,
+    })
   }
 
   static fromEle(ele, options) {
-    return new Spotlight({ eles: [ele], ...options })
+    return new Spotlight({
+      eles: [ele],
+      ...defaultOptions,
+      ...options
+    })
   }
 
-  constructor({
-    eles,
-    padding = 0,
-    captionPosition,
-    captionOffset = {},
-  } = {}) {
-    this.eles = eles
-    this.padding = padding
-    this.captionPosition = captionPosition || 'right'
-    this.captionOffset = { x: 0, y: 0, ...captionOffset }
-    this.generate()
+  static fromSpotlight(spotlight, options) {
+    return new Spotlight({
+      ...spotlight,
+      ...options
+    })
+  }
+
+  constructor(options, generate = true) {
+    Object.assign(this, options)
+    if (generate) this.generate()
   }
 
   generate() {
-    this.bounds = this.eles.map(ele => getPaddedBoundingRect(ele, this.padding))
+    this.bounds = this.eles.map((ele, idx) => {
+      const padding = this.padding instanceof Array
+        ? this.padding[idx]
+        : this.padding
+
+      return getPaddedBoundingRect(ele, padding)
+    })
+
     this.subPaths = []
     this.visited = {}
     this._anchorBounds = null
@@ -60,7 +85,11 @@ class Spotlight {
       i++
     }
 
-    this.subPaths.push(subPath)
+    const overflowOffsetSubPath = subPath.map(point =>
+      point.map(i => i + overflowPx / 2)
+    )
+
+    this.subPaths.push(overflowOffsetSubPath)
   }
 
   _addNextPoint(subPath) {
@@ -83,7 +112,7 @@ class Spotlight {
     }
 
     let closestBoundIdx = this.curBoundIdx
-    const interceptSide = getOpposideSide(nextCurBoundSide)
+    const interceptSide = getOppositeSide(nextCurBoundSide)
 
     this.boundsIndices.forEach(idx => {
       const [staticDimLower, staticDimUpper] =
@@ -95,10 +124,17 @@ class Spotlight {
 
       const interceptDim = this._getDim(idx, interceptSide)
 
-      if (
+      const differentShapeSameEdge = (
+        interceptDim === curChangingDim
+        && idx !== this.curBoundIdx
+      )
+
+      const closerEdgeInCorrectDir = (
         Math.sign(interceptDim - curChangingDim) === sideSigns[nextCurBoundSide]
         && Math.sign(closestDim - interceptDim) === sideSigns[nextCurBoundSide]
-      ) {
+      )
+
+      if (differentShapeSameEdge || closerEdgeInCorrectDir) {
         closestDim = interceptDim
         closestBoundIdx = idx
       }
@@ -111,10 +147,10 @@ class Spotlight {
     // side effects
     subPath.push(nextPoint)
     this.visited[closestBoundIdx] = true
-    this.curBoundIdx = closestBoundIdx
     this.curBoundSide = closestBoundIdx !== this.curBoundIdx
       ? interceptSide
       : nextCurBoundSide
+    this.curBoundIdx = closestBoundIdx
   }
 
   _getDim(boundOrIdx, side) {
@@ -167,11 +203,18 @@ class Spotlight {
     return `${m} ${l}`
   }
 
-  getD(vw, vh) {
-    const outerPath = `M 0,0 L ${vw},0 ${vw},${vh} 0,${vh} 0,0`
-    const innerPaths = this.subPaths.map(this._getSubPathD).join(' ')
-    return `${outerPath} ${innerPaths} z`
+  getD(vbw, vbh) {
+    return `M 0,0 L ${vbw},0 ${vbw},${vbh} 0,${vbh} 0,0 ${this.innerPath}`
   }
+  // getD(vbw, vbh) {
+  //   const getSubPathD = this.borderRadius
+  //     ? this._getRoundedSubPathD
+  //     : this._getSubPathD
+
+  //   const outerPath = `M 0,0 L ${vbw},0 ${vbw},${vbh} 0,${vbh} 0,0`
+  //   const innerPaths = this.subPaths.map(getSubPathD.bind(this)).join(' ')
+  //   return `${outerPath} ${innerPaths} z`
+  // }
 
   updateSVG({
     element: svg,
@@ -180,11 +223,12 @@ class Spotlight {
     if (!svg) return
     if (regenerate) this.generate()
 
-    const vw = window.innerWidth
-    const vh = window.innerHeight
+    const vbw = window.innerWidth + overflowPx
+    const vbh = window.innerHeight + overflowPx
 
-    svg.setAttribute('viewBox', `0 0 ${vw} ${vh}`)
-    svg.querySelector('path').setAttribute('d', this.getD(vw, vh))
+    svg.setAttribute('viewBox', `0 0 ${vbw} ${vbh}`)
+    svg.querySelector('path').setAttribute('d', this.getD(vbw, vbh))
+    svg.querySelector('feGaussianBlur').setAttribute('stdDeviation', this.blur)
     return svg
   }
 
@@ -198,6 +242,97 @@ class Spotlight {
     applyStyle(caption, this.captionStyle, true)
 
     return caption
+  }
+
+  dup(options) {
+    return new Spotlight({ ...this, ...options }, false)
+  }
+  //0 0 1
+
+  _getRoundedSubPathD(subPath) {
+    // const m = `M ${this._getNudgedPoint(subPath[0], subPath[1])}`
+    const hookPoints = [...subPath, subPath[1]]
+    const pathParts = Array.from({ length: hookPoints.length - 2 })
+      .reduce((parts, _, idx) => parts.concat(this._getPathHook(hookPoints.slice(idx, idx + 3))), [])
+
+    return [
+      'M', pathParts[pathParts.length - 1], ...pathParts
+    ].join(' ')
+
+    return `${m} ${hooks.join(' ')}`
+  }
+
+  _getPathHook([prev, cur, next]) {
+    // const [startPoint, endPoint] = this._getNudgedPoints(prev, cur, next)
+    // const  = this._getNudgedPoint(cur, next)
+    const startPoint = this._getNudgedPoint(cur, prev)
+    const endPoint = this._getNudgedPoint(cur, next)
+    const radii = getAbsDiff(startPoint, endPoint)
+
+    const clockwise =
+      Math.sign(next[1] - prev[1])
+      === Math.sign(cur[0] * 2 - prev[0] - next[0])
+
+    //   const l = `L ${startPoint.join()}`
+    // const a = `A ${radii.join(' ')} 0 0 ${clockwise ? '1' : '0'} ${endPoint.join(' ')}`
+    // return `${l} ${a}`
+    return [
+      'L', startPoint,
+      'A', radii, 0, 0, clockwise ? 1 : 0, endPoint
+    ]
+  }
+
+  _getNudgedPoint(a, b) {
+    return [0, 1].map(i => {
+      const diff = b[i] - a[i]
+      const mag = Math.min(this.borderRadius, Math.abs(diff) / 2)
+      return a[i] + mag * Math.sign(diff)
+    })
+  }
+
+  // _getNudgedPoints(prev, cur, next) {
+  //   let mag = this.borderRadius
+  //   const dirs = [prev, next].map(pos =>
+  //     [0, 1].map(i => {
+  //       const diff = pos[i] - cur[i]
+
+  //       const maxDiffRadius = Math.abs(diff) / 2
+  //       if (maxDiffRadius > 0 && maxDiffRadius < mag) {
+  //         mag = maxDiffRadius
+  //       }
+
+  //       return Math.sign(diff)
+  //     })
+  //   )
+  //   return dirs.map(dir => dir.map((sign, idx) => cur[idx] + sign * mag))
+  //   const prevDir = [0, 1].map(i => Math.sign(prev[i] - cur[i]))
+  //   const nextDir = [0, 1].map(i => Math.sign(next[i] - cur[i]))
+
+  //   return [0, 1].map(i => {
+  //     const diff = b[i] - a[i]
+  //     const mag = Math.min(this.borderRadius, Math.abs(diff) / 2)
+  //     return a[i] + mag * Math.sign(diff)
+  //   })
+  // }
+
+  // get steps() {
+  //   return this._steps.map(step => {
+  //     return () => {
+
+  //       const stepCleanup = step()
+  //       return () => {
+  //         stepCleanup()
+  //       }
+  //     }
+  //   })
+  // }
+
+  get innerPath() {
+    const getSubPathD = this.borderRadius
+      ? this._getRoundedSubPathD
+      : this._getSubPathD
+
+    return this.subPaths.map(getSubPathD.bind(this)).join(' ') + ' z'
   }
 
   get anchorBounds() {
@@ -261,9 +396,8 @@ class Spotlight {
       _default(() => '0')
     })
 
-    const { x: offsetX, y: offsetY } = this.captionOffset
-    const translateX = offsetX ? `calc(${xShift} + ${offsetX})` : xShift
-    const translateY = offsetY ? `calc(${yShift} + ${offsetY})` : yShift
+    const translateX = `calc(${xShift} + ${this.captionOffsetX})`
+    const translateY = `calc(${yShift} + ${this.captionOffsetY})`
 
     return {
       ...positionStyle,
@@ -290,7 +424,7 @@ function getNextSide(curSide) {
   return clockwiseOrder[nextSideIdx]
 }
 
-function getOpposideSide(side) {
+function getOppositeSide(side) {
   const idx = clockwiseOrder.indexOf(side)
   const oppositeIdx = (idx + 2) % 4
   return clockwiseOrder[oppositeIdx]
@@ -302,12 +436,67 @@ function toPixels(num) {
 
 function getPaddedBoundingRect(ele, padding) {
   const bound = ele.getBoundingClientRect()
+  const defaultPadding = typeof padding === 'object'
+    ? padding.default ?? 0
+    : padding
+
   return {
-    top: bound.top - padding,
-    left: bound.left - padding,
-    right: bound.right + padding,
-    bottom: bound.bottom + padding,
+    top: bound.top - (padding.top ?? defaultPadding),
+    left: bound.left - (padding.left ?? defaultPadding),
+    right: bound.right + (padding.right ?? defaultPadding),
+    bottom: bound.bottom + (padding.bottom ?? defaultPadding),
   }
 }
 
+// _getRoundedSubPathD(subPath) {
+//   const m = `M ${subPath[0].join()}`
+//   const l = `L ${subPath.slice(1).map(p => p.join()).join(' ')}`
+//   return `${m} ${l}`
+// }
+
+// function getNudgeDiff(a, b, px) {
+//   return [0, 1].map(i => {
+//     const diff = b[i] - a[i]
+//     const mag = Math.min(px, Math.abs(diff) / 2)
+//     return mag * Math.sign(diff)
+//   })
+// }
+
+// function getNudgedPoint(a, b) {
+//   return [0, 1].map(i => {
+//     const diff = b[i] - a[i]
+//     const mag = Math.min(this.borderRadius, Math.abs(diff) / 2)
+//     return a[i] + mag * Math.sign(diff)
+//   })
+// }
+
+function getAbsDiff(a, b) {
+  return [0, 1].map(i => Math.abs(a[i] - b[i]))
+}
+
+// function getPathHook(prev, cur, next, radius) {
+//   const startPoint = getNudgedPoint(cur, prev, radius)
+//   const endPoint = getNudgedPoint(cur, next, radius)
+//   const radii = getAbsDiff(startPoint, endPoint)
+
+//   const l = `L ${startPoint.join()}`
+//   const a = `A ${radii.join(' ')} 0 0 1 ${endPoint.join(' ')}`
+//   return `${l} ${a}`
+// }
+
+
+// function vecAdd(...vecs) {
+//   return Array.from({ length: vecs[0].length })
+//     .map((_, idx) => vecs.reduce((sum, vec) => vec[idx] + sum, 0))
+// }
+
+
 export default Spotlight
+window.Spotlight = Spotlight
+// clockwise
+// pos, pos -> higherx, lowery
+// neg, pos -> higherx, highery
+// pos, neg -> lowerx, lowery
+// neg, neg -> lowerx, highery
+
+// if sign of second matches sign of x diff

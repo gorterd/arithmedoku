@@ -338,6 +338,10 @@ const Collection = GameBase
         self.eliminatedCombos = self.allCombos
           .filter(combo => !includesArray(sortedCombos, combo))
       },
+      reset() {
+        self.filter.reset()
+        self.eliminatedCombos = []
+      }
     }
   })
 

@@ -169,6 +169,7 @@ const UI = GameBase
       selectSquare(square) {
         self.curSquare = square
         self.selectedSquares = [square]
+        self.isStaging = false
       },
       selectThroughSquare(squareId) {
         if (self.selectedSquares.length > 0) {
@@ -232,7 +233,6 @@ const UI = GameBase
       },
       changeFilterModeByDir(dir) {
         const modes = ['and', 'not', 'or']
-        console.log('a', dir)
         const idxDiff = dir === 'Left' ? -1 : 1
         const newIdx = (modes.indexOf(self.filterMode) + idxDiff + 3) % 3
         self.filterMode = modes[newIdx]

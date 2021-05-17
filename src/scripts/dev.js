@@ -9,7 +9,12 @@ import LRUCache from './shared/lru_cache'
 import './shared/spotlight'
 import Spotlight from './shared/spotlight'
 
-export default (game) => {
+let devFlag = false
+export const activateDevFlag = () => devFlag = true
+
+export const setupDev = (game) => {
+  if (!devFlag) return
+
   connectReduxDevtools(remotedev, game.gameStore)
   unprotect(game.gameStore)
   setupPalette()
@@ -18,6 +23,11 @@ export default (game) => {
   window.lru = LRUCache
   window.getSnap = getSnapshot
   window.applySnap = applySnapshot
+}
+
+export const devLog = (...args) => {
+  if (!devFlag) return
+  console.log(...args)
 }
 
 function setupPalette() {
@@ -103,3 +113,4 @@ function setupPalette() {
   })
   document.body.append(togglePalette, palette)
 }
+

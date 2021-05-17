@@ -1,6 +1,7 @@
-export default async () => {
-  return [
-    await import('./puzzle_01'),
-    await import('./puzzle_02'),
-  ].map(({ default: puzzle }) => puzzle)
-}
+import p1 from './puzzle_01.js'
+import p2 from './puzzle_02.js'
+
+export default [
+	p1,
+	p2,
+]

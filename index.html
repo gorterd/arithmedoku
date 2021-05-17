@@ -17,25 +17,31 @@
         <button id='header-about' class='header_button'>
           about
           <div class='header_dropdown header_dropdown--info'>
-            Arithmedoku is inspired by the popular puzzle game
-            <a href='https://en.wikipedia.org/wiki/KenKen'>KenKen</a>,
-            a sudoku-like game with a math twist, invented by Japanese math teacher
-            <a href='https://en.wikipedia.org/wiki/Tetsuya_Miyamoto'>Tetsuya Miyamoto</a>.
-            <br></br>
-            All of the puzzles in Arithmedoku were written by Jim Bumgardner, aka Krazydad. He calls them Inkies. From
-            the Krazydad
-            <a href='https://krazydad.com/about.php'>about page</a>:
+            <p>
+              Arithmedoku is inspired by the popular puzzle game
+              <a href='https://en.wikipedia.org/wiki/KenKen'>KenKen</a>,
+              a sudoku-like game with a math twist, invented by Japanese math teacher
+              <a href='https://en.wikipedia.org/wiki/Tetsuya_Miyamoto'>Tetsuya Miyamoto</a>.
+            </p>
 
             <p>
+              All of the puzzles in Arithmedoku were written by Jim Bumgardner, aka Krazydad. He calls them Inkies. From
+              the Krazydad
+              <a href='https://krazydad.com/about.php'>about page</a>:
+            </p>
+
+            <blockquote>
               This website has been offering free puzzles to the public since 2005. My mission is to provide puzzles to
               under-served groups that need them, including prisoners, pensioners, home-schoolers, hospitals, churches,
               and classrooms. There are currently about two million individual puzzles on the site, and over sixty
               unique varieties.
+            </blockquote>
+
+            <p>
+              Check out the
+              <a href='https://krazydad.com/'>Krazydad website</a>, or
+              <a href='https://krazydad.com/inkies/'>find more Inkies</a>.
             </p>
-            <br></br>
-            Check out the
-            <a href='https://krazydad.com/'>Krazydad website</a>, or
-            <a href='https://krazydad.com/inkies/'>find more Inkies</a>.
           </div>
         </button>
         <button id='header-instructions' class='header_button'>
@@ -53,11 +59,44 @@
         </button>
         <button id='header-options' class='header_button'>
           options
-          <ul class='header_dropdown header_dropdown--list options'>
+          <ul class='header_dropdown header_dropdown--list'>
+            <template id='option-template'>
+              <li class='option'>
+                <span class='option_info'>
+                  <span class='option_info-text'>
+                    <!-- insert text here -->
+                  </span>
+                  <span class='option_hover'>
+                    <i class="info"></i>
+                    <span class='option_hover-text'>
+                      <!-- insert text here -->
+                    </span>
+                  </span>
+                </span>
+
+                <!-- option toggle or num input here -->
+              </li>
+
+            </template>
+
+            <template id='option-toggle-template'>
+              <span class='toggle toggle--on'>
+                <span class='toggle_circle'></span>
+              </span>
+            </template>
+
+            <template id='option-num-template'>
+              <span class='option_num'>
+                <input class='option_num-input'></input>
+              </span>
+            </template>
+            <!-- 
             <li class='option'>
               <span class='option_info'>
-                block contradictory moves
-                <span>
+                <span class='option_info-text'>
+                  block contradictory moves
+                </span>
+                <span class='option_hover'>
                   <i class="info"></i>
                   <span class='option_hover-text'>
                     prevents you from entering a number that's eliminated as a possibility
@@ -98,6 +137,20 @@
               </span>
             </li>
             <li class='option'>
+              <span class='option_info'>
+                always show walkthrough
+                <span>
+                  <i class="info"></i>
+                  <span class='option_hover-text'>
+                    always show the walkthrough upon refresh or revisiting this page
+                  </span>
+                </span>
+              </span>
+              <span id='option-walkthrough' class='toggle'>
+                <span class='toggle_circle'></span>
+              </span>
+            </li>
+            <li class='option'>
               <span class="option_info">
                 max possibilities to display in square
                 <span>
@@ -109,10 +162,9 @@
                 </span>
               </span>
               <span id='option-max-possibilities' class='option_num'>
-                <input class='option_num-input' placeholder="x"></input>
-                <span class='option_error'></span>
+                <input class='option_num-input'></input>
               </span>
-            </li>
+            </li> -->
           </ul>
         </button>
       </div>
@@ -137,138 +189,109 @@
             <span class='square_label'></span>
             <span class='square_value'></span>
             <ol class='square_possibilities'>
-              <li class='square_possibility' data-val='1'>1</li>
-              <li class='square_possibility' data-val='2'>2</li>
-              <li class='square_possibility' data-val='3'>3</li>
-              <li class='square_possibility' data-val='4'>4</li>
-              <li class='square_possibility' data-val='5'>5</li>
-              <li class='square_possibility' data-val='6'>6</li>
-              <li class='square_possibility' data-val='7'>7</li>
-              <li class='square_possibility' data-val='8'>8</li>
-              <li class='square_possibility' data-val='9'>9</li>
+              <li class='square_possibility'></li>
+              <!-- more square possibilities here -->
             </ol>
           </div>
         </template>
 
-        <!-- squares cloned from template here -->
+        <!-- squares cloned from template go here -->
       </div>
-      <div class='info-wrapper'>
-        <div class='info-box'>
-          <svg id="square-label" class="info_label" viewBox="0 0 100 28">
+
+      <div class='info-box'>
+        <template id='info-label-template'>
+          <svg class="info_label" viewBox="0 0 100 28">
             <path d="
-              M 0,0
-              h 100
-              l -12,12
-              l 12,12
-              h -100
-              z
-            " />
+                M 0,0
+                h 100
+                l -12,12
+                l 12,12
+                h -100
+                z
+              " />
             <polygon points="
-              0,24
-              7,24
-              7,28
-            " />
+                0,24
+                7,24
+                7,28
+              " />
             <text x="15" y="45%" dominant-baseline="middle">
-              Square
+              <!-- insert text here -->
             </text>
           </svg>
-          <svg id="cage-label" class="info_label" viewBox="0 0 100 28">
-            <path d="
-              M 0,0
-              h 100
-              l -12,12
-              l 12,12
-              h -100
-              z
-            " />
-            <polygon points="
-              0,24
-              7,24
-              7,28
-            " />
-            <text x="15" y="45%" dominant-baseline="middle">
-              Cage
-            </text>
-          </svg>
-          <ol class='square-info'>
-            <template id='square-info_possibility-template'>
-              <li class='square-info_possibility' data-val=''>
-                <span class='possibility-icon no-hover'>
-                  <i class='circle'></i>
-                </span>
-                <span class='possibility-icon hover'>
-                  <i class='ban'></i>
-                </span>
-                <span class='square-info_possibility-val'></span>
-              </li>
-            </template>
+        </template>
 
-            <!-- possibilities cloned from template here -->
+        <!-- labels cloned from template go here -->
 
-            <button id='square-info_select-only' class='square-info_btn'>
-              <i class='select'></i>
-            </button>
-            <button id='square-info_clear' class='square-info_btn'>
-              <i class='clear'></i>
-            </button>
-          </ol>
+        <ol class='square-info'>
+          <template id='square-info_possibility-template'>
+            <li class='square-info_possibility' data-val=''>
+              <span class='possibility-icon no-hover'>
+                <i class='circle'></i>
+              </span>
+              <span class='possibility-icon hover'>
+                <i class='ban'></i>
+              </span>
+              <span class='square-info_possibility-val'>
+                <!-- insert val here -->
+              </span>
+            </li>
+          </template>
 
-          <div class='collection-info'>
-            <div class='collection-combos'>
-              <ul class='combos_list'>
-                <template id='combo-template'>
-                  <li class='combo' tabindex='-1'>
-                  </li>
-                </template>
+          <!-- possibilities cloned from template go here -->
 
-                <!-- combos cloned from template here -->
+          <button id='square-info_select-only' class='square-info_btn'>
+            <i class='select'></i>
+          </button>
+          <button id='square-info_clear' class='square-info_btn'>
+            <i class='clear'></i>
+          </button>
+        </ol>
 
-              </ul>
-              <!-- <ul class='combos_buttons'>
-                <button id='combos-clear' class='combos_btn'>
-                  <i class='clear'></i>
-                </button>
-                <button id='combos-toggle-math' class='combos_text-btn'>
-                  Eliminate Mathematical Impossibilities
-                </button>
-              </ul> -->
-            </div>
+        <div class='collection-info'>
+          <div class='collection-combos'>
+            <ul class='combos_list'>
+              <template id='combo-template'>
+                <li class='combo' tabindex='-1'>
+                </li>
+              </template>
 
-            <div class='collection-filter'>
-              <ul class='filter-tabs'>
-                <button id='filter-and' class='filter_mode-btn'>
-                  Require All <span class='keyboard'>a</span>
-                </button>
-                <button id='filter-not' class='filter_mode-btn'>
-                  Eliminate <span class='keyboard'>e</span>
-                </button>
-                <button id='filter-or' class='filter_mode-btn'>
-                  Require One <span class='keyboard'>o</span>
-                </button>
-                <span id='filter-tab-underline'></span>
-              </ul>
-
-              <ol class='filter-possibilities'>
-                <template id='filter-possibility-template'>
-                  <li class='filter-possibility' data-val=''>
-                    <div class='possibility-icons possibility-icons--no-hover'></div>
-                    <div class='possibility-icons possibility-icons--hover'></div>
-                    <span class='filter-possibility_val'></span>
-                  </li>
-                </template>
-
-                <!-- possibilities cloned from template here -->
-
-                <button id='filter-clear-mode' class='filter_btn'>
-                  <i class='reset'></i>
-                </button>
-                <button id='filter-clear-all' class='filter_btn'>
-                  <i class='clear'></i>
-                </button>
-              </ol>
-            </div>
+              <!-- combos cloned from template go here -->
+            </ul>
           </div>
 
+          <div class='collection-filter'>
+            <ul class='filter-tabs'>
+              <button id='filter-and' class='filter_mode-btn'>
+                Require All <span class='keyboard'>a</span>
+              </button>
+              <button id='filter-not' class='filter_mode-btn'>
+                Eliminate <span class='keyboard'>e</span>
+              </button>
+              <button id='filter-or' class='filter_mode-btn'>
+                Require One <span class='keyboard'>o</span>
+              </button>
+              <span id='filter-tab-underline'></span>
+            </ul>
+
+            <ol class='filter-possibilities'>
+              <template id='filter-possibility-template'>
+                <li class='filter-possibility' data-val=''>
+                  <div class='possibility-icons possibility-icons--no-hover'></div>
+                  <div class='possibility-icons possibility-icons--hover'></div>
+                  <span class='filter-possibility_val'></span>
+                </li>
+              </template>
+
+              <!-- possibilities cloned from template go here -->
+
+              <button id='filter-clear-mode' class='filter_btn'>
+                <i class='reset'></i>
+              </button>
+              <button id='filter-clear-all' class='filter_btn'>
+                <i class='clear'></i>
+              </button>
+            </ol>
+          </div>
         </div>
       </div>
     </section>
@@ -297,11 +320,81 @@
     </svg>
   </template>
 
+  <template id='spotlight-template'>
+    <svg class='spotlight-frame'>
+      <defs>
+        <filter id='border'>
+          <feGaussianBlur stdDeviation='2' />
+        </filter>
+      </defs>
+      <path fill-rule='evenodd' filter='url(#border)' />
+    </svg>
+  </template>
+
   <template id='spotlight-caption-template'>
     <div class='spotlight-caption'>
-      <button id='spotlight-next'>Next</button>
-      <button id='spotlight-previous'>Previous</button>
-      <button id='spotlight-finish'>Finish</button>
+      <div class='caption-controls'>
+        <button id='spotlight-next'>Next</button>
+        <button id='spotlight-previous'>Previous</button>
+        <button id='spotlight-finish'>Finish</button>
+      </div>
+    </div>
+  </template>
+
+  <template id='caption-content-puzzle-template'>
+    <div class='caption-content caption-content--puzzle'>
+      This is an Arithmedoku puzzle. Your goal is to fill every square with the correct number (between 1 and 9). But
+      there are some 2 constraints on what numbers can go where. The first: every row and column must contain the
+      numbers 1 through 9, no repeats.
+    </div>
+  </template>
+
+  <template id='caption-content-cage-template'>
+    <div class='caption-content caption-content--cage'>
+      The highlighted region in the puzzle is a cage. Cages are outlined with bold borders. Each cage has an associated
+      mathematical operation and
+      result. The operation for this cage is *OP*, and the result is *RESULT*. This leads us to the second constraint on
+      what numbers can go where: *DESCRIPTION*.
+
+      Highlighted on the right is the area in the Info Box dedicated toward reasoning about a cage as a whole. At the
+      bottom, you have 3 tabs, where you can select numbers:
+      <ol>
+        <li>*all* of which *must* appear in the cage. (Require All)</li>
+        <li>*all* of which *cannot* appear in the cage. (Eliminate)</li>
+        <li>*at least one* of which *must* appear somewhere in the cage. (Require One)</li>
+      </ol>
+
+      To review, the current configuration
+    </div>
+  </template>
+
+  <template id='caption-content-info-template'>
+    <div class='caption-content caption-content--info'>
+      This is the info box.
+    </div>
+  </template>
+
+  <template id='caption-content-square-info-template'>
+    <div class='caption-content caption-content--square-info'>
+      This is info about a square.
+    </div>
+  </template>
+
+  <template id='caption-content-collection-info-template'>
+    <div class='caption-content caption-content--collection-info'>
+      This is info about a cage.
+    </div>
+  </template>
+
+  <template id='caption-content-instructions-template'>
+    <div class='caption-content caption-content--instructions'>
+      Here are the instructions.
+    </div>
+  </template>
+
+  <template id='caption-content-options-template'>
+    <div class='caption-content caption-content--options'>
+      Here are the options.
     </div>
   </template>
 </body>

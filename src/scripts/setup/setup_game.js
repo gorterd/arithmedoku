@@ -4,17 +4,39 @@ import { setupCollectionInfo } from '../views/info_collection_view'
 import { setupSquareInfo } from '../views/info_square_view'
 import mountKeyboardListeners from './listeners/keyboard_listeners'
 import mountClickListeners from './listeners/click_listeners'
-import { resetPuzzle } from './setup_puzzle'
+import { setupPuzzle } from './setup_puzzle'
 import walkthrough from './walkthrough'
+import { applySnapshot, onAction, onSnapshot } from 'mobx-state-tree'
+import Game from '../store/game'
 
-export default async function setupGame(game) {
+export default async function setupGame({ env, elements }) {
+  const gameStore = await createGameStore(env)
+  const game = { gameStore, env, elements }
+
   setupOptions(game)
   setupSquareInfo(game)
   setupCollectionInfo(game)
-  resetPuzzle(game)
-  await walkthrough(game)
 
+  const snapshot = await gameStore.retrieveStoredSnapshot()
+  if (snapshot?.options.walkthrough) {
+    const teardownSquares = setupPuzzle(game)
+    await walkthrough(game)
+    teardownSquares()
+  }
+
+  gameStore.applyStoredSnapshot()
+  gameStore.attachHooks()
+
+  setupPuzzle(game)
   setupHeader(game)
-  mountKeyboardListeners(game)
   mountClickListeners(game)
+  mountKeyboardListeners(game)
+
+  return gameStore
+}
+
+async function createGameStore(env) {
+  const gameStore = Game.create({}, env)
+  gameStore.initialize()
+  return gameStore
 }

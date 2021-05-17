@@ -1,17 +1,23 @@
 import { extractPosFromSquare } from '../../shared/dom_util'
 
-export default function mountClickListeners({ gameStore, env: { elements } }) {
+export default function mountClickListeners({
+  gameStore,
+  elements: {
+    puzzleEle,
+    infoEle
+  }
+}) {
   document.addEventListener('click', e => {
     if (
-      !e.path.includes(elements.puzzle)
-      && !e.path.includes(elements.infoBox)
+      !e.path.includes(puzzleEle)
+      && !e.path.includes(infoEle)
     ) {
       gameStore.clearFocus()
       gameStore.ui.clearSelectedSquares()
     }
   })
 
-  elements.puzzle.addEventListener('click', e => {
+  puzzleEle.addEventListener('click', e => {
     const square = e.target.closest('.square')
     if (!square) return
 
@@ -22,7 +28,6 @@ export default function mountClickListeners({ gameStore, env: { elements } }) {
       gameStore.ui.toggleSelectedSquare(squareId)
     } else {
       gameStore.selectSquareById(squareId)
-      gameStore.selectSquareByPos(extractPosFromSquare(square))
     }
   })
 }

@@ -1,25 +1,35 @@
 import { autorun } from 'mobx'
-import { UP_OR_DOWN_REGEX, NUM_REGEX } from "../shared/constants"
+import { devLog } from '../dev'
+import walkthrough from '../setup/walkthrough'
+import { UP_OR_DOWN_REGEX, NUM_REGEX, ARROW_REGEX } from "../shared/constants"
 import { getDirFromCode, getNumFromCode, stringSwitch } from '../shared/general_util'
 
-export function setupOptions({ gameStore, env }) {
-  const optionsElements = getOptionsElements(env.elements.options)
-  setupListeners(gameStore.options, optionsElements)
-  makeOptionsReactive(gameStore.options, optionsElements)
+export function setupOptions(game) {
+  setupListeners(game)
+  makeOptionsReactive(game)
 }
 
-function setupListeners(options, {
-  autoBlock,
-  autoElim,
-  autoElimMathImpossibilities,
-  maxPossibilitiesInput,
+function setupListeners({
+  gameStore: {
+    options
+  },
+  elements: {
+    optionsEles: {
+      autoBlock,
+      autoElim,
+      autoElimMathImpossibilities,
+      walkthrough,
+      maxPossibilitiesInput,
+    }
+  }
 }) {
-  autoBlock.addEventListener('click', () => options.toggleAutoBlock())
-
-  autoElim.addEventListener('click', () => options.toggleAutoEliminate())
-
-  autoElimMathImpossibilities.addEventListener('click', () =>
-    options.toggleAutoElimMathImpossibilities())
+  autoBlock.addEventListener('click', options.toggleAutoBlock)
+  autoElim.addEventListener('click', options.toggleAutoEliminate)
+  walkthrough.addEventListener('click', options.toggleWalkthrough)
+  autoElimMathImpossibilities.addEventListener(
+    'click',
+    options.toggleAutoElimMathImpossibilities
+  )
 
   maxPossibilitiesInput.addEventListener('keydown', e => {
     e.preventDefault()
@@ -28,25 +38,33 @@ function setupListeners(options, {
       _case(NUM_REGEX, () => {
         return getNumFromCode(e.code)
       })
-      _case(UP_OR_DOWN_REGEX, () => {
+      _case(ARROW_REGEX, () => {
         const dir = getDirFromCode(e.code)
         let num = options.maxDisplayedPossibilities
-        return dir === 'Up' ? num + 1 : num - 1
+        return dir === 'Up' || dir === 'Right' ? num + 1 : num - 1
       })
     })
 
     if (num) {
       const success = options.setMaxDisplayedPossibilities(num)
-      if (!success) console.log('Bad Input!')
+      if (!success) devLog('Bad Input!')
     }
   })
 }
 
-function makeOptionsReactive(options, {
-  autoBlock,
-  autoElim,
-  autoElimMathImpossibilities,
-  maxPossibilitiesInput,
+function makeOptionsReactive({
+  gameStore: {
+    options
+  },
+  elements: {
+    optionsEles: {
+      autoBlock,
+      autoElim,
+      autoElimMathImpossibilities,
+      maxPossibilitiesInput,
+      walkthrough,
+    }
+  }
 }) {
   const reactions = [
     function renderAutoBlock() {
@@ -59,6 +77,9 @@ function makeOptionsReactive(options, {
       autoElimMathImpossibilities.className =
         options.autoElimMathImpossibilitiesClassName
     },
+    function renderWalkthrough() {
+      walkthrough.className = options.walkthroughClassName
+    },
     function renderMaxPossibilitiesInput() {
       maxPossibilitiesInput.value = options.maxDisplayedPossibilities
     },
@@ -68,15 +89,16 @@ function makeOptionsReactive(options, {
   return disposers
 }
 
-function getOptionsElements(optionsEle) {
+export function getOptionsElements() {
   return {
-    autoBlock: optionsEle.querySelector('#option-auto-block'),
-    autoElim: optionsEle.querySelector('#option-auto-elim'),
-    autoElimMathImpossibilities: optionsEle
+    autoBlock: document.querySelector('#option-auto-block'),
+    autoElim: document.querySelector('#option-auto-elim'),
+    walkthrough: document.querySelector('#option-walkthrough'),
+    autoElimMathImpossibilities: document
       .querySelector('#option-auto-elim-math-impossibilities'),
-    maxPossibilitiesInput: optionsEle
+    maxPossibilitiesInput: document
       .querySelector('#option-max-possibilities .option_num-input'),
-    maxPossibilitiesError: optionsEle
+    maxPossibilitiesError: document
       .querySelector('#option-max-possibilities .option_error'),
   }
 }

@@ -4,6 +4,8 @@
   grid-template-rows: 
     1fr
     #{'min(calc(#{$h-info} * 0.28), 270px)'};
+  grid-template-columns: 100%;
+  border-radius: 0 0 10px 10px;
   position: relative;
   background-color: $light-ocean-3;
   min-height: 0;
@@ -215,8 +217,6 @@
   &--required,
   &--hover-required:hover:not(.prevent-hover) {
     color: $green-3;
-    font-weight: 600;
-    font-size: 2.6vw;
   }
 
   &--eliminated,

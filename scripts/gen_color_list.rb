@@ -1,5 +1,3 @@
-require 'byebug'
-
 COLOR_FILE = "#{__dir__}/../src/styles/base/colors.scss"
 COLOR_REGEX = /^\$(?<color>(\w|-)+): (hsl|rgb).*;/
 

@@ -60,6 +60,10 @@ const Puzzle = GameBase
     return {
       resetUuid() {
         self.uuid = nextId()
+      },
+      reset() {
+        self.squaresArray.forEach(square => square.reset())
+        self.collections.forEach(collection => collection.reset())
       }
     }
   })

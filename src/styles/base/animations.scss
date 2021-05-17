@@ -81,18 +81,18 @@
 
 @keyframes lift {
   0% {
-    transform: translateY(0) scale(1);
+    transform: translateY(0);
   }
 
   35% {
-    transform: translateY(-18%) scale(1.1);
+    transform: translateY(-1vh);
   }
 
   65% {
-    transform: translateY(-18%) scale(1.1);
+    transform: translateY(-1vh);
   }
 
   100% {
-    transform: translateY(0) scale(1);
+    transform: translateY(0);
   }
 }

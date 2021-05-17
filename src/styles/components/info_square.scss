@@ -1,20 +1,8 @@
 .square-info {
   @include possibilities();
-  width: $w-info;
   grid-row: 1;
   position: relative;
   padding: 0 10px;
-
-  // &::after {
-  //   display: block;
-  //   content: '';
-  //   height: calc(#{$h-info} / 8);
-  //   width: 100%;
-  //   position: absolute;
-  //   bottom: 0;
-  //   left: 0;
-  //   background: linear-gradient(0deg, $light-ocean-2, $light-ocean-1);
-  // }
 }
 
 .square-info_possibility {
@@ -25,9 +13,8 @@
 
   &--chosen {
     color: $green-3;
-    // font-size: 2.5vw;
-    font-size: 1.08em;
     font-weight: 600;
+    font-size: $fnt-sz-info-poss-val--lrg;
   }
 
   &--unchosen {
@@ -52,14 +39,14 @@
       content: '';
       position: absolute;
       bottom: -6%;
-      background: $cream-5;
+      background: $brick-1;
       height: 12%;
   
-      animation: wipe-in-out 800ms forwards;
+      animation: wipe-in-out 600ms forwards;
     }
   
     & > span {
-      animation: lift 800ms forwards;
+      animation: lift 600ms forwards;
     }
   }
 

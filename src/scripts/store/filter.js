@@ -169,6 +169,9 @@ const Filter = GameBase
           }
         })
       },
+      reset() {
+        self.possibilities.forEach(possibility => possibility.status = 'none')
+      }
     }
   })
 

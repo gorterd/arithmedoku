@@ -13,6 +13,7 @@ export const mountDropdown = (button, dropdown, showClass) => {
       (isShowing && outsideDropdown)
       || (!isShowing && onButton)
     ) {
+      if (isShowing) button.blur()
       dropdown.classList.toggle(showClass)
     }
   })

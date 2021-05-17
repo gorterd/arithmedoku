@@ -3,16 +3,20 @@ import { setupSquares } from '../views/square_view'
 
 let disposerFunc
 
-export function newPuzzle({ gameStore, env }) {
-  disposerFunc?.()
-  gameStore.newPuzzle()
-  resetEnv(env)
-  disposerFunc = setupSquares(gameStore, env)
+export function setupPuzzle(game) {
+  disposerFunc = setupSquares(game)
+  return disposerFunc
 }
 
-export function resetPuzzle({ gameStore, env }) {
-  disposerFunc?.()
-  gameStore.resetPuzzle()
-  resetEnv(env)
-  disposerFunc = setupSquares(gameStore, env)
+export function resetPuzzle(game) {
+  game.gameStore.resetPuzzle()
+  resetEnv(game.env)
 }
+
+export function newPuzzle(game) {
+  disposerFunc?.()
+  game.gameStore.newPuzzle()
+  resetEnv(game.env)
+  disposerFunc = setupSquares(game)
+}
+

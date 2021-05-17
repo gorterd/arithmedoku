@@ -1,11 +1,19 @@
 import { autorun } from 'mobx'
 
-export function setupSquares(gameStore, { elements, templates }) {
+export function setupSquares({
+  gameStore,
+  env: {
+    templates,
+  },
+  elements: {
+    puzzleEle
+  }
+}) {
   const squareEles = new DocumentFragment()
 
   const disposers = gameStore.puzzle.squaresArray.map(square => {
     const squareEle = templates.square.cloneNode(true)
-    const squareElements = getSquareElements(squareEle)
+    const squareElements = getSquareElementsFromSquare(squareEle)
 
     setupSquare(square, squareElements)
     squareEles.appendChild(squareEle)
@@ -13,7 +21,7 @@ export function setupSquares(gameStore, { elements, templates }) {
     return makeSquareReactive(square, squareElements)
   })
 
-  elements.puzzle.replaceChildren(squareEles)
+  puzzleEle.replaceChildren(squareEles)
   return () => disposers.forEach(disposer => disposer())
 }
 
@@ -61,7 +69,38 @@ function makeSquareReactive(square, {
   return () => disposers.forEach(disposer => disposer())
 }
 
-function getSquareElements(squareEle) {
+export function getSquareElement(id) {
+  return document.querySelector(squareSelector(id))
+}
+
+export function getSquareElementsFromId(id) {
+  const { getChild, getChildren } = createSquareChildSelectors(id)
+
+  return {
+    squareEle: getSquareElement(id, parent),
+    cageTop: getChild('.square_cage-top'),
+    cageLeft: getChild('.square_cage-left'),
+    label: getChild('.square_label'),
+    value: getChild('.square_value'),
+    possibilityEles: getChildren('.square_possibility')
+  }
+}
+
+function createSquareChildSelectors(id) {
+  const getSelector = subSelector => [squareSelector(id), subSelector].join(' ')
+
+  return {
+    getChild: subSelector => document.querySelector(getSelector(subSelector)),
+    getChildren: subSelector => document.querySelectorAll(getSelector(subSelector))
+  }
+}
+
+function squareSelector(id) {
+  return `.square[data-id="${id}"]`
+}
+
+
+function getSquareElementsFromSquare(squareEle) {
   return {
     squareEle,
     cageTop: squareEle.querySelector('.square_cage-top'),
