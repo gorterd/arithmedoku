@@ -210,10 +210,28 @@ function getSpotlights({
 
   const selectSquare = (square) => gameStore.selectSquareById(square.dataset.id)
 
+  const introSpotlight = Spotlight.blank({
+    captionPosition: 'middle',
+    captionOffsetX: '50vw',
+    captionOffsetY: '50vh',
+    captionContent: templates.introCaptionContent.cloneNode(true),
+  })
+
   const puzzleSpotlight = Spotlight.fromEle(puzzleEle, {
     padding: 5,
     borderRadius: 8,
+    captionPosition: 'right',
+    captionOffsetX: '20px',
     captionContent: templates.puzzleCaptionContent.cloneNode(true),
+  })
+
+  const cageSpotlight = Spotlight.fromEles([...cageSquares], {
+    padding: 0.5,
+    borderRadius: 2,
+    blur: 1,
+    captionPosition: 'right',
+    captionOffsetX: '20px',
+    captionContent: templates.cageCaptionContent.cloneNode(true),
   })
 
   const infoSpotlight = Spotlight.fromEle(infoEle, {
@@ -221,33 +239,8 @@ function getSpotlights({
     borderRadius: 8,
     blur: 1.5,
     captionPosition: 'left',
-    captionOffsetX: '-10px',
-    captionOffsetY: '50px',
+    captionOffsetX: '-20px',
     captionContent: templates.infoCaptionContent.cloneNode(true),
-  })
-
-  const squareInfoSpotlight = Spotlight.fromEles([squareEle, squareInfoEle], {
-    padding: [0, { default: 0, top: -10, bottom: -20 }],
-    borderRadius: 2,
-    blur: 1,
-    captionPosition: 'bottom',
-    captionContent: templates.squareInfoCaptionContent.cloneNode(true),
-  })
-
-  const selectionSpotlight = Spotlight.fromEles([squareEle, squareEle2, squareInfoEle], {
-    padding: [0, 0, { default: 0, top: -10, bottom: -20 }],
-    borderRadius: 2,
-    blur: 1,
-    captionPosition: 'bottom',
-    captionContent: templates.squareInfoCaptionContent.cloneNode(true),
-  })
-
-  const cageSpotlight = Spotlight.fromEles([...cageSquares], {
-    padding: 0.5,
-    borderRadius: 2,
-    blur: 1,
-    captionPosition: 'bottom',
-    captionContent: templates.cageCaptionContent.cloneNode(true),
   })
 
   const cageInfoSpotlight = Spotlight.fromEles([...cageSquares, collectionInfoEle], {
@@ -260,15 +253,42 @@ function getSpotlights({
     ],
     borderRadius: 2,
     blur: 1,
-    captionPosition: 'bottom',
-    captionContent: templates.cageInfoCaptionContent.cloneNode(true),
+    anchorEle: cageSquares.length,
+    captionPosition: 'bottomLeft',
+    captionOffsetX: '-20px',
+    captionOffsetY: '-100%',
+  })
+
+  const squareInfoSpotlight = Spotlight.fromEles([squareEle, squareInfoEle], {
+    padding: [0, { default: 0, top: -10, bottom: -20 }],
+    borderRadius: 2,
+    blur: 1,
+    anchorEle: 1,
+    captionOffsetX: '-20px',
+    captionPosition: 'left',
+    captionOffsetY: '50%',
+    captionContent: templates.squareInfoCaptionContent.cloneNode(true),
+  })
+
+  const selectionSpotlight = Spotlight.fromEles([squareEle, squareEle2, squareInfoEle], {
+    padding: [0, 0, { default: 0, top: -10, bottom: -20 }],
+    borderRadius: 2,
+    blur: 1,
+    anchorEle: 2,
+    captionPosition: 'left',
+    captionOffsetX: '-20px',
+    captionOffsetY: '50%',
+    captionContent: templates.selectionInfoCaptionContent.cloneNode(true),
   })
 
   const optionsSpotlight = Spotlight.fromEles([optionsButton, optionsDropdown], {
     padding: [{ right: 7, bottom: 7, default: 4 }, { default: 6, top: 4 }],
     borderRadius: 8,
     blur: 2,
-    captionPosition: 'bottom',
+    anchorEle: 1,
+    captionPosition: 'right',
+    captionOffsetX: '10px',
+    // captionOffsetY: '10px',
     captionContent: templates.optionsCaptionContent.cloneNode(true),
     onShow: () => {
       optionsDropdown.classList.add('show')
@@ -280,7 +300,10 @@ function getSpotlights({
     padding: [{ right: 7, bottom: 7, default: 4 }, { default: 6, top: 4 }],
     borderRadius: 8,
     blur: 2,
+    anchorEle: 1,
     captionPosition: 'right',
+    captionOffsetX: '10px',
+    // captionOffsetY: '10px',
     captionContent: templates.instructionsCaptionContent.cloneNode(true),
     onShow: () => {
       instructionsDropdown.classList.add('show')
@@ -289,11 +312,21 @@ function getSpotlights({
   })
 
   return [
+    introSpotlight,
     puzzleSpotlight,
     cageSpotlight,
     infoSpotlight,
     cageInfoSpotlight.dup({
-      captionPosition: 'top',
+      captionPosition: 'left',
+      captionOffsetY: '-50%',
+      captionContent: templates.cageInfoCombosCaptionContent.cloneNode(true),
+      onShow: () => {
+        selectSquare(squareEle)
+        return () => clearFocusAndFilter(gameStore)
+      }
+    }),
+    cageInfoSpotlight.dup({
+      captionContent: templates.cageInfoTabsCaptionContent.cloneNode(true),
       onShow: () => {
         selectSquare(squareEle)
         return () => clearFocusAndFilter(gameStore)
@@ -327,6 +360,7 @@ function getSpotlights({
       }
     }),
     cageInfoSpotlight.dup({
+      captionContent: templates.cageInfoAllFiltersCaptionContent.cloneNode(true),
       onShow: () => {
         selectSquare(squareEle)
         toggleOr(gameStore)

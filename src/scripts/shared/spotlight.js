@@ -20,9 +20,9 @@ const overflowPx = 20
 const defaultOptions = {
   padding: 0,
   blur: 2,
-  captionOffsetX: 0,
-  captionOffsetY: 0,
-  captionPosition: 'right',
+  captionOffsetX: '0px',
+  captionOffsetY: '0px',
+  captionPosition: 'none',
   onShow: () => () => { },
 }
 
@@ -50,19 +50,28 @@ class Spotlight {
     })
   }
 
+  static blank(options) {
+    return new Spotlight({
+      ...defaultOptions,
+      ...options
+    })
+  }
+
   constructor(options, generate = true) {
     Object.assign(this, options)
-    if (generate) this.generate()
+    if (generate && this.eles) this.generate()
   }
 
   generate() {
-    this.bounds = this.eles.map((ele, idx) => {
-      const padding = this.padding instanceof Array
-        ? this.padding[idx]
-        : this.padding
+    this.bounds = this.eles
+      ? this.eles.map((ele, idx) => {
+        const padding = this.padding instanceof Array
+          ? this.padding[idx]
+          : this.padding
 
-      return getPaddedBoundingRect(ele, padding)
-    })
+        return getPaddedBoundingRect(ele, padding)
+      })
+      : [{ top: 0, left: 0, bottom: 0, right: 0 }]
 
     this.subPaths = []
     this.visited = {}
@@ -378,6 +387,10 @@ class Spotlight {
       bottomLeft: { top: lowerTop, left: startLeft },
       left: { top: midTop, left: startLeft },
       topLeft: { top: upperTop, left: startLeft },
+      middle: {
+        top: midTop,
+        left: midLeft,
+      }
     }
   }
 
@@ -386,14 +399,14 @@ class Spotlight {
 
     const xShift = stringSwitch(this.captionPosition, ({ _case, _default }) => {
       _case(/(L|l)eft/, () => '-100%')
-      _case(['top', 'bottom'], () => '-50%')
-      _default(() => '0')
+      _case(['top', 'bottom', 'middle'], () => '-50%')
+      _default(() => '0px')
     })
 
     const yShift = stringSwitch(this.captionPosition, ({ _case, _default }) => {
       _case(/top/, () => '-100%')
-      _case(['left', 'right'], () => '-50%')
-      _default(() => '0')
+      _case(['left', 'right', 'middle'], () => '-50%')
+      _default(() => '0px')
     })
 
     const translateX = `calc(${xShift} + ${this.captionOffsetX})`

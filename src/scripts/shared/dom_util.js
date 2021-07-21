@@ -506,7 +506,10 @@ export const createSVGElement = tag =>
 
 export const applyStyle = (ele, style, clear = false) => {
   if (clear) ele.style = null
-  Object.entries(style).forEach(([attr, val]) => ele.style[attr] = val)
+  Object.entries(style).forEach(([attr, val]) => {
+    ele.style[attr] = val
+    console.log(ele.style[attr], val)
+  })
 }
 
 window.cap = document.createElement('div')
