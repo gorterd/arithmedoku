@@ -1,10 +1,10 @@
-import remotedev from 'remotedev'
+// import remotedev from 'remotedev'
 import {
   unprotect,
   applySnapshot,
   getSnapshot
 } from 'mobx-state-tree'
-import { connectReduxDevtools } from 'mst-middlewares'
+// import { connectReduxDevtools } from 'mst-middlewares'
 import LRUCache from './shared/lru_cache'
 import './shared/spotlight'
 import Spotlight from './shared/spotlight'
@@ -15,7 +15,7 @@ export const activateDevFlag = () => devFlag = true
 export const setupDev = (game) => {
   if (!devFlag) return
 
-  connectReduxDevtools(remotedev, game.gameStore)
+  // connectReduxDevtools(remotedev, game.gameStore)
   unprotect(game.gameStore)
   setupPalette()
 

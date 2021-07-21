@@ -508,7 +508,7 @@ export const applyStyle = (ele, style, clear = false) => {
   if (clear) ele.style = null
   Object.entries(style).forEach(([attr, val]) => {
     ele.style[attr] = val
-    console.log(ele.style[attr], val)
+    // console.log(ele.style[attr], val)
   })
 }
 

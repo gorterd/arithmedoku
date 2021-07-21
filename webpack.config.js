@@ -3,12 +3,18 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const config = {
   entry: {
-    main: path.resolve(__dirname, "src", "scripts", "index.js"),
-    worker: path.resolve(__dirname, "src", "scripts", "worker.js"),
+    main: [
+      path.resolve(__dirname, "src", "js", "index.js"),
+      path.resolve(__dirname, "src", "scss", "index.scss"),
+    ],
+    worker: path.resolve(__dirname, "src", "js", "worker.js"),
   },
   output: {
     path: path.join(__dirname, 'dist'),
     filename: '[name].js',
+  },
+  devServer: {
+    publicPath: '/dist/',
   },
   module: {
     rules: [

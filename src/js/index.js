@@ -1,4 +1,3 @@
-import '../styles/index.scss'
 import { getNewEnv } from './setup/setup_env'
 import setupDOM from './setup/setup_dom'
 import setupGame from './setup/setup_game'
