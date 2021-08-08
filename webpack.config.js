@@ -1,13 +1,14 @@
-const path = require('path');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const path = require('path')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const HandlebarsPlugin = require('handlebars-webpack-plugin')
 
 const config = {
   entry: {
     main: [
-      path.resolve(__dirname, "src", "js", "index.js"),
-      path.resolve(__dirname, "src", "scss", "index.scss"),
+      path.join(__dirname, 'src', 'js', 'index.js'),
+      path.join(__dirname, 'src', 'scss', 'index.scss'),
     ],
-    worker: path.resolve(__dirname, "src", "js", "worker.js"),
+    storage_worker: path.join(__dirname, 'src', 'js', 'storage_worker.js'),
   },
   output: {
     path: path.join(__dirname, 'dist'),
@@ -36,7 +37,14 @@ const config = {
       }
     ],
   },
-  plugins: [new MiniCssExtractPlugin()],
+  plugins: [
+    new MiniCssExtractPlugin(),
+    new HandlebarsPlugin({
+      entry: path.join(__dirname, 'src', 'hbs', 'index.hbs'),
+      output: path.join(__dirname, 'index.html'),
+      partials: [path.join(__dirname, 'src', 'hbs', 'partials', '*.hbs')],
+    }),
+  ],
 };
 
 module.exports = (env, argv) => {

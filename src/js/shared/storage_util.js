@@ -4,7 +4,7 @@ export let dbGet
 const DB_FALLBACK_MS = 1000
 
 if (Worker && indexedDB) {
-  const storageWorker = new Worker('./dist/worker.js')
+  const storageWorker = new Worker('./dist/storage_worker.js')
   const callbackRegistry = {}
 
   const dbLoaded = new Promise((resolve, reject) => {
@@ -113,6 +113,3 @@ function setupLocalStorageDb() {
     return JSON.parse(item)
   }
 }
-
-window.dbAdd = dbAdd
-window.dbGet = dbGet

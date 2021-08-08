@@ -23,7 +23,6 @@
   color: $cappuccino-1;
   background: $cream-3;
   border-radius: 15px;
-  font-size: 1.2em;
   border: 1px solid $cream-4;
 
   padding: 15px;
@@ -36,16 +35,15 @@
 .caption-content {
   margin-bottom: 20px;
 
-  p, li {
+  p, li, h1 {
     margin-bottom: 10px;
   }
 
-  strong {
+  strong, h1 {
     font-weight: bold;
   }
 
   ol {
-    // list-style: decimal inside;
     counter-reset: num;
     padding-left: 20px;
 
@@ -60,15 +58,6 @@
       }
     }
   }
-
-  &--cage-info-and,
-  &--cage-info-not,
-  &--cage-info-or {
-    li:not(:last-of-type) {
-      font-size: 0.9em;
-      opacity: 0.9;
-    }
-  }
 }
 
 .caption-controls {
@@ -76,4 +65,18 @@
   justify-content: space-between;
   width: 100%;
   font-weight: 700;
+
+  button {
+    padding: 3px 5px;
+    border-radius: 5px;
+    background: $cream-4;
+    border: 2px solid $cream-5;
+    margin-right: 3px;
+
+    &.hide { display: none; }
+  }
+
+  button:hover {
+    background: $cream-5;
+  }
 }

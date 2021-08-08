@@ -60,7 +60,6 @@ export default function mountKeyboardListeners({ gameStore }) {
   })
 
   document.addEventListener('keyup', e => {
-    console.log(e.code)
     stringSwitch(e.code, ({ _case }) => {
       _case(/Shift/, () => gameStore.ui.lockInTentativeSelections())
       _case(/Alt/, () => gameStore.stopStaging())

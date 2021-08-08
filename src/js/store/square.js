@@ -1,6 +1,6 @@
 import { flow, setLivelinessChecking, types } from 'mobx-state-tree'
 import { ICONS } from '../shared/constants'
-import { wait, classes, arrayUnion, togglePresenceInArray, pushIfNotIncluded, removeIfIncluded, generateClassName } from '../shared/general_util'
+import { wait, classes, arrayUnion, togglePresenceInArray, pushIfNotIncluded, removeFromArray, generateClassName } from '../shared/general_util'
 import { Id, Position, GameBase } from './base'
 import { Cage } from './collections'
 
@@ -283,7 +283,7 @@ const Square = GameBase
           pushIfNotIncluded(self.eliminatedPossibilities, val)
         },
         uneliminatePossibility(val) {
-          removeIfIncluded(self.eliminatedPossibilities, val)
+          removeFromArray(self.eliminatedPossibilities, val)
         },
         setStagedPossibilities() {
           self.eliminatedPossibilities = initialPossibilities

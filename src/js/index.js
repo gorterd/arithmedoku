@@ -7,9 +7,11 @@ if (process.env.NODE_ENV === 'development') {
   activateDevFlag()
 }
 
-document.addEventListener('DOMContentLoaded', async () => {
+// document.addEventListener('DOMContentLoaded', 
+(async () => {
   const env = await getNewEnv()
   const elements = setupDOM(env)
   const gameStore = await setupGame({ env, elements })
   setupDev({ env, elements, gameStore })
-})
+})()
+// })

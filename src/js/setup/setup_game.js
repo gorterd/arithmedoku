@@ -6,7 +6,6 @@ import mountKeyboardListeners from './listeners/keyboard_listeners'
 import mountClickListeners from './listeners/click_listeners'
 import { setupPuzzle } from './setup_puzzle'
 import walkthrough from './walkthrough'
-import { applySnapshot, onAction, onSnapshot } from 'mobx-state-tree'
 import Game from '../store/game'
 
 export default async function setupGame({ env, elements }) {
@@ -18,7 +17,7 @@ export default async function setupGame({ env, elements }) {
   setupCollectionInfo(game)
 
   const snapshot = await gameStore.retrieveStoredSnapshot()
-  if (snapshot?.options.walkthrough) {
+  if (!snapshot || snapshot.options.walkthrough) {
     const teardownSquares = setupPuzzle(game)
     await walkthrough(game)
     teardownSquares()

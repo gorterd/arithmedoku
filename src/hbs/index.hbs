@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='UTF-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+  <link rel='stylesheet' href='dist/main.css'>
+  <script src='https://kit.fontawesome.com/24cc9dca36.js' crossorigin='anonymous'></script>
+  <script src='dist/main.js' defer></script>
+  <title>Arithmedoku</title>
+</head>
+
+<body>
+  <main class='app'>
+    {{> partials/header }}
+
+
+    {{> partials/game }}
+
+
+    <a id='attribution' href='https://www.krazydad.com'>
+      puzzles by Jim Bumgardner, aka Krazydad
+    </a>
+  </main>
+
+  {{> partials/walkthrough }}
+
+</body>
+
+</html>

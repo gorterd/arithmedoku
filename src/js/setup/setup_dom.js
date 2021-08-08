@@ -1,12 +1,10 @@
 import { ICONS } from "../shared/constants"
 import { kebabToCamel } from "../shared/general_util"
-import { getTemplateById } from '../shared/dom_util'
 import { getHeaderElements } from '../views/header_view'
 import { getOptionsElements } from '../views/options_view'
 import { getCollectionInfoElements } from '../views/info_collection_view'
 import { getSquareInfoElements } from '../views/info_square_view'
 import { getSquareElement, getSquareElementsFromId } from '../views/square_view'
-import { devLog } from "../dev"
 
 export default function setupDOM({ globals, templates }) {
   setupOptions(templates)

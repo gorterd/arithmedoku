@@ -1,5 +1,5 @@
-import { applyStyle, createSVGElement, getTemplateById } from "./dom_util"
-import { areEqualArrays, stringSwitch } from "./general_util"
+import { applyStyle } from "./dom_util"
+import { areEqualArrays, removeFromArray, stringSwitch } from "./general_util"
 
 const clockwiseOrder = [
   'top',
@@ -59,46 +59,55 @@ class Spotlight {
 
   constructor(options, generate = true) {
     Object.assign(this, options)
-    if (generate && this.eles) this.generate()
+    if (generate) this.generate()
   }
 
   generate() {
-    this.bounds = this.eles
-      ? this.eles.map((ele, idx) => {
-        const padding = this.padding instanceof Array
-          ? this.padding[idx]
-          : this.padding
+    if (!this.eles) return
 
-        return getPaddedBoundingRect(ele, padding)
-      })
-      : [{ top: 0, left: 0, bottom: 0, right: 0 }]
+    this.bounds = this.eles.map((ele, idx) => getPaddedBoundingRect(ele,
+      this.padding instanceof Array ? this.padding[idx] : this.padding
+    ))
 
     this.subPaths = []
-    this.visited = {}
+    this.unvisitedBounds = Array.from(Array(this.bounds.length), (_, i) => i)
     this._anchorBounds = null
 
-    let i = 0
-    while (!this.isComplete && i < 5) {
-      this._addNextSubPath()
-      i++
-    }
+    while (this.unvisitedBounds.length > 0) this._addNextSubPath()
+  }
+
+  updateSVG(svg) {
+    const vbw = window.innerWidth + overflowPx
+    const vbh = window.innerHeight + overflowPx
+
+    svg.setAttribute('viewBox', `0 0 ${vbw} ${vbh}`)
+    svg.querySelector('path').setAttribute('d', this._getD(vbw, vbh))
+    svg.querySelector('feGaussianBlur').setAttribute('stdDeviation', this.blur)
+  }
+
+  updateCaption(caption) {
+    applyStyle(caption, this.captionStyle, true)
+  }
+
+  dup(options) {
+    return new Spotlight({ ...this, ...options }, false)
   }
 
   _addNextSubPath() {
-    const subPath = []
-    this._beginSubPath(subPath)
+    this.curBoundIdx = this.unvisitedBounds.shift()
+    this.curBoundSide = 'top'
 
-    let i = 0
-    while (!this._isCompleteSubPath(subPath) && i < 100) {
+    const { left, top } = this.bounds[this.curBoundIdx]
+    const subPath = [[left, top]]
+
+    this._addNextPoint(subPath)
+    while (!areEqualArrays(subPath[0], subPath[subPath.length - 1])) {
       this._addNextPoint(subPath)
-      i++
     }
 
-    const overflowOffsetSubPath = subPath.map(point =>
+    this.subPaths.push(subPath.map(point =>
       point.map(i => i + overflowPx / 2)
-    )
-
-    this.subPaths.push(overflowOffsetSubPath)
+    ))
   }
 
   _addNextPoint(subPath) {
@@ -108,7 +117,7 @@ class Spotlight {
         _case(['top', 'bottom'], () => [1, 0])
       })
 
-    const curPoint = this._getLastPoint(subPath)
+    const curPoint = subPath[subPath.length - 1]
     const curStaticDim = curPoint[staticIdx]
     const curChangingDim = curPoint[changingIdx]
 
@@ -123,12 +132,12 @@ class Spotlight {
     let closestBoundIdx = this.curBoundIdx
     const interceptSide = getOppositeSide(nextCurBoundSide)
 
-    this.boundsIndices.forEach(idx => {
+    for (let idx = 0; idx < this.bounds.length; idx++) {
       const [staticDimLower, staticDimUpper] =
         this._getOtherDimRange(idx, interceptSide)
 
       if (curStaticDim < staticDimLower || curStaticDim > staticDimUpper) {
-        return
+        continue
       }
 
       const interceptDim = this._getDim(idx, interceptSide)
@@ -147,15 +156,15 @@ class Spotlight {
         closestDim = interceptDim
         closestBoundIdx = idx
       }
-    })
+    }
 
     const nextPoint = [null, null]
     nextPoint[staticIdx] = curStaticDim
     nextPoint[changingIdx] = closestDim
 
-    // side effects
     subPath.push(nextPoint)
-    this.visited[closestBoundIdx] = true
+    removeFromArray(this.unvisitedBounds, closestBoundIdx)
+
     this.curBoundSide = closestBoundIdx !== this.curBoundIdx
       ? interceptSide
       : nextCurBoundSide
@@ -168,28 +177,6 @@ class Spotlight {
       : boundOrIdx[side]
   }
 
-  _getNextBoundIdx() {
-    return this.boundsIndices.find(idx => !this.visited[idx])
-  }
-
-  _beginSubPath(subPath) {
-    this.curBoundIdx = this._getNextBoundIdx()
-    this.visited[this.curBoundIdx] = true
-
-    this.curBoundSide = 'top'
-
-    const { left, top } = this.curBound
-    subPath.push([left, top])
-  }
-
-  _getFirstPoint(subPath) {
-    return subPath[0]
-  }
-
-  _getLastPoint(subPath) {
-    return subPath[subPath.length - 1]
-  }
-
   _getOtherDimRange(boundIdx, side) {
     const bound = this.bounds[boundIdx]
 
@@ -199,95 +186,43 @@ class Spotlight {
     })
   }
 
-  _isCompleteSubPath(subPath) {
-    return subPath.length > 1 && areEqualArrays(
-      this._getFirstPoint(subPath),
-      this._getLastPoint(subPath)
-    )
+  _getD(vbw, vbh) {
+    return `M 0,0 L ${vbw},0 ${vbw},${vbh} 0,${vbh} 0,0 ${this.innerPath}`
   }
 
   _getSubPathD(subPath) {
     const m = `M ${subPath[0].join()}`
-    const l = `L ${subPath.slice(1).map(p => p.join()).join(' ')}`
+    const l = subPath.length > 1
+      ? `L ${subPath.slice(1).map(p => p.join()).join(' ')}`
+      : ''
     return `${m} ${l}`
   }
 
-  getD(vbw, vbh) {
-    return `M 0,0 L ${vbw},0 ${vbw},${vbh} 0,${vbh} 0,0 ${this.innerPath}`
-  }
-  // getD(vbw, vbh) {
-  //   const getSubPathD = this.borderRadius
-  //     ? this._getRoundedSubPathD
-  //     : this._getSubPathD
-
-  //   const outerPath = `M 0,0 L ${vbw},0 ${vbw},${vbh} 0,${vbh} 0,0`
-  //   const innerPaths = this.subPaths.map(getSubPathD.bind(this)).join(' ')
-  //   return `${outerPath} ${innerPaths} z`
-  // }
-
-  updateSVG({
-    element: svg,
-    regenerate = true,
-  } = {}) {
-    if (!svg) return
-    if (regenerate) this.generate()
-
-    const vbw = window.innerWidth + overflowPx
-    const vbh = window.innerHeight + overflowPx
-
-    svg.setAttribute('viewBox', `0 0 ${vbw} ${vbh}`)
-    svg.querySelector('path').setAttribute('d', this.getD(vbw, vbh))
-    svg.querySelector('feGaussianBlur').setAttribute('stdDeviation', this.blur)
-    return svg
-  }
-
-  updateCaption({
-    element: caption,
-    regenerate = true,
-  } = {}) {
-    if (!caption) return
-    if (regenerate) this.generate()
-
-    applyStyle(caption, this.captionStyle, true)
-
-    return caption
-  }
-
-  dup(options) {
-    return new Spotlight({ ...this, ...options }, false)
-  }
-  //0 0 1
-
   _getRoundedSubPathD(subPath) {
-    // const m = `M ${this._getNudgedPoint(subPath[0], subPath[1])}`
-    const hookPoints = [...subPath, subPath[1]]
-    const pathParts = Array.from({ length: hookPoints.length - 2 })
-      .reduce((parts, _, idx) => parts.concat(this._getPathHook(hookPoints.slice(idx, idx + 3))), [])
+    const pathParts = []
+    for (let i = 0; i < subPath.length - 1; i++) {
+      const hook = i === subPath.length - 2
+        ? this._getPathHook([...subPath.slice(-2), subPath[1]])
+        : this._getPathHook(subPath.slice(i, i + 3))
 
-    return [
-      'M', pathParts[pathParts.length - 1], ...pathParts
-    ].join(' ')
+      pathParts.push(...hook)
+    }
 
-    return `${m} ${hooks.join(' ')}`
+    return `M ${pathParts[pathParts.length - 1]} ${pathParts.join(' ')}`
   }
 
   _getPathHook([prev, cur, next]) {
-    // const [startPoint, endPoint] = this._getNudgedPoints(prev, cur, next)
-    // const  = this._getNudgedPoint(cur, next)
     const startPoint = this._getNudgedPoint(cur, prev)
     const endPoint = this._getNudgedPoint(cur, next)
-    const radii = getAbsDiff(startPoint, endPoint)
+    const radii = [0, 1].map(i => Math.abs(startPoint[i] - endPoint[i]))
 
-    const clockwise =
-      Math.sign(next[1] - prev[1])
-      === Math.sign(cur[0] * 2 - prev[0] - next[0])
+    const goingDown = next[1] > prev[1]
+    const onRight = cur[0] * 2 > prev[0] + next[0]
+    const clockwise = goingDown === onRight ? 1 : 0
 
-    //   const l = `L ${startPoint.join()}`
-    // const a = `A ${radii.join(' ')} 0 0 ${clockwise ? '1' : '0'} ${endPoint.join(' ')}`
-    // return `${l} ${a}`
     return [
       'L', startPoint,
-      'A', radii, 0, 0, clockwise ? 1 : 0, endPoint
+      'A', radii, 0, 0, clockwise, endPoint
     ]
   }
 
@@ -299,44 +234,9 @@ class Spotlight {
     })
   }
 
-  // _getNudgedPoints(prev, cur, next) {
-  //   let mag = this.borderRadius
-  //   const dirs = [prev, next].map(pos =>
-  //     [0, 1].map(i => {
-  //       const diff = pos[i] - cur[i]
-
-  //       const maxDiffRadius = Math.abs(diff) / 2
-  //       if (maxDiffRadius > 0 && maxDiffRadius < mag) {
-  //         mag = maxDiffRadius
-  //       }
-
-  //       return Math.sign(diff)
-  //     })
-  //   )
-  //   return dirs.map(dir => dir.map((sign, idx) => cur[idx] + sign * mag))
-  //   const prevDir = [0, 1].map(i => Math.sign(prev[i] - cur[i]))
-  //   const nextDir = [0, 1].map(i => Math.sign(next[i] - cur[i]))
-
-  //   return [0, 1].map(i => {
-  //     const diff = b[i] - a[i]
-  //     const mag = Math.min(this.borderRadius, Math.abs(diff) / 2)
-  //     return a[i] + mag * Math.sign(diff)
-  //   })
-  // }
-
-  // get steps() {
-  //   return this._steps.map(step => {
-  //     return () => {
-
-  //       const stepCleanup = step()
-  //       return () => {
-  //         stepCleanup()
-  //       }
-  //     }
-  //   })
-  // }
-
   get innerPath() {
+    if (!this.eles) return ''
+
     const getSubPathD = this.borderRadius
       ? this._getRoundedSubPathD
       : this._getSubPathD
@@ -346,7 +246,9 @@ class Spotlight {
 
   get anchorBounds() {
     if (!this._anchorBounds) {
-      if (this.bounds.length > 1 && typeof this.anchorEle === 'number') {
+      if (!this.eles) {
+        this._anchorBounds = { top: 0, right: 0, left: 0, bottom: 0 }
+      } else if (this.bounds.length > 1 && typeof this.anchorEle === 'number') {
         this._anchorBounds = this.bounds[this.anchorEle]
       } else if (this.bounds.length > 1) {
         this._anchorBounds = this.bounds.reduce((anchorBounds, bound) => ({
@@ -371,12 +273,12 @@ class Spotlight {
       bottom: boundsBottom,
     } = this.anchorBounds
 
-    const upperTop = toPixels(boundsTop)
-    const midTop = toPixels((boundsTop + boundsBottom) / 2)
-    const lowerTop = toPixels(boundsBottom)
-    const startLeft = toPixels(boundsLeft)
-    const midLeft = toPixels((boundsLeft + boundsRight) / 2)
-    const endLeft = toPixels(boundsRight)
+    const upperTop = `${boundsTop}px`
+    const midTop = `${(boundsTop + boundsBottom) / 2}px`
+    const lowerTop = `${boundsBottom}px`
+    const startLeft = `${boundsLeft}px`
+    const midLeft = `${(boundsLeft + boundsRight) / 2}px`
+    const endLeft = `${boundsRight}px`
 
     return {
       top: { top: upperTop, left: midLeft },
@@ -387,10 +289,7 @@ class Spotlight {
       bottomLeft: { top: lowerTop, left: startLeft },
       left: { top: midTop, left: startLeft },
       topLeft: { top: upperTop, left: startLeft },
-      middle: {
-        top: midTop,
-        left: midLeft,
-      }
+      middle: { top: midTop, left: midLeft },
     }
   }
 
@@ -417,18 +316,6 @@ class Spotlight {
       transform: `translateX(${translateX}) translateY(${translateY})`
     }
   }
-
-  get curBound() {
-    return this.bounds[this.curBoundIdx]
-  }
-
-  get isComplete() {
-    return this._getNextBoundIdx() === undefined
-  }
-
-  get boundsIndices() {
-    return Array.from({ length: this.bounds.length }).map((_, idx) => idx)
-  }
 }
 
 function getNextSide(curSide) {
@@ -441,10 +328,6 @@ function getOppositeSide(side) {
   const idx = clockwiseOrder.indexOf(side)
   const oppositeIdx = (idx + 2) % 4
   return clockwiseOrder[oppositeIdx]
-}
-
-function toPixels(num) {
-  return `${num}px`
 }
 
 function getPaddedBoundingRect(ele, padding) {
@@ -461,55 +344,4 @@ function getPaddedBoundingRect(ele, padding) {
   }
 }
 
-// _getRoundedSubPathD(subPath) {
-//   const m = `M ${subPath[0].join()}`
-//   const l = `L ${subPath.slice(1).map(p => p.join()).join(' ')}`
-//   return `${m} ${l}`
-// }
-
-// function getNudgeDiff(a, b, px) {
-//   return [0, 1].map(i => {
-//     const diff = b[i] - a[i]
-//     const mag = Math.min(px, Math.abs(diff) / 2)
-//     return mag * Math.sign(diff)
-//   })
-// }
-
-// function getNudgedPoint(a, b) {
-//   return [0, 1].map(i => {
-//     const diff = b[i] - a[i]
-//     const mag = Math.min(this.borderRadius, Math.abs(diff) / 2)
-//     return a[i] + mag * Math.sign(diff)
-//   })
-// }
-
-function getAbsDiff(a, b) {
-  return [0, 1].map(i => Math.abs(a[i] - b[i]))
-}
-
-// function getPathHook(prev, cur, next, radius) {
-//   const startPoint = getNudgedPoint(cur, prev, radius)
-//   const endPoint = getNudgedPoint(cur, next, radius)
-//   const radii = getAbsDiff(startPoint, endPoint)
-
-//   const l = `L ${startPoint.join()}`
-//   const a = `A ${radii.join(' ')} 0 0 1 ${endPoint.join(' ')}`
-//   return `${l} ${a}`
-// }
-
-
-// function vecAdd(...vecs) {
-//   return Array.from({ length: vecs[0].length })
-//     .map((_, idx) => vecs.reduce((sum, vec) => vec[idx] + sum, 0))
-// }
-
-
 export default Spotlight
-window.Spotlight = Spotlight
-// clockwise
-// pos, pos -> higherx, lowery
-// neg, pos -> higherx, highery
-// pos, neg -> lowerx, lowery
-// neg, neg -> lowerx, highery
-
-// if sign of second matches sign of x diff

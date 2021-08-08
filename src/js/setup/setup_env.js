@@ -1,12 +1,6 @@
 import LRUCache from '../shared/lru_cache'
 import { getTemplateById, getTemplateNode } from '../shared/dom_util'
 import puzzles from '../data/puzzles'
-import { getHeaderElements } from '../views/header_view'
-import { getOptionsElements } from '../views/options_view'
-import { getCollectionInfoElements } from '../views/info_collection_view'
-import { getSquareInfoElements } from '../views/info_square_view'
-import { getSquareElement, getSquareElementsFromId } from '../views/square_view'
-import { defineLazyProperties } from '../shared/general_util'
 import { dbGet } from '../shared/storage_util'
 
 export async function getNewEnv() {

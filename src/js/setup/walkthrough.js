@@ -1,190 +1,68 @@
-import { addNoFocusClickListener, createSVGElement, getTemplateById } from "../shared/dom_util"
+import { addNoFocusClickListener } from "../shared/dom_util"
 import { stringSwitch } from "../shared/general_util"
 import Spotlight from "../shared/spotlight"
 
-export default ({ gameStore, env, elements }) => {
-  const caption = env.templates.spotlightCaption.cloneNode(true)
-  const svg = env.templates.spotlight.cloneNode(true)
+export default (game) => new Promise(resolve => {
+  const caption = game.env.templates.spotlightCaption.cloneNode(true)
+  const svg = game.env.templates.spotlight.cloneNode(true)
+  const { nextBtn, previousBtn, finishBtn } = getCaptionElements(caption)
 
   let cleanup = () => { }
-
-  const steps = getSpotlights({ gameStore, env, elements }).map(spotlight => () => {
+  const spotlights = getSpotlights(game)
+  const steps = spotlights.map((spotlight, idx) => () => {
+    if (idx === 0) previousBtn.classList.add('hide')
+    if (idx + 1 === spotlights.length) nextBtn.classList.add('hide')
     cleanup()
 
     const update = () => {
-      spotlight.updateSVG({ element: svg, regenerate: true })
-      spotlight.updateCaption({ element: caption, regenerate: false })
+      spotlight.generate()
+      spotlight.updateSVG(svg)
+      spotlight.updateCaption(caption)
     }
 
-    if (spotlight.captionContent) {
-      caption.querySelector('.caption-content')?.remove()
-      caption.prepend(spotlight.captionContent)
-    }
+    caption.querySelector('.caption-content')?.remove()
+    caption.prepend(spotlight.captionContent)
 
     const cleanupShow = spotlight.onShow()
     window.addEventListener('resize', update)
     cleanup = () => {
+      if (idx === 0) previousBtn.classList.remove('hide')
+      if (idx + 1 === spotlights.length) nextBtn.classList.remove('hide')
       window.removeEventListener('resize', update)
       cleanupShow()
     }
-    // debugger
+
     update()
     appendIfRemoved(svg, caption)
   })
 
-  return new Promise((resolve) => {
-    const finish = () => {
-      cleanup()
-      svg.remove()
-      caption.remove()
-
-      document.removeEventListener('keydown', handleKeydown, true)
-      resolve()
-    }
-    steps.push(finish)
-
-    const { nextBtn, previousBtn, finishBtn } = getCaptionElements(caption)
-    let curStep = 0
-
-    const next = () => steps[++curStep]()
-
-    const prev = () => {
-      if (curStep > 0) steps[--curStep]()
-    }
-
-    addNoFocusClickListener(nextBtn, next)
-    addNoFocusClickListener(previousBtn, prev)
-    addNoFocusClickListener(finishBtn, finish)
-
-    function handleKeydown(e) {
-      stringSwitch(e.code, ({ _case }) => {
-        _case('KeyN', next)
-        _case('KeyP', prev)
-        _case('KeyF', finish)
-        // e.stopImmediatePropagation()
-      })
-    }
-
-    document.addEventListener('keydown', handleKeydown, true)
-
-    steps[curStep]()
-  })
-}
-
-// function getSpotlights({
-//   gameStore,
-//   env: {
-//     templates: {
-//       puzzleCaptionContent,
-//       infoCaptionContent,
-//       squareInfoCaptionContent,
-//       collectionInfoCaptionContent,
-//       instructionsCaptionContent,
-//     }
-//   },
-//   elements: {
-//     puzzleEle,
-//     infoEle,
-//     squareInfoEle,
-//     collectionInfoEle,
-//     headerEles: {
-//       instructionsButton,
-//       instructionsDropdown,
-//     },
-//   }
-// }) {
-//   const cageSquares = getCageSquares(gameStore)
-//   const squareEle = cageSquares[0]
-
-//   return [
-//     Spotlight.fromEle(puzzleEle, {
-//       padding: 5,
-//       borderRadius: 8,
-//       captionContent: puzzleCaptionContent.cloneNode(true),
-//     }),
-//     Spotlight.fromEle(infoEle, {
-//       padding: { default: 6, left: 8 },
-//       borderRadius: 8,
-//       blur: 1.5,
-//       captionPosition: 'left',
-//       captionOffsetX: '-10px',
-//       captionOffsetY: '50px',
-//       captionContent: infoCaptionContent.cloneNode(true),
-//     }),
-//     Spotlight.fromEles([squareEle, squareInfoEle], {
-//       padding: [0, { default: 0, top: -10, bottom: -20 }],
-//       borderRadius: 2,
-//       blur: 1,
-//       captionPosition: 'bottom',
-//       captionContent: squareInfoCaptionContent.cloneNode(true),
-//       onShow: () => {
-//         gameStore.selectSquareById(squareEle.dataset.id)
-//         return () => {
-//           gameStore.clearFocus()
-//           gameStore.ui.clearSelectedSquares()
-//         }
-//       }
-//     }),
-//     Spotlight.fromEles([...cageSquares, collectionInfoEle], {
-//       padding: [
-//         ...Array(cageSquares.length).fill(0.5),
-//         {
-//           // default: 0,
-//           top: 26,
-//           bottom: -10,
-//         }
-//       ],
-//       borderRadius: 2,
-//       blur: 1,
-//       captionPosition: 'bottom',
-//       captionContent: collectionInfoCaptionContent.cloneNode(true),
-//       onShow: () => {
-//         gameStore.selectSquareById(squareEle.dataset.id)
-//         return () => {
-//           gameStore.clearFocus()
-//           gameStore.ui.clearSelectedSquares()
-//         }
-//       }
-//     }),
-//     Spotlight.fromEles([instructionsButton, instructionsDropdown], {
-//       padding: [{ right: 7, bottom: 7, default: 4 }, { default: 6, top: 4 }],
-//       borderRadius: 8,
-//       blur: 2,
-//       captionPosition: 'right',
-//       captionContent: instructionsCaptionContent.cloneNode(true),
-//       onShow: () => {
-//         instructionsDropdown.classList.add('show')
-//         return () => instructionsDropdown.classList.remove('show')
-//       },
-//     }),
-//   ]
-// }
-
-function getCaptionElements(captionEle) {
-  return {
-    nextBtn: captionEle.querySelector('#spotlight-next'),
-    previousBtn: captionEle.querySelector('#spotlight-previous'),
-    finishBtn: captionEle.querySelector('#spotlight-finish'),
+  let curStep = 0
+  const next = () => curStep < steps.length - 1 && steps[++curStep]()
+  const prev = () => curStep > 0 && steps[--curStep]()
+  const finish = () => {
+    cleanup()
+    svg.remove()
+    caption.remove()
+    document.removeEventListener('keydown', handleKeydown, true)
+    resolve()
   }
-}
 
-function getCageSquares(gameStore) {
-  const cornerCage = gameStore.puzzle.cagesArray
-    .find(cage => cage.numPossibleRepeats > 0 && cage.result === 15)
+  addNoFocusClickListener(nextBtn, next)
+  addNoFocusClickListener(previousBtn, prev)
+  addNoFocusClickListener(finishBtn, finish)
 
-  return Array.from(cornerCage.squares.map(square =>
-    document.querySelector(`.square[data-id="${square.id}"]`)
-  ))
-}
+  const handleKeydown = e => {
+    stringSwitch(e.code, ({ _case }) => {
+      _case('KeyN', next)
+      _case('KeyP', prev)
+      _case('KeyF', finish)
+    })
+  }
 
-function createSVG() {
-  return getTemplateById('spotlight-template').cloneNode(true)
-}
+  document.addEventListener('keydown', handleKeydown, true)
 
-function appendIfRemoved(...eles) {
-  const removedEles = eles.filter(ele => !document.body.contains(ele))
-  document.body.append(...removedEles)
-}
+  steps[curStep]()
+})
 
 function getSpotlights({
   gameStore,
@@ -288,11 +166,13 @@ function getSpotlights({
     anchorEle: 1,
     captionPosition: 'right',
     captionOffsetX: '10px',
-    // captionOffsetY: '10px',
     captionContent: templates.optionsCaptionContent.cloneNode(true),
     onShow: () => {
-      optionsDropdown.classList.add('show')
-      return () => optionsDropdown.classList.remove('show')
+      optionsButton.classList.add('show')
+      return () => {
+        optionsButton.classList.remove('show')
+        optionsButton.blur()
+      }
     },
   })
 
@@ -303,11 +183,13 @@ function getSpotlights({
     anchorEle: 1,
     captionPosition: 'right',
     captionOffsetX: '10px',
-    // captionOffsetY: '10px',
     captionContent: templates.instructionsCaptionContent.cloneNode(true),
     onShow: () => {
-      instructionsDropdown.classList.add('show')
-      return () => instructionsDropdown.classList.remove('show')
+      instructionsButton.classList.add('show')
+      return () => {
+        instructionsButton.classList.remove('show')
+        instructionsButton.blur()
+      }
     },
   })
 
@@ -410,6 +292,28 @@ function getSpotlights({
     optionsSpotlight,
     instructionsSpotlight,
   ]
+}
+
+function getCaptionElements(captionEle) {
+  return {
+    nextBtn: captionEle.querySelector('#spotlight-next'),
+    previousBtn: captionEle.querySelector('#spotlight-previous'),
+    finishBtn: captionEle.querySelector('#spotlight-finish'),
+  }
+}
+
+function getCageSquares(gameStore) {
+  const cornerCage = gameStore.puzzle.cagesArray
+    .find(cage => cage.numPossibleRepeats > 0 && cage.result === 15)
+
+  return Array.from(cornerCage.squares.map(square =>
+    document.querySelector(`.square[data-id="${square.id}"]`)
+  ))
+}
+
+function appendIfRemoved(...eles) {
+  const removedEles = eles.filter(ele => !document.body.contains(ele))
+  document.body.append(...removedEles)
 }
 
 function toggleAnd(gameStore) {

@@ -150,14 +150,6 @@ const Game = GameBase
         self.ui.reset()
         self.puzzle.reset()
       },
-      // applyStoredSnapshot: flow(function* () {
-      //   const snapshot = yield getStoredSnapshot()
-      //   try {
-      //     applySnapshot(self, snapshot)
-      //   } catch {
-      //     console.log('Unable to apply stored snapshot')
-      //   }
-      // }),
       applyStoredSnapshot() {
         try {
           applySnapshot(self, self.storedSnapshot)

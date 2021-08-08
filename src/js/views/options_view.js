@@ -1,7 +1,6 @@
 import { autorun } from 'mobx'
 import { devLog } from '../dev'
-import walkthrough from '../setup/walkthrough'
-import { UP_OR_DOWN_REGEX, NUM_REGEX, ARROW_REGEX } from "../shared/constants"
+import { NUM_REGEX, ARROW_REGEX } from "../shared/constants"
 import { getDirFromCode, getNumFromCode, stringSwitch } from '../shared/general_util'
 
 export function setupOptions(game) {

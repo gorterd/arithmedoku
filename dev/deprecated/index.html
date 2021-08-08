@@ -6,7 +6,7 @@
   <meta name='viewport' content='width=device-width, initial-scale=1.0'>
   <link rel='stylesheet' href='dist/main.css'>
   <script src='https://kit.fontawesome.com/24cc9dca36.js' crossorigin='anonymous'></script>
-  <script src='dist/main.js' defer></script>
+  <script src='dist/main.js'></script>
   <title>Arithmedoku</title>
 </head>
 
@@ -23,20 +23,20 @@
               a sudoku-like game with a math twist, invented by Japanese math teacher
               <a href='https://en.wikipedia.org/wiki/Tetsuya_Miyamoto'>Tetsuya Miyamoto</a>.
             </p>
-    
+
             <p>
               All of the puzzles in Arithmedoku were written by Jim Bumgardner, aka Krazydad. He calls them Inkies. From
               the Krazydad
               <a href='https://krazydad.com/about.php'>about page</a>:
             </p>
-    
+
             <blockquote>
               This website has been offering free puzzles to the public since 2005. My mission is to provide puzzles to
               under-served groups that need them, including prisoners, pensioners, home-schoolers, hospitals, churches,
               and classrooms. There are currently about two million individual puzzles on the site, and over sixty
               unique varieties.
             </blockquote>
-    
+
             <p>
               Check out the
               <a href='https://krazydad.com/'>Krazydad website</a>, or
@@ -46,74 +46,38 @@
         </button>
         <button id='header-instructions' class='header_button'>
           instructions
-          <div class='header_dropdown header_dropdown--list'>
-            <ul class='instructions-inner'>
-              <li class='instruction-section'>
-                <h1>Rules</h1>
-                <ul>
-                  <li> Each row and culumn must contain each of the numbers 1 through 9, no repeats</li>
-                  <li> In the upper left of each cage is an arithmetic operation and result.
-                    Performing this operation on the numbers in the cage must yield the listed
-                    result.
-                  </li>
-                </ul>
-              </li>
-              <li class='instruction-section'>
-                <h1>Info Box: Cage</h1>
-                <ul>
-                  <li>HELLO</li>
-                </ul>
-              </li>
-              <li class='instruction-section'>
-                <h1>Info Box: Square</h1>
-                <ul></ul>
-              </li>
-              <li class='instruction-section'>
-                <h1>Keyboard Shortcuts</h1>
-                <ul>
-                  <li>
-                    <span class='keyboard keyboard--cream'>←↑↓→</span> Change selected square
-                  </li>
-                  <li>
-                    <span class='keyboard keyboard--cream'>⌃ + number</span> Toggle square possibility
-                  </li>
-                  <li>
-                    <span class='keyboard keyboard--cream'>Alt + number</span> Hold down Alt and select numbers you want to
-                    rule
-                    *in* (eliminating every other number as a square possibility)
-                  </li>
-                  <li>
-                    <span class='keyboard keyboard--cream'>⌘ + z</span> or <span class='keyboard keyboard--cream'>⌃ +
-                      z</span>
-                    Undo last move
-                  </li>
-                  <li>
-                    <span class='keyboard keyboard--cream'>⌘ + y</span> or <span class='keyboard keyboard--cream'>⌃ +
-                      y</span>
-                    Redo last move
-                  </li>
-                  <li>
-                    <span class='keyboard keyboard--cream'>⇧ + number</span> Toggle number within currently selected Cage
-                    Info
-                    tab
-                  </li>
-                  <li>
-                    <span class='keyboard keyboard--cream'>⌘ + ⇧ + ←/→</span> Change selected Cage Info tab
-                  </li>
-                  <li>
-                    <span class='keyboard keyboard--cream'>a</span> Select the Require All tab
-                  </li>
-                  <li>
-                    <span class='keyboard keyboard--cream'>e</span> Select the Eliminate tab
-                  </li>
-                  <li>
-                    <span class='keyboard keyboard--cream'>o</span> Select the Require One tab
-                  </li>
-                </ul>
-              </li>
-            </ul>
-          </div>
-    
+          <ul class='header_dropdown header_dropdown--list'>
+            <li>
+              <span>Rules</span>
+              <div></div>
+            </li>
+            <li>
+              <span>Cages</span>
+              <div></div>
+            </li>
+            <li>
+              <span>Squares</span>
+              <div></div>
+            </li>
+            <li>
+              <span>Keyboard Shortcuts</span>
+              <div></div>
+            </li>
+            <li>
+              <span>Tips and Tricks</span>
+              <div></div>
+            </li>
+          </ul>
+          <!-- <ol class='header_dropdown header_dropdown--list header_dropdown--ordered'>
+            <li>Each row and colum contain each of the numbers 1 through 9, no repeats</li>
+            <li>Cages are outlined in bold. They usually contain 2-4 squares.</li>
+            <li>In the upper left is a result, and an operation. Performing this operation on the numbers in the cage
+              must produce the listed result.</li>
+            <li>E.g. a cage with two squares and label <span>42 x</span> could contain 6 and 7, since 6 * 7 = 42, but
+              not 8 and 5, since 8 * 5 != 42.</li>
+            <li>You can note possible numbers in the box on the left. If you've noted every possibility, hit the
+              checkmark to finalize them.</li>
+          </ol> -->
         </button>
         <button id='header-options' class='header_button'>
           options
@@ -131,23 +95,98 @@
                     </span>
                   </span>
                 </span>
-    
+
                 <!-- option toggle or num input here -->
               </li>
-    
+
             </template>
-    
+
             <template id='option-toggle-template'>
               <span class='toggle toggle--on'>
                 <span class='toggle_circle'></span>
               </span>
             </template>
-    
+
             <template id='option-num-template'>
               <span class='option_num'>
                 <input class='option_num-input'></input>
               </span>
             </template>
+            <!-- 
+            <li class='option'>
+              <span class='option_info'>
+                <span class='option_info-text'>
+                  block contradictory moves
+                </span>
+                <span class='option_hover'>
+                  <i class="info"></i>
+                  <span class='option_hover-text'>
+                    prevents you from entering a number that's eliminated as a possibility
+                  </span>
+                </span>
+              </span>
+              <span id='option-auto-block' class='toggle toggle--on'>
+                <span class='toggle_circle'></span>
+              </span>
+            </li>
+            <li class='option'>
+              <span class='option_info'>
+                auto-eliminate possibilities
+                <span>
+                  <i class="info"></i>
+                  <span class='option_hover-text'>
+                    when you enter a number, remove that number as a possibility from all the squares in the same row or
+                    column
+                  </span>
+                </span>
+              </span>
+              <span id='option-auto-elim' class='toggle toggle--on'>
+                <span class='toggle_circle'></span>
+              </span>
+            </li>
+            <li class='option'>
+              <span class='option_info'>
+                auto-eliminate mathematical impossibilities
+                <span>
+                  <i class="info"></i>
+                  <span class='option_hover-text'>
+                    only certain combinations of numbers can mathematically appear in a cage; eliminate those that can't
+                  </span>
+                </span>
+              </span>
+              <span id='option-auto-elim-math-impossibilities' class='toggle toggle--on'>
+                <span class='toggle_circle'></span>
+              </span>
+            </li>
+            <li class='option'>
+              <span class='option_info'>
+                always show walkthrough
+                <span>
+                  <i class="info"></i>
+                  <span class='option_hover-text'>
+                    always show the walkthrough upon refresh or revisiting this page
+                  </span>
+                </span>
+              </span>
+              <span id='option-walkthrough' class='toggle'>
+                <span class='toggle_circle'></span>
+              </span>
+            </li>
+            <li class='option'>
+              <span class="option_info">
+                max possibilities to display in square
+                <span>
+                  <i class="info"></i>
+                  <span class='option_hover-text'>
+                    don't display the possibilites in the square itself, unless you've narrowed it down to this number
+                    or less
+                  </span>
+                </span>
+              </span>
+              <span id='option-max-possibilities' class='option_num'>
+                <input class='option_num-input'></input>
+              </span>
+            </li> -->
           </ul>
         </button>
       </div>
@@ -177,34 +216,34 @@
             </ol>
           </div>
         </template>
-    
+
         <!-- squares cloned from template go here -->
       </div>
-    
+
       <div class='info-box'>
         <template id='info-label-template'>
           <svg class="info_label" viewBox="0 0 100 28">
             <path d="
-                    M 0,0
-                    h 100
-                    l -12,12
-                    l 12,12
-                    h -100
-                    z
-                  " />
+                M 0,0
+                h 100
+                l -12,12
+                l 12,12
+                h -100
+                z
+              " />
             <polygon points="
-                    0,24
-                    7,24
-                    7,28
-                  " />
+                0,24
+                7,24
+                7,28
+              " />
             <text x="15" y="45%" dominant-baseline="middle">
               <!-- insert text here -->
             </text>
           </svg>
         </template>
-    
+
         <!-- labels cloned from template go here -->
-    
+
         <ol class='square-info'>
           <template id='square-info_possibility-template'>
             <li class='square-info_possibility' data-val=''>
@@ -219,9 +258,9 @@
               </span>
             </li>
           </template>
-    
+
           <!-- possibilities cloned from template go here -->
-    
+
           <button id='square-info_select-only' class='square-info_btn'>
             <i class='select'></i>
           </button>
@@ -229,7 +268,7 @@
             <i class='clear'></i>
           </button>
         </ol>
-    
+
         <div class='collection-info'>
           <div class='collection-combos'>
             <ul class='combos_list'>
@@ -237,11 +276,11 @@
                 <li class='combo' tabindex='-1'>
                 </li>
               </template>
-    
+
               <!-- combos cloned from template go here -->
             </ul>
           </div>
-    
+
           <div class='collection-filter'>
             <ul class='filter-tabs'>
               <button id='filter-and' class='filter_mode-btn'>
@@ -255,7 +294,7 @@
               </button>
               <span id='filter-tab-underline'></span>
             </ul>
-    
+
             <ol class='filter-possibilities'>
               <template id='filter-possibility-template'>
                 <li class='filter-possibility' data-val=''>
@@ -264,9 +303,9 @@
                   <span class='filter-possibility_val'></span>
                 </li>
               </template>
-    
+
               <!-- possibilities cloned from template go here -->
-    
+
               <button id='filter-clear-mode' class='filter_btn'>
                 <i class='reset'></i>
               </button>
@@ -284,6 +323,25 @@
     </a>
   </main>
 
+  <template id='info-label-template'>
+    <svg class="info_label" viewBox="0 0 100 28">
+      <path d="
+        M 0,0
+        h 100
+        l -12,12
+        l 12,12
+        h -100
+        z
+      " />
+      <polygon points="
+        0,24
+        7,24
+        7,28
+      " />
+      <text x="15" y="45%" dominant-baseline="middle"></text>
+    </svg>
+  </template>
+
   <template id='spotlight-template'>
     <svg class='spotlight-frame'>
       <defs>
@@ -294,163 +352,179 @@
       <path fill-rule='evenodd' filter='url(#border)' />
     </svg>
   </template>
-  
+
   <template id='spotlight-caption-template'>
     <div class='spotlight-caption'>
       <div class='caption-controls'>
-        <div>
-          <button id='spotlight-previous'>
-            <span class='keyboard keyboard--inword keyboard--cream'>P</span>revious
-          </button>
-          <button id='spotlight-next'>
-            <span class='keyboard keyboard--inword keyboard--cream'>N</span>ext
-          </button>
-        </div>
-        <button id='spotlight-finish'>
-          <span class='keyboard keyboard--inword keyboard--cream'>F</span>inish
-        </button>
+        <button id='spotlight-previous'>Previous</button>
+        <button id='spotlight-finish'>Finish</button>
+        <button id='spotlight-next'>Next</button>
       </div>
     </div>
   </template>
-  
+
   <template id='caption-content-intro-template'>
     <div class='caption-content caption-content--intro'>
       <h1>Welcome to Arithmedoku!</h1>
       <p>
-        Let's start with a walkthrough. Navigate the walkthrough with the
-        <strong>Next</strong> and
-        <strong>Previous</strong>
-        buttons, or skip by clicking <strong>Finish</strong>.
+        Glad to see you! Let's start with a walkthrough. The buttons
+        <strong>Next</strong> and <strong>Previous</strong>
+        below will go forward or back a step in the walkthrough. You can skip
+        the walkthrough by clicking
+        <strong>Finish</strong>.
+      </p>
+      <p>
+        Just as a heads up, the puzzle and all the controls and buttons are
+        non-interactive during the walkthrough.
       </p>
     </div>
   </template>
-  
+
   <template id='caption-content-puzzle-template'>
     <div class='caption-content caption-content--puzzle'>
       <p>
-        This is the <strong>puzzle</strong>. Your goal is to fill every square with the
-        correct number. Every row and column must contain the numbers 1 through 9, no repeats.
+        On our left is the puzzle. Your goal is to fill every square with the
+        correct number.
+      </p>
+      <p>
+        Every row and column must contain the numbers 1 through 9, no repeats.
       </p>
     </div>
   </template>
-  
+
   <template id='caption-content-cage-template'>
     <div class='caption-content caption-content--cage'>
       <p>
-        This is a <strong>cage</strong>. Each cage has an arithmetic operation and
-        result written in its upper left corner.
+        This is a <strong>cage</strong>. Each cage has an associated
+        mathematical operation and result written in its upper left corner.
       </p>
       <p>
-        Performing this operation on the
-        numbers in the cage <em>must</em> yield the listed result.
+        Performing the operation on the numbers in the cage <em>must</em> yield
+        the listed result.
       </p>
       <p>
-        So in this cage, the three squares must add up to 15.
+        For this cage, the operation is <strong>+</strong> and the result is
+        <strong>15</strong>. So the three squares must add up to 15.
       </p>
     </div>
   </template>
-  
+
   <template id='caption-content-info-template'>
     <div class='caption-content caption-content--info'>
       <p>
-        This is the <strong>info box</strong>, where you can reason
-        about the puzzle, narrowing down which numbers can appear in a square
-        and which combinations of numbers can appear in a cage.
+        This is the <strong>Info Box</strong>. Here is where you can reason
+        about the puzzle, narrowing down which numbers could appear in a square
+        and which combinations of numbers could appear in a cage.
       </p>
     </div>
   </template>
-  
+
   <template id='caption-content-cage-info-combos-template'>
     <div class='caption-content caption-content--cage-info-combos'>
       <p>
-        This is the <strong>cage info</strong> section. On top, we have
-        a list of every possible combination of numbers that could appear in the
-        current cage.
+        At the top of the cage section of the Info Box, we have a list of every
+        possible combination of numbers that could appear in the current cage.
       </p>
       <p>
         This list is currently filtered to only show combinations that are
         mathematically possible (i.e. numbers that add up to 15), but this is an
         option you can turn off.
       </p>
+      <p>
+        At the bottom, we have 3 tabs, representing 3 different ways we can
+        narrow down our possible combinations.
+      </p>
     </div>
   </template>
-  
+
   <template id='caption-content-cage-info-tabs-template'>
     <div class='caption-content caption-content--cage-info-tabs'>
       <p>
-        At the bottom, we have 3 tabs, representing 3 different ways we can narrow
-        down our possible combinations.
+        At the top of the cage section of the Info Box, we have a list of every
+        possible combination of numbers that could appear in the current cage.
       </p>
       <p>
-        In the new few steps, pay attention to how
-        the list up top changes when we select numbers under the different tabs.
+        This list is currently filtered to only show combinations that are
+        mathematically possible (i.e. numbers that add up to 15), but this is an
+        option you can turn off.
+      </p>
+      <p>
+        At the bottom, we have 3 tabs, representing 3 different ways we can
+        narrow down our possible combinations.
       </p>
     </div>
   </template>
-  
+
   <template id='caption-content-cage-info-and-template'>
     <div class='caption-content caption-content--cage-info-and'>
       <ol>
         <li>
-          <strong>Require All</strong>: all the selected numbers
-          must appear in the current cage. (We've narrowed the possible combinations to
-          those with a <strong>4</strong>.)
+          <strong>Require All</strong>: here we choose numbers that
+          <em>must</em> appear in this cage.
         </li>
       </ol>
+      <p>Currently, we've selected <em>4</em> (you can toggle a selection by
+        just clicking the number). Notice our list of possible combinations now
+        only includes those with a 4.</p>
     </div>
   </template>
-  
+
   <template id='caption-content-cage-info-not-template'>
     <div class='caption-content caption-content--cage-info-not'>
       <ol>
         <li>
-          <strong>Require All</strong>: all the selected numbers
-          must appear in the current cage.
+          <strong>Require All</strong>: here we choose numbers that
+          <em>must</em> appear in this cage.
         </li>
         <li>
-          <strong>Eliminate</strong>: none of the selected numbers
-          can appear in the current cage. (We've eliminated combinations with
-          <strong>1</strong>, <strong>6</strong>, or <strong>8</strong>.)
+          <strong>Eliminate</strong>: here we choose numbers that
+          <em>cannot</em> appear in this cage.
         </li>
       </ol>
+      <p>
+        Currently, we've selected <em>1</em>, <em>6</em>, and<em>8</em>; do you
+        see how that changed our list of possible combinations?
+      </p>
     </div>
   </template>
-  
+
   <template id='caption-content-cage-info-or-template'>
     <div class='caption-content caption-content--cage-info-or'>
       <ol>
         <li>
-          <strong>Require All</strong>: all the selected numbers
-          must appear in the current cage.
+          <strong>Require All</strong>: here we choose numbers that
+          <em>must</em> appear in this cage.
         </li>
         <li>
-          <strong>Eliminate</strong>: none of the selected numbers
-          can appear in the current cage.
+          <strong>Eliminate</strong>: here we choose numbers that
+          <em>cannot</em> appear in this cage.
         </li>
         <li>
-          <strong>Require One</strong>: at least one of the selected numbers must
-          appear in the current cage. (We've narrowed the possible combinations to
-          those with either a
-          <strong>2</strong> or a <strong>7</strong>.)
+          <strong>Require One</strong>: here we pick a set of numbers, at least
+          <em>one</em> of which <em>must</em> appear in this cage.
         </li>
       </ol>
+      <p>
+        Currently, we've selected <em>2</em> and <em>7</em>, so our list of
+        possible combinations now only includes that contain 2 <em>or</em> 7.
+      </p>
     </div>
   </template>
-  
+
   <template id='caption-content-cage-info-all-filters-template'>
     <div class='caption-content caption-content--cage-info-all-filters'>
       <ol>
         <li>
-          <strong>Require All</strong>: all the selected numbers
-          must appear in the current cage.
+          <strong>Require All</strong>: here we choose numbers that
+          <em>must</em> appear in this cage.
         </li>
         <li>
-          <strong>Eliminate</strong>: none of the selected numbers
-          can appear in the current cage.
+          <strong>Eliminate</strong>: here we choose numbers that
+          <em>cannot</em> appear in this cage.
         </li>
         <li>
-          <strong>Require One</strong>: at least one of the selected numbers must
-          appear in the current cage.
+          <strong>Require One</strong>: here we pick a set of numbers, at least
+          <em>one</em> of which <em>must</em> appear in this cage.
         </li>
       </ol>
       <p>
@@ -459,49 +533,54 @@
       </p>
     </div>
   </template>
-  
+
   <template id='caption-content-square-info-template'>
     <div class='caption-content caption-content--square-info'>
       <p>
-        This is the <strong>square info</strong> section. Click a
-        number to toggle whether it's a possibility for the current square.
+        This is the area of the Info Box where we can reason about an individual square or squares. We see listed every
+        possible number that can appear in this square.
       </p>
       <p>
-        The faded out numbers are those that can't appear in the square because
-        they don't appear in any possible combination for the current cage.
+        The faded out numbers are those that can't appear in the square because they don't appear in any possible
+        combination.
       </p>
       <p>
-        Notice that, once a square has been narrowed down to just a few possible
-        numbers, they appear within the square in the puzzle!
+        The red numbers, 4 and 6, are those that we've manually eliminated as possibilities. Just click a number to
+        toggle it from possible to eliminated, or vice versa.
+      </p>
+      <p>
+        This leaves us with just 2, 7, and 9 as viable possibilities. Notice that those numbers appear in the square
+        itself on the left. Once you've narrowed things down to just a few possibilities, they'll show up in the square.
       </p>
     </div>
   </template>
-  
+
   <template id='caption-content-selection-info-template'>
     <div class='caption-content caption-content--selection-info'>
       <p>
-        You can also select multiple squares. Hold command and click another
-        square to add it to the current selection, or hold shift to select all the
-        squares in between. Then, you can batch eliminate possibilities. Cool!
+        You can also select multiple squares. Hold down shift and click a square to select everything through that
+        square; hold down command and click a square to just select that square. Then, you can batch eliminate
+        possibilities. Cool!
       </p>
     </div>
   </template>
-  
+
+  <!-- <template id='caption-content-collection-info-template'>
+    <div class='caption-content caption-content--collection-info'>
+      This is info about a cage.
+    </div>
+  </template> -->
+
   <template id='caption-content-instructions-template'>
     <div class='caption-content caption-content--instructions'>
-      <p>
-        If you ever need to revisit the instructions, just go here. It contains all the info from the walkthrough, plus
-        more! Or, if you'd rather go through this walkthrough again, just refresh the page.
-      </p>
-      <p>
-        Good luck!
-      </p>
+      If you ever need to revisit the instructions, just go here. It contains all the info from the walkthrough, plus
+      nifty keyboard shortcuts and other tips and tricks!
     </div>
   </template>
-  
+
   <template id='caption-content-options-template'>
     <div class='caption-content caption-content--options'>
-      Here's the options menu. Hover over the info icon next to each option to learn what it does!
+      Here's the options menu.
     </div>
   </template>
 </body>

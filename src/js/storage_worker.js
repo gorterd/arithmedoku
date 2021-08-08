@@ -1,4 +1,4 @@
-const DB_NAME = 'arithmethdoku'
+const DB_NAME = 'arithmedoku'
 const STORE_NAME = 'savedData'
 
 let db
