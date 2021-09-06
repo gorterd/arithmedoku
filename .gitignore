@@ -1,4 +1,6 @@
 node_modules/
 experimental/
-tmp
+tmp/
+src/hbs/
 .vscode/
+dev/
