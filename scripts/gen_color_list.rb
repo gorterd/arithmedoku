@@ -1,20 +1,20 @@
-COLOR_FILE = "#{__dir__}/../src/styles/base/colors.scss"
-COLOR_REGEX = /^\$(?<color>(\w|-)+): (hsl|rgb).*;/
+require_relative 'shared'
 
-color_lines = File.readlines(COLOR_FILE).take_while do |ln| 
-  !ln.include?('/* Color Palette */')
+num_spaces = { js: 4, scss: 2 }.merge(get_named_args('js', 'scss'))
+
+colors = File.readlines("#{SCSS_DIR}/base/colors.scss")
+  .take_while { |ln| !ln.include?('/* Color Palette */') } 
+  .filter_map { |ln| /^\$(?<color>(\w|-)+): (hsl|rgb).*;/.match(ln) }
+  .map { |match| match[:color] }
+
+format_colors = proc do |key, format|
+  indent = ' ' * num_spaces[key].to_i
+  colors.map { |color| indent + format.gsub('?', color) }.join("\n")
 end
 
-colors = color_lines.each_with_object([]) do |ln, colors|
-  color_match = COLOR_REGEX.match(ln)
-  colors << color_match[:color] if color_match
-end
-
-js_colors = colors.map { |c| "    '#{c}',\n" }.join('')
-scss_colors = colors.map { |c| "  '#{c}': $#{c},\n" }.join('')
-
-puts 'JS COLORS'
-print js_colors
-puts
-puts 'SCSS COLORS'
-print scss_colors
+puts <<~HERE
+  JS COLORS
+  #{format_colors.call(:js, "'?',")}
+  SCSS COLORS
+  #{format_colors.call(:scss, "'?': $?,")}
+HERE
