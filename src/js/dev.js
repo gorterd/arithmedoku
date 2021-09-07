@@ -23,6 +23,7 @@ export const setupDev = (game) => {
   window.lru = LRUCache
   window.getSnap = getSnapshot
   window.applySnap = applySnapshot
+  document.body.style.overflow = 'initial'
 }
 
 export const devLog = (...args) => {
