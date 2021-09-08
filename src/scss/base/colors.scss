@@ -40,7 +40,7 @@ $green-2: hsl(140, 80%, 45%);
 $green-3: hsl(140, 80%, 40%);
 $green-4: hsl(140, 80%, 25%);
 
-$cream-1: hsl(36, 100%, 98%);
+$cream-1: hsl(36, 100%, 97%);
 $cream-2: hsl(36, 100%, 94%);
 $cream-3: hsl(36, 100%, 88%);
 $cream-4: hsl(36, 100%, 83%);
@@ -48,6 +48,8 @@ $cream-5: hsl(36, 100%, 78%);
 $cream-6: hsl(36, 100%, 73%);
 $cream-7: hsl(36, 90%, 55%);
 $cream-8: hsl(36, 90%, 45%);
+$cream-9: hsl(36, 30%, 50%);
+$cream-10: hsl(36, 30%, 40%);
 
 $cappuccino-1: hsl(36, 100%, 30%);
 $cappuccino-2: hsl(36, 100%, 25%);
@@ -58,6 +60,7 @@ $cappuccino-3: hsl(36, 100%, 18%);
 $colors: (
   'light-brick-1': $light-brick-1,
   'light-brick-2': $light-brick-2,
+  'light-brick-2-transparent': $light-brick-2-transparent,
   'light-brick-3': $light-brick-3,
   'light-brick-4': $light-brick-4,
   'light-brick-5': $light-brick-5,
@@ -66,6 +69,7 @@ $colors: (
   'brick-1': $brick-1,
   'brick-2': $brick-2,
   'violet-1': $violet-1,
+  'violet-1-transparent': $violet-1-transparent,
   'violet-2': $violet-2,
   'violet-3': $violet-3,
   'violet-4': $violet-4,
@@ -97,6 +101,8 @@ $colors: (
   'cream-6': $cream-6,
   'cream-7': $cream-7,
   'cream-8': $cream-8,
+  'cream-9': $cream-9,
+  'cream-10': $cream-10,
   'cappuccino-1': $cappuccino-1,
   'cappuccino-2': $cappuccino-2,
   'cappuccino-3': $cappuccino-3,
@@ -110,6 +116,7 @@ $colors: (
 #color-palette {
   display: flex;
   flex-wrap: wrap;
+  margin-bottom: 50px;
 
   &.hidden {
     display: none;
@@ -147,39 +154,3 @@ $colors: (
     background-color: $color;
   }
 }
-
-/* DEPRECATED
-
-$forest: hsl(126°, 80%, 35%);
-
-$rose-lighter: #fff7f6;
-$rose-light: #ffe0dd;
-$rose: #ffc9c3;
-$rose-dark: #ffb2aa;
-$rose-darker: #ff9b90;
-$rose-darker2: #ff8477;
-
-$ruby: #990f00;
-$ruby-dark: #800d00;
-
-$cream-lighter: #fffbf6;
-$cream-light: #fff1dd;
-$cream: #ffe7c3;
-$cream-dark: #ffddaa;
-$cream-darker: #ffd390;
-$cream-darker2: #ffc877;
-$cream-darker3: #f4a125;
-
-$robin-lighter: #f6feff;
-$robin-light: #ddfcff;
-$robin: #c3f9ff;
-$robin-dark: #aaf6ff;
-$robin-darker: #90f4ff;
-
-$cappuccino: hsl(36, 100%, 30%);
-$cappuccino-dark: hsl(36, 100%, 25%);
-$cappuccino-darker: hsl(36, 100%, 18%);
-
-$mint: #c3ffc9;
-*/
-

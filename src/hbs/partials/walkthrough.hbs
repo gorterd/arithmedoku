@@ -1,0 +1,230 @@
+<template id='spotlight-template'>
+  <svg class='spotlight-frame'>
+    <defs>
+      <filter id='border'>
+        <feGaussianBlur stdDeviation='2' />
+      </filter>
+    </defs>
+    <path fill-rule='evenodd' filter='url(#border)' />
+  </svg>
+</template>
+
+<template id='spotlight-caption-template'>
+  <div class='spotlight-caption'>
+    <div class='caption-controls'>
+      <div>
+        <button id='spotlight-previous'>
+          <i class='fas fa-arrow-left'></i>
+        </button>
+        <button id='spotlight-next'>
+          <i class='fas fa-arrow-right'></i>
+        </button>
+      </div>
+      <button id='spotlight-finish'>
+        Done
+      </button>
+    </div>
+  </div>
+</template>
+
+<template id='caption-content-intro-template'>
+  <div class='caption-content caption-content--intro'>
+    <h1>Welcome to Arithmedoku!</h1>
+    <p>
+      Let's start with a walkthrough!
+    </p>
+    <p>
+      Go forward and back with the <strong>→</strong> and <strong>←</strong>
+      buttons, or by using your arrow keys.
+    </p>
+    <p>
+      Click <strong>Done</strong> or hit Enter to finish the walkthrough.
+    </p>
+  </div>
+</template>
+
+<template id='caption-content-puzzle-template'>
+  <div class='caption-content caption-content--puzzle'>
+    <p>
+      This is the <strong>puzzle</strong>. Your goal is to fill every square with the
+      correct number. Every row and column must contain the numbers 1 through 9, no repeats.
+    </p>
+  </div>
+</template>
+
+<template id='caption-content-cage-template'>
+  <div class='caption-content caption-content--cage'>
+    <p>
+      This is a <strong>cage</strong>. Each cage has an arithmetic operation and
+      result written in its upper left corner.
+    </p>
+    <p>
+      Performing this operation on the
+      numbers in the cage <em>must</em> yield the listed result.
+    </p>
+    <p>
+      So in this cage, the three squares must add up to 15.
+    </p>
+  </div>
+</template>
+
+<template id='caption-content-info-template'>
+  <div class='caption-content caption-content--info'>
+    <p>
+      This is the <strong>info box</strong>, where you can reason
+      about the puzzle, narrowing down which numbers can appear in a square
+      and which combinations of numbers can appear in a cage.
+    </p>
+  </div>
+</template>
+
+<template id='caption-content-cage-info-combos-template'>
+  <div class='caption-content caption-content--cage-info-combos'>
+    <p>
+      This is the <strong>cage info</strong> section. On top, we have
+      a list of every possible combination of numbers that could appear in the
+      current cage.
+    </p>
+    <p>
+      This list is currently filtered to only show combinations that are
+      mathematically possible (i.e. numbers that add up to 15), but this is an
+      option you can turn off.
+    </p>
+  </div>
+</template>
+
+<template id='caption-content-cage-info-tabs-template'>
+  <div class='caption-content caption-content--cage-info-tabs'>
+    <p>
+      At the bottom, we have 3 tabs, representing 3 different ways we can narrow
+      down our possible combinations.
+    </p>
+    <p>
+      In the new few steps, pay attention to how
+      the list up top changes when we select numbers under the different tabs.
+    </p>
+  </div>
+</template>
+
+<template id='caption-content-cage-info-and-template'>
+  <div class='caption-content caption-content--cage-info-and'>
+    <ol>
+      <li>
+        <strong>Require All</strong>: all the selected numbers
+        must appear in the current cage. (We've narrowed the possible combinations to
+        those with a <strong>4</strong>.)
+      </li>
+    </ol>
+  </div>
+</template>
+
+<template id='caption-content-cage-info-not-template'>
+  <div class='caption-content caption-content--cage-info-not'>
+    <ol>
+      <li>
+        <strong>Require All</strong>: all the selected numbers
+        must appear in the current cage.
+      </li>
+      <li>
+        <strong>Eliminate</strong>: none of the selected numbers
+        can appear in the current cage. (We've eliminated combinations with
+        <strong>1</strong>, <strong>6</strong>, or <strong>8</strong>.)
+      </li>
+    </ol>
+  </div>
+</template>
+
+<template id='caption-content-cage-info-or-template'>
+  <div class='caption-content caption-content--cage-info-or'>
+    <ol>
+      <li>
+        <strong>Require All</strong>: all the selected numbers
+        must appear in the current cage.
+      </li>
+      <li>
+        <strong>Eliminate</strong>: none of the selected numbers
+        can appear in the current cage.
+      </li>
+      <li>
+        <strong>Require One</strong>: at least one of the selected numbers must
+        appear in the current cage. (We've narrowed the possible combinations to
+        those with either a
+        <strong>2</strong> or a <strong>7</strong>.)
+      </li>
+    </ol>
+  </div>
+</template>
+
+<template id='caption-content-cage-info-all-filters-template'>
+  <div class='caption-content caption-content--cage-info-all-filters'>
+    <ol>
+      <li>
+        <strong>Require All</strong>: all the selected numbers
+        must appear in the current cage.
+      </li>
+      <li>
+        <strong>Eliminate</strong>: none of the selected numbers
+        can appear in the current cage.
+      </li>
+      <li>
+        <strong>Require One</strong>: at least one of the selected numbers must
+        appear in the current cage.
+      </li>
+    </ol>
+    <p>
+      With all our filters combined, we've narrowed things down to 2 possible
+      combinations. Nice!
+    </p>
+  </div>
+</template>
+
+<template id='caption-content-square-info-template'>
+  <div class='caption-content caption-content--square-info'>
+    <p>
+      This is the <strong>square info</strong> section. Click a
+      number to toggle whether it's a possibility for the current square.
+    </p>
+    <p>
+      The faded out numbers are those that can't appear in the square because
+      they don't appear in any possible combination for the current cage.
+    </p>
+    <p>
+      Notice that, once a square has been narrowed down to just a few possible
+      numbers, they appear within the square in the puzzle!
+    </p>
+  </div>
+</template>
+
+<template id='caption-content-selection-info-template'>
+  <div class='caption-content caption-content--selection-info'>
+    <p>
+      You can also select multiple squares. Hold command and click another
+      square to add it to the current selection, or hold shift to select all the
+      squares in between. Then, you can batch eliminate possibilities. Cool!
+    </p>
+  </div>
+</template>
+
+<template id='caption-content-instructions-template'>
+  <div class='caption-content caption-content--instructions'>
+    <p>
+      Lastly, the instructions dropdown contains the key info from the walkthrough, plus more.
+    </p>
+    <p>
+      Be sure to check out the keyboard shortcuts!
+    </p>
+    <p>
+      If you'd like to go through this walkthrough again, just refresh the page! (Or turn off the walkthrough in
+      options.)
+    </p>
+    <p>
+      Good luck!
+    </p>
+  </div>
+</template>
+
+<template id='caption-content-options-template'>
+  <div class='caption-content caption-content--options'>
+    This is the options menu. Hover over the info icon next to each option to learn what it does!
+  </div>
+</template>

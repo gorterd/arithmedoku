@@ -13,7 +13,6 @@ export default function setupDOM({ globals, templates }) {
   setupFilterPossibilities(globals, templates)
   setupLabels(templates)
   setupIcons()
-  setupLocalizations()
 
   return getElements()
 }
@@ -79,12 +78,6 @@ function setupFilterPossibilities(globals, templates) {
 
   document.querySelector('.filter-possibilities')
     .prepend(filterPossibilities)
-}
-
-function setupLocalizations() {
-  const metaKey = window.navigator.platform.startsWith('Win') ? '⌃' : '⌘'
-  document.querySelector('#header-undo .keyboard').innerText = `${metaKey}z`
-  document.querySelector('#header-redo .keyboard').innerText = `${metaKey}y`
 }
 
 function setupLabels(templates) {

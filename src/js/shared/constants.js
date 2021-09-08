@@ -19,4 +19,7 @@ export const ICONS = {
   reset: 'fas fa-undo-alt',
   select: 'far fa-check-circle',
   confirm: 'fas fa-check-circle',
+  github: 'fab fa-github',
+  linkedin: 'fab fa-linkedin',
+  angel: 'fab fa-angellist',
 }

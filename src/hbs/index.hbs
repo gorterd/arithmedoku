@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='UTF-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+
+  <meta property='og:image' content='dist/images/preview.png'>
+  <meta property='og:description' content="Arithmedoku is inspired by KenKen, a
+  Sudoku-like puzzle game with a fun math twist. It's beginner-friendly, yet
+  packed with nifty tools for power solvers.">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="fa{vicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+  <link rel="manifest" href="favicon/site.webmanifest">
+
+  <link rel='stylesheet' href='dist/main.css'>
+  <script src='https://kit.fontawesome.com/24cc9dca36.js' crossorigin='anonymous'></script>
+  <script src='dist/main.js' defer></script>
+  <title>Arithmedoku</title>
+</head>
+
+<body>
+  <main class='app'>
+
+    {{> partials/header }}
+
+
+    {{> partials/game }}
+
+
+    {{> partials/footer }}
+
+  </main>
+
+  <p id='no-render'>
+    Unfortunately, Arithmedoku cannot render at this width. Your window must be at
+    least 900px wide.
+
+    If you are viewing this on mobile, please switch to a laptop or desktop.
+  </p>
+
+  {{> partials/walkthrough }}
+
+</body>
+
+</html>

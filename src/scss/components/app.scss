@@ -1,15 +1,31 @@
-.game {
+body {
+  background-color: $cream-1;
+  font-family: sans-serif;  
+  min-height: 100vh;
+  overflow: hidden;
   display: flex;
-  justify-content: space-evenly;
   align-items: center;
+  justify-content: center;
 }
 
-#attribution {
-  position: absolute;
-  bottom: 5px;
-  right: 5px;
+.app {
+  width: $w-app;;
+  position: relative;
 
-  &:hover {
-    text-decoration: underline;
+  @include hide-on-small-screen
+}
+
+#no-render {
+  display: none;
+
+  @include small-screen {
+    display: block;
+    width: 300px;    
   }
+}
+
+.game {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }

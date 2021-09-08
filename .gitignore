@@ -1,6 +1,5 @@
 node_modules/
 experimental/
 tmp/
-src/hbs/
 .vscode/
 dev/

@@ -1,0 +1,11 @@
+@mixin small-screen {
+  @media (max-width: 900px) {
+    @content;
+  }
+}
+
+@mixin hide-on-small-screen {
+  @include small-screen { 
+    display: none;
+  }
+}

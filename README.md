@@ -1,7 +1,7 @@
 ## Background and Overview 
 
 Arithmedoku is inspired by the popular puzzle game [KenKen][kenken], a
-sudoku-like game with a math twist, invented by Japanese math teacher [Tetsuya
+Sudoku-like game with a math twist, invented by Japanese math teacher [Tetsuya
 Miyamoto][miyamoto]
 
 

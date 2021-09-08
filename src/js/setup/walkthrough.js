@@ -53,9 +53,9 @@ export default (game) => new Promise(resolve => {
 
   const handleKeydown = e => {
     stringSwitch(e.code, ({ _case }) => {
-      _case('KeyN', next)
-      _case('KeyP', prev)
-      _case('KeyF', finish)
+      _case('ArrowRight', next)
+      _case('ArrowLeft', prev)
+      _case('Enter', finish)
     })
   }
 

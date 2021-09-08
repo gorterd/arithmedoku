@@ -1,13 +1,10 @@
-// import remotedev from 'remotedev'
 import {
   unprotect,
   applySnapshot,
   getSnapshot
 } from 'mobx-state-tree'
-// import { connectReduxDevtools } from 'mst-middlewares'
-import LRUCache from './shared/lru_cache'
 import './shared/spotlight'
-import Spotlight from './shared/spotlight'
+
 
 let devFlag = false
 export const activateDevFlag = () => devFlag = true
@@ -15,15 +12,13 @@ export const activateDevFlag = () => devFlag = true
 export const setupDev = (game) => {
   if (!devFlag) return
 
-  // connectReduxDevtools(remotedev, game.gameStore)
   unprotect(game.gameStore)
   setupPalette()
 
   window.gs = game.gameStore
-  window.lru = LRUCache
   window.getSnap = getSnapshot
   window.applySnap = applySnapshot
-  document.body.style.overflow = 'initial'
+  document.body.style.overflow = 'auto'
 }
 
 export const devLog = (...args) => {
@@ -35,6 +30,7 @@ function setupPalette() {
   const COLORS = [
     'light-brick-1',
     'light-brick-2',
+    'light-brick-2-transparent',
     'light-brick-3',
     'light-brick-4',
     'light-brick-5',
@@ -43,13 +39,13 @@ function setupPalette() {
     'brick-1',
     'brick-2',
     'violet-1',
+    'violet-1-transparent',
     'violet-2',
     'violet-3',
     'violet-4',
     'light-ocean-1',
     'light-ocean-2',
     'light-ocean-2-transparent',
-    'light-ocean-2-semi-transparent',
     'light-ocean-3',
     'light-ocean-4',
     'light-ocean-5',
@@ -75,13 +71,12 @@ function setupPalette() {
     'cream-6',
     'cream-7',
     'cream-8',
+    'cream-9',
+    'cream-10',
     'cappuccino-1',
     'cappuccino-2',
     'cappuccino-3',
   ]
-
-  const togglePalette = document.createElement('button')
-  togglePalette.innerText = 'Toggle Palette'
 
   const palette = document.createElement('section')
   palette.className = 'hidden'
@@ -109,9 +104,10 @@ function setupPalette() {
   palette.appendChild(testDiv)
   testDiv.onclick = () => testDiv.classList.toggle('test-color-div')
 
-  togglePalette.addEventListener('click', () => {
-    palette.classList.toggle('hidden')
+  document.addEventListener('keydown', e => {
+    if (e.code === 'KeyP') palette.classList.toggle('hidden')
   })
-  document.body.append(togglePalette, palette)
+
+  document.querySelector('.app').append(palette)
 }
 

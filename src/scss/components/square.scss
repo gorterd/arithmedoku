@@ -1,5 +1,4 @@
 .square {
-  // @include large($sm-pz-size, 9);
   @include coord-grid-element(9, 9);
   position: relative;
   display: flex;
@@ -94,35 +93,3 @@
   font-size: $fnt-sz-square-label;
   user-select: none;
 }
-
-// @media only screen 
-// and (min-width: $breakpoint-1) 
-// and (max-width: $breakpoint-2) {
-
-//   .square {
-//     @include large($md-pz-size, 9)
-//   }
-
-//   .square_label {
-//     @include small($md-pz-size, 9)
-//   }
-
-//   .square_possibilities {
-//     @include small($md-pz-size, 9);
-//   }
-// }
-
-// @media only screen and (min-width: $breakpoint-2){
-//   .square {
-//     @include large($lg-pz-size, 9)
-//   }
-
-//   .square_label{
-//     @include small($lg-pz-size, 9)
-//   }
-
-//   .square_possibilities {
-//     @include small($lg-pz-size, 9);
-//   }
-// }
-

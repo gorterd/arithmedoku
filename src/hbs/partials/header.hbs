@@ -1,0 +1,217 @@
+<header class='header'>
+  <div class='header_left'>
+    <button id='header-about' class='header_button'>
+      about
+      <div class='header_dropdown header_dropdown--info'>
+        <p>
+          Arithmedoku is inspired by the popular puzzle game
+          <a href='https://en.wikipedia.org/wiki/KenKen'>KenKen</a>,
+          a Sudoku-like game with a math twist, invented by Japanese math teacher
+          <a href='https://en.wikipedia.org/wiki/Tetsuya_Miyamoto'>Tetsuya Miyamoto</a>.
+        </p>
+
+        <p>
+          All of the puzzles in Arithmedoku were written by Jim Bumgardner, aka Krazydad. He calls them Inkies. From
+          the Krazydad
+          <a href='https://krazydad.com/about.php'>about page</a>:
+        </p>
+
+        <blockquote>
+          This website has been offering free puzzles to the public since 2005. My mission is to provide puzzles to
+          under-served groups that need them, including prisoners, pensioners, home-schoolers, hospitals, churches,
+          and classrooms. There are currently about two million individual puzzles on the site, and over sixty
+          unique varieties.
+        </blockquote>
+
+        <p>
+          Check out the
+          <a href='https://krazydad.com/'>Krazydad website</a>, or
+          <a href='https://krazydad.com/inkies/'>find more Inkies</a>.
+        </p>
+      </div>
+    </button>
+    <button id='header-instructions' class='header_button'>
+      instructions
+      <div class='header_dropdown header_dropdown--list'>
+        <ul class='instructions-inner'>
+          <li class='instruction-section show'>
+            <h1 class='show'>Rules</h1>
+            <ul>
+              <li> Each row and column must contain each of the numbers 1 through 9, no repeats.</li>
+              <li> In the upper left of each cage is an arithmetic operation and result.
+                Performing this operation on the numbers in the cage must yield the listed
+                result.
+              </li>
+              <li> Click a square to select it, then use your arrows keys to move around. Place a number in a square
+                using your keyboard.</li>
+            </ul>
+          </li>
+          <li class='instruction-section'>
+            <h1>Info Box: Cage</h1>
+            <ul>
+              <li>
+                At the top is a list of all the possible combinations you think
+                can appear in the currently selected square's cage.. At the
+                bottom are 3 tabs for filtering this list of combinations. (You
+                can also directly eliminate a possible combination by clicking
+                it.)
+              </li>
+              <li>
+                <strong>Require All</strong>: all the selected numbers
+                must appear in the current cage.
+              </li>
+              <li>
+                <strong>Eliminate</strong>: none of the selected numbers
+                can appear in the current cage.
+              </li>
+              <li>
+                <strong>Require One</strong>: at least one of the selected numbers must
+                appear in the current cage.
+              </li>
+            </ul>
+          </li>
+          <li class='instruction-section'>
+            <h1>Info Box: Square</h1>
+            <ul>
+              <li>
+                Click a number to toggle whether it's a possibility for the
+                currently selected square.
+              </li>
+              <li>
+                The faded out numbers are those that can't appear in the square
+                because they don't appear in any possible combination for the
+                current cage.
+              </li>
+              <li>
+                Notice that, once a square has been narrowed down to just a few
+                possible numbers, they appear within the square in the puzzle!
+              </li>
+              <li>
+                You can also select multiple squares to batch eliminate
+                possibilities. Hold command and click another square to add it
+                to the current selection, or hold shift to select all the
+                squares in between.
+              </li>
+            </ul>
+          </li>
+          <li class='instruction-section'>
+            <h1>Keyboard Shortcuts</h1>
+            <ul class='shortcuts'>
+              <li>
+                <span class='keyboard keyboard--cream'>←↑↓→</span>
+                <span>
+                  Change selected square
+                </span>
+              </li>
+              <li>
+                <span class='keyboard keyboard--cream'>Ctrl + number</span>
+                <span>
+                  Toggle possible number for current square
+                </span>
+              </li>
+              <li>
+                <span class='keyboard keyboard--cream'>Alt + number</span>
+                <span>
+                  Hold Alt & select numbers to rule *in* as
+                  possibilities for current square (eliminates
+                  every other number)
+                </span>
+              </li>
+              <li>
+                <span>
+                  <span class='keyboard keyboard--cream'>Cmd + z</span> /
+                  <span class='keyboard keyboard--cream'>Ctrl + z</span>
+                </span>
+                <span>
+                  Undo last move
+                </span>
+              </li>
+              <li>
+                <span>
+                  <span class='keyboard keyboard--cream'>Cmd + y</span> /
+                  <span class='keyboard keyboard--cream'>Ctrl + y</span>
+                </span>
+                <span>
+                  Redo last move
+                </span>
+              </li>
+              <li>
+                <span class='keyboard keyboard--cream'>Shift + number</span>
+                <span>
+                  Toggle number within currently selected Cage Info tab
+                </span>
+              </li>
+              <li>
+                <span class='keyboard keyboard--cream'>Cmd + Shift + ←/→</span>
+                <span>
+                  Change selected Cage Info tab
+                </span>
+              </li>
+              <li>
+                <span class='keyboard keyboard--cream'>a</span>
+                <span>
+                  Select the Require All tab
+                </span>
+              </li>
+              <li>
+                <span class='keyboard keyboard--cream'>e</span>
+                <span>
+                  Select the Eliminate tab
+                </span>
+              </li>
+              <li>
+                <span class='keyboard keyboard--cream'>o</span>
+                <span>
+                  Select the Require One tab
+                </span>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+
+    </button>
+    <button id='header-options' class='header_button'>
+      options
+      <ul class='header_dropdown header_dropdown--list'>
+        <template id='option-template'>
+          <li class='option'>
+            <span class='option_info'>
+              <span class='option_info-text'>
+                <!-- insert text here -->
+              </span>
+              <span class='option_hover'>
+                <i class="info"></i>
+                <span class='option_hover-text'>
+                  <!-- insert text here -->
+                </span>
+              </span>
+            </span>
+
+            <!-- option toggle or num input here -->
+          </li>
+
+        </template>
+
+        <template id='option-toggle-template'>
+          <span class='toggle toggle--on'>
+            <span class='toggle_circle'></span>
+          </span>
+        </template>
+
+        <template id='option-num-template'>
+          <span class='option_num'>
+            <input class='option_num-input'></input>
+          </span>
+        </template>
+      </ul>
+    </button>
+  </div>
+  <h1 id='title'>Arithmedoku</h1>
+  <div class='header_right'>
+    <button id='header-undo' class='header_button'>undo</button>
+    <button id='header-redo' class='header_button'>redo</button>
+    <button id='header-new' class='header_button'>new</button>
+    <button id='header-reset' class='header_button'>reset</button>
+  </div>
+</header>

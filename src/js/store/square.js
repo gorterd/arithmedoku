@@ -1,7 +1,18 @@
-import { flow, setLivelinessChecking, types } from 'mobx-state-tree'
+import { flow, types } from 'mobx-state-tree'
 import { ICONS } from '../shared/constants'
-import { wait, classes, arrayUnion, togglePresenceInArray, pushIfNotIncluded, removeFromArray, generateClassName } from '../shared/general_util'
-import { Id, Position, GameBase } from './base'
+import {
+  wait,
+  arrayUnion,
+  togglePresenceInArray,
+  pushIfNotIncluded,
+  removeFromArray,
+  generateClassName
+} from '../shared/general_util'
+import {
+  Id,
+  Position,
+  GameBase
+} from './base'
 import { Cage } from './collections'
 
 const Square = GameBase

@@ -11,6 +11,8 @@
   path {
     fill: rgba(0,0,0,0.4);
   }
+
+  @include hide-on-small-screen
 }
 
 .spotlight-caption {
@@ -30,6 +32,7 @@
   flex-direction: column;
   justify-content: space-between;
 
+  @include hide-on-small-screen
 }
 
 .caption-content {

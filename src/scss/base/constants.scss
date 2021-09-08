@@ -8,6 +8,9 @@ $fnt-sz-square-poss: calc(#{$sz-puzzle} / 9 * 0.22);
 $w-info: calc(min(42vw, (97vw - #{$sz-puzzle})));
 $h-info: calc(#{$sz-puzzle} * 0.95);
 
+$total-width: calc(#{$sz-puzzle} + #{$w-info});
+$w-app: calc(#{$total-width} + (100vw - #{$total-width}) / 3);
+
 $sz-info-square-poss: calc(#{$w-info} / 13);
 $sz-info-square-chosen: calc(#{$sz-info-square-poss} * 1.2);
 
@@ -21,42 +24,3 @@ $fnt-sz-info-poss-icon--small: calc(#{$fnt-sz-info-poss-icon} * 0.95);
 $fnt-sz-info-poss-val: 2.3vw; // * 1.08 for chosen
 $fnt-sz-info-poss-val--lrg: 2.45vw; // * 1.08 for chosen
 $fnt-sz-info-poss-btn: 2.6vw; 
-
-
-// old size
-
-$lg-pz-size: 42vw;
-$md-pz-size: 60vw;
-$sm-pz-size: 95vw;
-
-$lg-info-size: 27vw;
-$md-info-size: 35vw;
-$sm-info-size: 70vw;
-
-$lg-hdr-height: calc(40px + 1.5vw);
-$sm-hdr-height: 8vh;
-
-$lg-nav-height: 40px;
-
-$breakpoint-1: 700px;
-$breakpoint-2: 1050px;
-
-// @mixin hd-small() {
-//   min-width: 90vw;
-//   min-height: $lg-hdr-height;
-// }
-
-// @mixin hd-large() {
-//   min-width: 42vw;
-//   min-height: $lg-hdr-height;
-// }
-
-// @mixin small($pz-size, $num-squares) {
-//   font-size: calc(#{$pz-size} / #{$num-squares} / 4.5);
-// }
-
-// @mixin large($pz-size, $num-squares) {
-//   font-size: calc(#{$pz-size} / #{$num-squares} / 2);
-// }
-
-
