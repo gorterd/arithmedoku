@@ -16,8 +16,6 @@
   "devDependencies": {
     "handlebars": "^4.7.7",
     "handlebars-webpack-plugin": "^2.2.1",
-    "mst-middlewares": "^5.0.1",
-    "remotedev": "^0.2.9",
     "webpack-dev-server": "^3.11.2"
   },
   "dependencies": {

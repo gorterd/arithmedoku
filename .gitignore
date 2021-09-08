@@ -3,3 +3,4 @@ experimental/
 tmp/
 .vscode/
 dev/
+.DS_Store
