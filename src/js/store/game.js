@@ -200,7 +200,11 @@ const Game = GameBase
         })
       },
       beginStaging() {
-        if (!self.ui.curSquare.hasValue && !self.ui.hasSelection) {
+        if (
+          !self.ui.curSquare.hasValue
+          && !self.ui.hasSelection
+          && !self.ui.tentativeSelections.length > 0
+        ) {
           self.ui.isStaging = true
         }
       },
@@ -228,6 +232,7 @@ const Game = GameBase
       },
       clearFocus() {
         self.ui.curSquare = null
+        self.ui.clearSelectedSquares()
       },
       undoOrRedo({ popFrom, pushTo }) {
         if (popFrom.length > 0) {

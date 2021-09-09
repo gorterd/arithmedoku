@@ -13,7 +13,6 @@ export default function mountClickListeners({
       && !e.path.includes(infoEle)
     ) {
       gameStore.clearFocus()
-      gameStore.ui.clearSelectedSquares()
     }
   })
 

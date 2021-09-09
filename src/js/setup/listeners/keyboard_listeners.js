@@ -39,6 +39,7 @@ export default function mountKeyboardListeners({ gameStore }) {
       _case('KeyA', () => gameStore.ui.setFilterMode('and'))
       _case('KeyE', () => gameStore.ui.setFilterMode('not'))
       _case('KeyO', () => gameStore.ui.setFilterMode('or'))
+      _case('Escape', () => gameStore.clearFocus())
       _ensure(() => {
         e.preventDefault()
       })

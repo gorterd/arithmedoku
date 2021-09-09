@@ -222,9 +222,6 @@ function deepClone(obj) {
   }
 }
 
-
-
-
 export const togglePresenceInArray = (
   array,
   ele,
