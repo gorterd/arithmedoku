@@ -1,7 +1,5 @@
 import { ARROW_REGEX, NUM_REGEX } from "./constants"
 
-export const isTruthy = a => a
-
 export const combos = (numElements, {
   min = 1,
   max = 9,
@@ -120,19 +118,6 @@ export const nextId = (() => {
   return () => `${id++}`
 })()
 
-export const classes = (...args) => args
-  .map(arg => {
-    if (arg instanceof Array) {
-      return arg[0]
-        ? arg[1]
-        : arg[2]
-    } else {
-      return arg
-    }
-  })
-  .filter(arg => arg)
-  .join(' ')
-
 function evalClassNameComponent(component) {
   if (component instanceof Array) {
     return component[0] ? component[1] : component[2]
@@ -144,7 +129,7 @@ function evalClassNameComponent(component) {
 function evalClassNameComponents(components) {
   return components
     .map(evalClassNameComponent)
-    .filter(isTruthy)
+    .filter(c => c)
 }
 
 function evalClassNameFlags(base, flags) {
@@ -181,13 +166,7 @@ export const generateClassName = (dynamicArg, flags) => {
   }
 }
 
-export const copyPuzzle = puzzle => {
-  const copy = puzzle.clone()
-  copy.resetUuid()
-  return copy
-}
-
-export const wait = ms => new Promise(resolve => window.setTimeout(resolve, ms))
+export const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 export const product = numArray => {
   return numArray.reduce((product, num) => product * num, 1)
@@ -244,18 +223,7 @@ function deepClone(obj) {
 }
 
 
-export const throttle = (func, ms = 200) => {
-  let lastFired = Date.now()
 
-  return (...args) => {
-    const now = Date.now()
-
-    if (now - lastFired >= ms) {
-      lastFired = now
-      func(...args)
-    }
-  }
-}
 
 export const togglePresenceInArray = (
   array,
@@ -336,7 +304,7 @@ function baseSwitch(
   function _case(...args) {
     const { exec, isMatch } = caseArgParser(args)
 
-    const shouldExecByMatch = isMatch() && (!matched || multipleMatches)
+    const shouldExecByMatch = isMatch && (!matched || multipleMatches)
     const shouldExecByFallthrough = matched && fallthrough
 
     if (shouldExecByMatch || shouldExecByFallthrough) {
@@ -391,7 +359,7 @@ function stringSwitchCaseArgParser(input, args) {
     throw new Error('Last argument to case function must be a callback to execute if the case matches')
   }
 
-  const isMatch = () => args.every(matcher => parseMatcher(matcher)(input))
+  const isMatch = args.every(matcher => parseMatcher(matcher)(input))
   return { exec, isMatch }
 }
 
@@ -401,12 +369,10 @@ function funcSwitchCaseArgParser(input, comparator, args) {
     throw new Error('Last argument to case function must be a callback to execute if the case matches')
   }
 
-  const isMatch = () => {
-    return (
-      comparator(input, ...args[0])
-      && args.slice(1).every(matcher => parseMatcher(matcher)(input))
-    )
-  }
+  const isMatch = (
+    comparator(input, ...args[0])
+    && args.slice(1).every(matcher => parseMatcher(matcher)(input))
+  )
 
   return { exec, isMatch }
 }

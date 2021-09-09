@@ -1,7 +1,7 @@
 {
   "name": "arithmedoku",
   "version": "1.0.0",
-  "description": "A Sudoku-like puzzle with an Arithmetic twist, inspired by KenKen",
+  "description": "A Sudoku-like puzzle with an arithmetic twist, inspired by KenKen",
   "main": "index.js",
   "browserslist": [
     "defaults"
@@ -14,6 +14,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "find-unused-exports": "^2.0.0",
     "handlebars": "^4.7.7",
     "handlebars-webpack-plugin": "^2.2.1",
     "webpack-dev-server": "^3.11.2"

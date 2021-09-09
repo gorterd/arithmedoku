@@ -24,11 +24,11 @@ export default (game) => new Promise(resolve => {
     caption.prepend(spotlight.captionContent)
 
     const cleanupShow = spotlight.onShow()
-    window.addEventListener('resize', update)
+    addEventListener('resize', update)
     cleanup = () => {
       if (idx === 0) previousBtn.classList.remove('hide')
       if (idx + 1 === spotlights.length) nextBtn.classList.remove('hide')
-      window.removeEventListener('resize', update)
+      removeEventListener('resize', update)
       cleanupShow()
     }
 
@@ -186,7 +186,14 @@ function getSpotlights({
     captionContent: templates.instructionsCaptionContent.cloneNode(true),
     onShow: () => {
       instructionsButton.classList.add('show')
+      let refresh = () => {
+        instructionsSpotlight.generate()
+        instructionsSpotlight.updateSVG()
+      }
+
+      instructionsButton.addEventListener('click', refresh)
       return () => {
+        removeEventListener('click', refresh)
         instructionsButton.classList.remove('show')
         instructionsButton.blur()
       }

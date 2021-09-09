@@ -5,7 +5,7 @@ const defaultOptions = {
   autoBlock: true,
   autoEliminate: true,
   autoElimMathImpossibilities: true,
-  maxDisplayedPossibilities: 6,
+  maxDisplayedPossibilities: 4,
   walkthrough: true,
 }
 

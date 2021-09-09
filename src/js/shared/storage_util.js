@@ -15,7 +15,7 @@ if (Worker && indexedDB) {
       reject()
     }
 
-    const timeoutId = window.setTimeout(failure, DB_FALLBACK_MS)
+    const timeoutId = setTimeout(failure, DB_FALLBACK_MS)
 
     storageWorker.onmessage = msg => {
       const { requestId, ...otherData } = msg.data
@@ -26,10 +26,10 @@ if (Worker && indexedDB) {
         delete callbackRegistry[requestId]
       } else if (msg.data.type === 'META') {
         if (msg.data.status === 'dbLoaded') {
-          window.clearTimeout(timeoutId)
+          clearTimeout(timeoutId)
           resolve()
         } else if (msg.data.status === 'dbFailure') {
-          window.clearTimeout(timeoutId)
+          clearTimeout(timeoutId)
           failure()
         }
 
@@ -72,12 +72,12 @@ if (Worker && indexedDB) {
 
     return new Promise((resolve, reject) => {
       if (timeout !== undefined) {
-        const timeoutId = window.setTimeout(() => {
+        const timeoutId = setTimeout(() => {
           reject('Request timed out')
         }, timeout)
 
         addCbToRegistry(requestId, resolve, reject, () => {
-          window.clearTimeout(timeoutId)
+          clearTimeout(timeoutId)
         })
       } else {
         addCbToRegistry(requestId, resolve, reject)

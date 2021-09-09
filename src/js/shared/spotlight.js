@@ -76,7 +76,10 @@ class Spotlight {
     while (this.unvisitedBounds.length > 0) this._addNextSubPath()
   }
 
-  updateSVG(svg) {
+  updateSVG(svg = this.svg) {
+    if (!svg) throw new Error('no svg provided')
+    this.svg = svg
+
     const vbw = window.innerWidth + overflowPx
     const vbh = window.innerHeight + overflowPx
 
@@ -85,7 +88,10 @@ class Spotlight {
     svg.querySelector('feGaussianBlur').setAttribute('stdDeviation', this.blur)
   }
 
-  updateCaption(caption) {
+  updateCaption(caption = this.caption) {
+    if (!caption) throw new Error('no caption element provided')
+    this.caption = caption
+
     applyStyle(caption, this.captionStyle, true)
   }
 

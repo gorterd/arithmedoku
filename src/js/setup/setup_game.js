@@ -1,4 +1,4 @@
-import { setupHeader } from '../views/header_view'
+import { setupHeader, setupInstructions } from '../views/header_view'
 import { setupOptions } from '../views/options_view'
 import { setupCollectionInfo } from '../views/info_collection_view'
 import { setupSquareInfo } from '../views/info_square_view'
@@ -13,6 +13,7 @@ export default async function setupGame({ env, elements }) {
   const game = { gameStore, env, elements }
 
   setupOptions(game)
+  setupInstructions(game)
   setupSquareInfo(game)
   setupCollectionInfo(game)
 
@@ -26,8 +27,8 @@ export default async function setupGame({ env, elements }) {
   gameStore.applyStoredSnapshot()
   gameStore.attachHooks()
 
-  setupPuzzle(game)
   setupHeader(game)
+  setupPuzzle(game)
   mountClickListeners(game)
   mountKeyboardListeners(game)
 

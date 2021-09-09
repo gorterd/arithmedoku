@@ -14,7 +14,7 @@ export default class LRUCache {
     this.tail = newNode()
     this.timeBeforeClear = timeBeforeClear
 
-    window.setInterval(() => {
+    setInterval(() => {
       this._removeBefore(this.timeBeforeClear)
     }, 10000)
 

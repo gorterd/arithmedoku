@@ -14,7 +14,6 @@ export function setupHeader({
 
       instructionsButton,
       instructionsDropdown,
-      instructionsSections,
 
       optionsButton,
       optionsDropdown,
@@ -35,15 +34,6 @@ export function setupHeader({
   addNoFocusClickListener(newButton, () => newPuzzle({ gameStore, env, elements }))
   addNoFocusClickListener(resetButton, () => resetPuzzle({ gameStore, env, elements }))
 
-  instructionsSections.forEach(section => {
-    section.querySelector('h1').addEventListener('click', () => {
-      section.classList.toggle('show')
-      instructionsSections.forEach(otherSection => {
-        if (otherSection !== section) otherSection.classList.remove('show')
-      })
-    })
-  })
-
   const thickness = 1.5
   const blur = 1
 
@@ -61,6 +51,18 @@ export function setupHeader({
   }, 50)
 
   title.addEventListener('click', toggleInterval)
+}
+
+export function setupInstructions({ elements }) {
+  const sections = elements.headerEles.instructionsSections
+  sections.forEach(section => {
+    section.querySelector('h1').addEventListener('click', () => {
+      section.classList.toggle('show')
+      sections.forEach(otherSection => {
+        if (otherSection !== section) otherSection.classList.remove('show')
+      })
+    })
+  })
 }
 
 export function getHeaderElements() {

@@ -56,12 +56,15 @@ const UI = GameBase
       },
       get squareInfoSelectClassName() {
         return generateClassName('square-info_btn', [
-          [!self.curSquare || self.curSquare.hasValue, 'disabled']
+          [
+            !self.curSquare || self.curSquare.hasValue || self.hasSelection,
+            'disabled'
+          ]
         ])
       },
       get squareInfoClearClassName() {
         return generateClassName('square-info_btn', [
-          [!self.curSquare, 'disabled']
+          [!self.curSquare || self.hasSelection, 'disabled']
         ])
       },
       get squareInfoSelectIconClassName() {
@@ -190,6 +193,8 @@ const UI = GameBase
       },
       selectThroughSquare(squareId) {
         if (self.selectedSquares.length > 0) {
+          self.abandonStaging()
+
           const nextSquarePos = self.rootPuzzle.squares.get(squareId).position
           const prevSquarePos = self.lastSelectedSquare.position
 
@@ -202,7 +207,12 @@ const UI = GameBase
       },
       tentativelySelectInDir(dir) {
         if (self.selectedSquares.length > 0) {
-          const curSquarePos = self.tentativeSelections[self.tentativeSelections.length - 1]?.position || self.lastSelectedSquare.position
+          self.abandonStaging()
+
+          const curSquarePos = (
+            self.tentativeSelections[self.tentativeSelections.length - 1]?.position
+            || self.lastSelectedSquare.position
+          )
           const nextSquarePos = posInDir(curSquarePos, dir)
 
           if (!nextSquarePos) return
@@ -224,12 +234,18 @@ const UI = GameBase
         self.tentativeSelections = []
       },
       toggleSelectedSquare(squareId) {
+        self.abandonStaging()
+
         togglePresenceInArray(
           self.selectedSquares,
           squareId,
           () => self.selectedSquares.findIndex(s => s.id === squareId)
         )
         if (self.curSquare.id === squareId) self.curSquare = null
+      },
+      abandonStaging() {
+        self.clearStagedPossibilities()
+        self.isStaging = false
       },
       clearStagedPossibilities() {
         self.stagedPossibilities = []

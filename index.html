@@ -5,14 +5,13 @@
   <meta charset='UTF-8'>
   <meta name='viewport' content='width=device-width, initial-scale=1.0'>
 
-
   <meta property='og:title' content='Arithmedoku'>
   <meta property='og:image' content='dist/images/og_preview.png'>
   <meta property='og:description' content="Arithmedoku is inspired by KenKen, a
   Sudoku-like puzzle game with a fun math twist. It's beginner-friendly, yet
   packed with nifty tools for power solvers.">
 
-  <link rel="apple-touch-icon" sizes="180x180" href="fa{vicon/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
   <link rel="manifest" href="favicon/site.webmanifest">
@@ -381,8 +380,8 @@
   </main>
 
   <p id='no-render'>
-    Unfortunately, Arithmedoku cannot render at this width. Your window must be at
-    least 900px wide.
+    Unfortunately, Arithmedoku cannot render at this size. Your window must be at
+    least 900px wide and 600px tall.
 
     If you are viewing this on mobile, please switch to a laptop or desktop.
   </p>
@@ -486,11 +485,7 @@
     <div class='caption-content caption-content--cage-info-tabs'>
       <p>
         At the bottom, we have 3 tabs, representing 3 different ways we can narrow
-        down our possible combinations.
-      </p>
-      <p>
-        In the new few steps, pay attention to how
-        the list up top changes when we select numbers under the different tabs.
+        down our possible combinations. Let's take a closer look.
       </p>
     </div>
   </template>
@@ -561,8 +556,11 @@
         </li>
       </ol>
       <p>
-        With all our filters combined, we've narrowed things down to 2 possible
-        combinations. Nice!
+        Combining all 3 filters, we're down to 2 possible combinations; nice!
+      </p>
+      <p>
+        One last tip: click the <strong>⟲</strong> button to reset the currently selected
+        filter, or the eraser button to reset all filters.
       </p>
     </div>
   </template>
@@ -570,16 +568,18 @@
   <template id='caption-content-square-info-template'>
     <div class='caption-content caption-content--square-info'>
       <p>
-        This is the <strong>square info</strong> section. Click a
-        number to toggle whether it's a possibility for the current square.
+        This is the <strong>square info</strong> section. Click a number to toggle
+        whether it's a possibility for the current square. Click the eraser button to
+        reset the possibilities.
+      </p>
+      <p>
+        To narrow possibilities down more quickly, click the <strong>☑</strong> button and then
+        select numbers to rule <strong>in</strong> as possibilities (thus ruling
+        out every other number). Click <strong>☑</strong> again to confirm.
       </p>
       <p>
         The faded out numbers are those that can't appear in the square because
         they don't appear in any possible combination for the current cage.
-      </p>
-      <p>
-        Notice that, once a square has been narrowed down to just a few possible
-        numbers, they appear within the square in the puzzle!
       </p>
     </div>
   </template>
@@ -587,17 +587,22 @@
   <template id='caption-content-selection-info-template'>
     <div class='caption-content caption-content--selection-info'>
       <p>
-        You can also select multiple squares. Hold command and click another
-        square to add it to the current selection, or hold shift to select all the
-        squares in between. Then, you can batch eliminate possibilities. Cool!
+        You can also select multiple squares to batch eliminate possibilities. Cool!
       </p>
+    </div>
+  </template>
+  
+  <template id='caption-content-options-template'>
+    <div class='caption-content caption-content--options'>
+      This is the options menu. Go ahead and hover over the info icon next to each
+      option to learn what it does!
     </div>
   </template>
   
   <template id='caption-content-instructions-template'>
     <div class='caption-content caption-content--instructions'>
       <p>
-        Lastly, the instructions dropdown contains the key info from the walkthrough, plus more.
+        Lastly, the instructions dropdown contains the key info from the walkthrough and more.
       </p>
       <p>
         Be sure to check out the keyboard shortcuts!
@@ -609,12 +614,6 @@
       <p>
         Good luck!
       </p>
-    </div>
-  </template>
-  
-  <template id='caption-content-options-template'>
-    <div class='caption-content caption-content--options'>
-      This is the options menu. Hover over the info icon next to each option to learn what it does!
     </div>
   </template>
 </body>

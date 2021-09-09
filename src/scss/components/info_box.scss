@@ -72,7 +72,7 @@
 @mixin possibilities_btn {
   @include possibilities_child();
 
-  font-size: $fnt-sz-info-poss-btn;
+  font-size: $fnt-sz-info-poss-val;
 }
 
 .possibility-icons {

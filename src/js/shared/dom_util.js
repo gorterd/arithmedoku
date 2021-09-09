@@ -27,14 +27,6 @@ export const getTemplateNode = (template, firstChild = true) =>
 export const getTemplateById = (id, firstChild = true) =>
   getTemplateNode(document.getElementById(id), firstChild)
 
-export function isEquivalentNode(nodeA, nodeB, options = {}) {
-  return (
-    nodeA.nodeName === nodeB.nodeName
-    && haveEquivalentAttributes(nodeA, nodeB, options)
-    && haveEquivalentChildren(nodeA, nodeB, options)
-  )
-}
-
 export function haveEquivalentChildren(nodeOrListA, nodeOrListB, options = {}) {
   const childrenA = nodeOrListA instanceof Node
     ? Array.from(nodeOrListA.childNodes)
@@ -59,6 +51,14 @@ export function haveEquivalentChildren(nodeOrListA, nodeOrListB, options = {}) {
 
     return true
   }
+}
+
+function isEquivalentNode(nodeA, nodeB, options = {}) {
+  return (
+    nodeA.nodeName === nodeB.nodeName
+    && haveEquivalentAttributes(nodeA, nodeB, options)
+    && haveEquivalentChildren(nodeA, nodeB, options)
+  )
 }
 
 function haveEquivalentAttributes(nodeA, nodeB, options = {}) {

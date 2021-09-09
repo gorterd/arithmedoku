@@ -51,7 +51,7 @@ const Game = GameBase
     }
 
     const noHistory = () => {
-      window.setTimeout(() => {
+      setTimeout(() => {
         self.env.history.pop()
       }, 0)
     }
@@ -66,7 +66,9 @@ const Game = GameBase
 
     const recordedActions = {
       setFocusedSquare(value) {
-        if (
+        if (self.ui.hasSelection) {
+          noHistory()
+        } else if (
           self.options.autoBlock
           && !self.ui.curSquare.isPossibleValue(value)
         ) {
@@ -74,9 +76,7 @@ const Game = GameBase
             .forEach(square => square.setConflict())
 
           self.ui.curSquare.setMistake(value)
-          window.setTimeout(() => {
-            self.env.history.pop()
-          }, 0)
+          noHistory()
         } else {
           self.ui.curSquare.value = value
           self.ui.isStaging = false
@@ -87,11 +87,14 @@ const Game = GameBase
       },
       resetFocusedSquarePossibilities() {
         const square = self.ui.curSquare
-        if (!square.hasEliminations && !square.hasValue) {
+        if (
+          (!square.hasEliminations && !square.hasValue)
+          || self.ui.hasSelection
+        ) {
           noHistory()
         } else {
-          self.ui.curSquare.eliminatedPossibilities = []
-          self.ui.curSquare.value = null
+          square.eliminatedPossibilities = []
+          square.value = null
         }
       },
       setStagedPossibilities() {
@@ -197,7 +200,7 @@ const Game = GameBase
         })
       },
       beginStaging() {
-        if (!self.ui.curSquare.hasValue) {
+        if (!self.ui.curSquare.hasValue && !self.ui.hasSelection) {
           self.ui.isStaging = true
         }
       },

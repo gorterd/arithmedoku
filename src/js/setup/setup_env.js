@@ -20,7 +20,7 @@ export function resetEnv(env) {
   return Object.assign(env, getDefaultDynamicEnv())
 }
 
-export function getStaticEnv() {
+function getStaticEnv() {
   return {
     puzzles,
     globals: {

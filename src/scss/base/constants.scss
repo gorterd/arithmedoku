@@ -1,11 +1,10 @@
-// new size
-$sz-puzzle: #{'min(55vw, 85vh)'};
+$sz-puzzle: #{'min(55vw, 80vh)'};
 
 $fnt-sz-square-val: calc(#{$sz-puzzle} / 9 * 0.5);
 $fnt-sz-square-label: calc(#{$sz-puzzle} / 9 * 0.24);
 $fnt-sz-square-poss: calc(#{$sz-puzzle} / 9 * 0.22);
 
-$w-info: calc(min(42vw, (97vw - #{$sz-puzzle})));
+$w-info: calc(min(42vw, #{$sz-puzzle}, (97vw - #{$sz-puzzle})));
 $h-info: calc(#{$sz-puzzle} * 0.95);
 
 $total-width: calc(#{$sz-puzzle} + #{$w-info});
@@ -14,13 +13,10 @@ $w-app: calc(#{$total-width} + (100vw - #{$total-width}) / 3);
 $sz-info-square-poss: calc(#{$w-info} / 13);
 $sz-info-square-chosen: calc(#{$sz-info-square-poss} * 1.2);
 
-$sz-info-poss: calc(#{$w-info} / 11.5);
+$sz-info-poss: min(calc(#{$w-info} / 11.5),calc(#{$sz-puzzle} / 13));
 
 $w-info-tab: calc(#{$w-info} * 0.3);
 
 $fnt-sz-info-poss-icon: calc(#{$sz-info-poss} * 0.9);
-$fnt-sz-info-poss-icon--lrg: calc(#{$fnt-sz-info-poss-icon} * 1.05);
-$fnt-sz-info-poss-icon--small: calc(#{$fnt-sz-info-poss-icon} * 0.95);
-$fnt-sz-info-poss-val: 2.3vw; // * 1.08 for chosen
-$fnt-sz-info-poss-val--lrg: 2.45vw; // * 1.08 for chosen
-$fnt-sz-info-poss-btn: 2.6vw; 
+$fnt-sz-info-poss-val: calc(#{$fnt-sz-info-poss-icon} * 0.7); // * 1.08 for chosen
+$fnt-sz-info-poss-val--lrg: calc(#{$fnt-sz-info-poss-val} * 1.08);

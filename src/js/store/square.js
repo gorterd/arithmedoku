@@ -69,10 +69,11 @@ const Square = GameBase
             .filter(val => self.squarePossiblities.includes(val))
         },
         get possibilities() {
-          return self.hasValue
-            ? [self.value]
-            : self.squareAndCollectionPossibilities
-              .filter(val => !self.isAutoEliminatedValue(val))
+          return self.squareAndCollectionPossibilities
+            .filter(val => !self.isAutoEliminatedValue(val))
+        },
+        get logicalPossibilities() {
+          return self.hasValue ? [self.value] : self.possibilities
         },
         get dataPos() {
           return self.position.join(',')
@@ -149,28 +150,26 @@ const Square = GameBase
             : self.rowColSquares.filter(square => square.value === val)
         },
         possibilityStatuses(val) {
-          if (self.hasValue) {
-            return self.value === val ? ['chosen'] : ['unchosen']
-          } else {
-            let statuses = []
+          if (self.hasValue && self.value === val) return ['chosen']
 
-            if (self.isSquareEliminatedValue(val)) {
-              statuses.push('square-eliminated')
-            }
-            if (self.isCollectionEliminatedValue(val)) {
-              statuses.push('collection-eliminated')
-            }
-            if (self.isAutoEliminatedValue(val)) {
-              statuses.push('auto-eliminated')
-            }
+          let statuses = []
 
-            return statuses.length > 0 ? statuses : ['possible']
-          }
+          if (self.hasValue) statuses.push('unchosen')
+          if (self.isSquareEliminatedValue(val))
+            statuses.push('square-eliminated')
+          if (self.isCollectionEliminatedValue(val))
+            statuses.push('collection-eliminated')
+          if (self.isAutoEliminatedValue(val))
+            statuses.push('auto-eliminated')
+
+          return statuses.length > 0 ? statuses : ['possible']
         },
         isPossibleValue(val) {
-          return val === null || val === self.value
-            ? true
-            : self.possibilities.includes(val)
+          return (
+            val === null
+            || self.value === val
+            || self.possibilities.includes(val)
+          )
         },
         isSquareEliminatedValue(val) {
           return self.eliminatedPossibilities.includes(val)
@@ -226,7 +225,7 @@ const Square = GameBase
               ? { hover: ICONS.ban, noHover: ICONS.circle }
               : { hover: ICONS.circle, noHover: ICONS.ban }
           } else {
-            return self.isSquareEliminatedValue(val) && !self.hasValue
+            return self.isSquareEliminatedValue(val)
               ? { hover: ICONS.ban, noHover: ICONS.ban }
               : { hover: ICONS.ban, noHover: ICONS.circle }
           }
@@ -260,15 +259,15 @@ const Square = GameBase
           }
         },
         isLogicalSupersetOf(otherSquare) {
-          return otherSquare.possibilities.every(self.isPossibleValue)
+          return otherSquare.logicalPossibilities.every(self.isPossibleValue)
         },
         isLogicalSubsetOf(otherSquare) {
           return otherSquare.isLogicalSupersetOf(self)
         },
         isConsistentWith(otherSquare) {
           const possibilityOverlap = arrayUnion(
-            otherSquare.possibilities,
-            self.possibilities
+            otherSquare.logicalPossibilities,
+            self.logicalPossibilities
           )
 
           return possibilityOverlap.length > 0

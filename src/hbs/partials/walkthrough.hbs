@@ -97,11 +97,7 @@
   <div class='caption-content caption-content--cage-info-tabs'>
     <p>
       At the bottom, we have 3 tabs, representing 3 different ways we can narrow
-      down our possible combinations.
-    </p>
-    <p>
-      In the new few steps, pay attention to how
-      the list up top changes when we select numbers under the different tabs.
+      down our possible combinations. Let's take a closer look.
     </p>
   </div>
 </template>
@@ -172,8 +168,11 @@
       </li>
     </ol>
     <p>
-      With all our filters combined, we've narrowed things down to 2 possible
-      combinations. Nice!
+      Combining all 3 filters, we're down to 2 possible combinations; nice!
+    </p>
+    <p>
+      One last tip: click the <strong>⟲</strong> button to reset the currently selected
+      filter, or the eraser button to reset all filters.
     </p>
   </div>
 </template>
@@ -181,16 +180,18 @@
 <template id='caption-content-square-info-template'>
   <div class='caption-content caption-content--square-info'>
     <p>
-      This is the <strong>square info</strong> section. Click a
-      number to toggle whether it's a possibility for the current square.
+      This is the <strong>square info</strong> section. Click a number to toggle
+      whether it's a possibility for the current square. Click the eraser button to
+      reset the possibilities.
+    </p>
+    <p>
+      To narrow possibilities down more quickly, click the <strong>☑</strong> button and then
+      select numbers to rule <strong>in</strong> as possibilities (thus ruling
+      out every other number). Click <strong>☑</strong> again to confirm.
     </p>
     <p>
       The faded out numbers are those that can't appear in the square because
       they don't appear in any possible combination for the current cage.
-    </p>
-    <p>
-      Notice that, once a square has been narrowed down to just a few possible
-      numbers, they appear within the square in the puzzle!
     </p>
   </div>
 </template>
@@ -198,17 +199,22 @@
 <template id='caption-content-selection-info-template'>
   <div class='caption-content caption-content--selection-info'>
     <p>
-      You can also select multiple squares. Hold command and click another
-      square to add it to the current selection, or hold shift to select all the
-      squares in between. Then, you can batch eliminate possibilities. Cool!
+      You can also select multiple squares to batch eliminate possibilities. Cool!
     </p>
+  </div>
+</template>
+
+<template id='caption-content-options-template'>
+  <div class='caption-content caption-content--options'>
+    This is the options menu. Go ahead and hover over the info icon next to each
+    option to learn what it does!
   </div>
 </template>
 
 <template id='caption-content-instructions-template'>
   <div class='caption-content caption-content--instructions'>
     <p>
-      Lastly, the instructions dropdown contains the key info from the walkthrough, plus more.
+      Lastly, the instructions dropdown contains the key info from the walkthrough and more.
     </p>
     <p>
       Be sure to check out the keyboard shortcuts!
@@ -220,11 +226,5 @@
     <p>
       Good luck!
     </p>
-  </div>
-</template>
-
-<template id='caption-content-options-template'>
-  <div class='caption-content caption-content--options'>
-    This is the options menu. Hover over the info icon next to each option to learn what it does!
   </div>
 </template>
